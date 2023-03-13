@@ -14,7 +14,7 @@ namespace Server
         public string getPassword() { return _password;  }
         public void setPassword(string pw) { _password = pw;  }
 
-        public string getUsername() { return null; }
-        public void setUsername(string username) { }
+        public string getUsername() { return _username; }
+        public void setUsername(string username) { _username = username; }
     }
 }
