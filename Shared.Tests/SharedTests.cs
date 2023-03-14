@@ -285,4 +285,32 @@ namespace Shared.Tests
             Assert.AreEqual(_ALBUMNAME, actual);
         }
     }
+
+    [TestClass]
+    public class ArtistTests
+    {
+        [TestMethod]
+        public void ARTISTSHARED001_SetName_placeholder_placeholderSet()
+        {
+
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED002_SetImage_placeholder_placeholderSet()
+        {
+
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED003_GetName_placeholder_returnsPlaceholder()
+        {
+
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED004_GetArtist_placeholder_returnsPlaceholder()
+        {
+
+        }
+    }
 }
