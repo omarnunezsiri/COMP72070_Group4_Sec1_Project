@@ -46,28 +46,31 @@ namespace Server
         {
             byte serialized = new byte();
 
-            serialized += this.GetAccountBit() ? 1 : 0;
+            byte one = 1;
+            byte zero = 0;
+
+            serialized += this.GetAccountBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetSongBit() ? 1 : 0;
+            serialized += this.GetSongBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetSignUpBit() ? 1 : 0;
+            serialized += this.GetSignUpBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetLogInBit() ? 1 : 0;
+            serialized += this.GetLogInBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetSyncBit() ? 1 : 0;
+            serialized += this.GetSyncBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetMediaBit() ? 1 : 0;
+            serialized += this.GetMediaBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetDownloadBit() ? 1 : 0;
+            serialized += this.GetDownloadBit() ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetListBit() ? 1 : 0;
+            serialized += this.GetListBit() ? one : zero;
             //serialized <<= 1;
 
             return serialized;
