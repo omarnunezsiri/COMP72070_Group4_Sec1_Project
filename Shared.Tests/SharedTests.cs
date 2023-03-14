@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace Shared.Tests
 {
     [TestClass]
@@ -289,28 +291,63 @@ namespace Shared.Tests
     [TestClass]
     public class ArtistTests
     {
+        private Bitmap _bitmap = (Bitmap)Image.FromFile("placeholder.png");
+        private const string _ARTISTNAME = "artistPlaceholder";
+
         [TestMethod]
         public void ARTISTSHARED001_SetName_placeholder_placeholderSet()
         {
+            // Arrange
+            Artist artist = new();
 
+            // Act
+            artist.SetName(_ARTISTNAME);
+            string actual = artist.GetName();
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, actual);
         }
 
         [TestMethod]
         public void ARTISTSHARED002_SetImage_placeholder_placeholderSet()
         {
+            // Arrange
+            Artist artist = new();
 
+            // Act
+            artist.SetImage(_bitmap);
+            Bitmap actual = artist.GetImage();
+
+            // Assert
+            Assert.AreEqual(_bitmap, actual);
         }
 
         [TestMethod]
         public void ARTISTSHARED003_GetName_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Artist artist = new();
+            artist.SetName(_ARTISTNAME);
 
+            // Act
+            string actual = artist.GetName();
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, actual);
         }
 
         [TestMethod]
-        public void ARTISTSHARED004_GetArtist_placeholder_returnsPlaceholder()
+        public void ARTISTSHARED004_GetImage_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Artist artist = new();
+            artist.SetImage(_bitmap);
 
+            // Act
+            Bitmap actual = artist.GetImage();
+
+            // Assert
+            Assert.AreEqual(_bitmap, actual);
         }
     }
 }
