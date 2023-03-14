@@ -26,16 +26,16 @@ namespace Server
         public PacketHeader()
         { }
 
-        public PacketHeader(bool account, bool song, bool signup, bool login, bool sync, bool media, bool download, bool list)
+        public PacketHeader(bool _account, bool _song, bool _signup, bool _login, bool _sync, bool _media, bool _download, bool _list)
         {
-            this.SetAccountBit(account);
-            this.SetSongBit(song);
-            this.SetSignUpBit(signup);
-            this.SetLogInBit(login);
-            this.SetSyncBit(sync);
-            this.SetMediaBit(media);
-            this.SetDownloadBit(download);
-            this.SetListBit(list);
+            this.SetAccountBit(_account);
+            this.SetSongBit(_song);
+            this.SetSignUpBit(_signup);
+            this.SetLogInBit(_login);
+            this.SetSyncBit(_sync);
+            this.SetMediaBit(_media);
+            this.SetDownloadBit(_download);
+            this.SetListBit(_list);
         }
 
         public PacketHeader(byte serialized)
