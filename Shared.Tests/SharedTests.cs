@@ -365,40 +365,92 @@ namespace Shared.Tests
     [TestClass]
     public class AlbumTests
     {
+        private const string _ALBUMNAME = "albumPlaceholder";
+        private const string _ARTISTNAME = "artistPlaceholder";
+        private Bitmap _bitmap = (Bitmap)Image.FromFile("placeholder.png");
+
         [TestMethod]
         public void ALBUMSHARED001_SetName_placeholder_placeholderSet()
         {
+            // Arrange
+            Album album = new();
 
+            // Act
+            album.SetName(_ALBUMNAME);
+            string actual = album.GetName();
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, actual);
         }
 
         [TestMethod]
         public void ALBUMSHARED002_SetArtist_placeholder_placeholderSet()
         {
+            // Arrange
+            Album album = new();
 
+            // Act
+            album.SetArtist(_ARTISTNAME);
+            string actual = album.GetArtist();
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, actual);
         }
 
         [TestMethod]
         public void ALBUMSHARED003_SetImage_placeholder_placeholderSet()
         {
+            // Arrange
+            Album album = new();
 
+            // Act
+            album.SetImage(_bitmap);
+            Bitmap actual = album.GetImage();
+
+            // Assert
+            Assert.AreEqual(_bitmap, actual);
         }
 
         [TestMethod]
         public void ALBUMSHARED004_GetName_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Album album = new();
+            album.SetName(_ALBUMNAME);
 
+            // Act
+            string actual = album.GetName();
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, actual);
         }
 
         [TestMethod]
         public void ALBUMSHARED005_GetImage_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Album album = new();
+            album.SetImage(_bitmap);
 
+            // Act
+            Bitmap actual = album.GetImage();
+
+            // Assert
+            Assert.AreEqual(_bitmap, actual);
         }
 
         [TestMethod]
         public void ALBUMSHARED006_GetArtist_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Album album = new();
+            album.SetArtist(_ARTISTNAME);
 
+            // Act
+            string actual = album.GetArtist();
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, actual);
         }
     }
 }
