@@ -1,3 +1,8 @@
+/*The System.Drawing namespace has functionalities that are only available on Windows, which leads to
+  the CA1416 warning being raised. We have decided to disable it since the Silly Music Player App
+  will be made for the Windows platform only. */
+#pragma warning disable CA1416 
+
 using System.Drawing;
 
 namespace Shared.Tests
@@ -354,6 +359,46 @@ namespace Shared.Tests
 
             // Assert
             Assert.AreEqual(_bitmap, actual);
+        }
+    }
+
+    [TestClass]
+    public class AlbumTests
+    {
+        [TestMethod]
+        public void ALBUMSHARED001_SetName_placeholder_placeholderSet()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED002_SetArtist_placeholder_placeholderSet()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED003_SetImage_placeholder_placeholderSet()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED004_GetName_placeholder_returnsPlaceholder()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED005_GetImage_placeholder_returnsPlaceholder()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED006_GetArtist_placeholder_returnsPlaceholder()
+        {
+
         }
     }
 }
