@@ -69,7 +69,13 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT001_SerializeHeader_CorrectBytesAllocated()
         {
+            // [ACCOUNT] [SONG] | [SIGNUP] [LOGIN] | [SYNC] [MEDIA] [DOWNLOAD] [LIST]
+            byte expected = 0b10100110;
 
+
+            PacketHeader pHeader = new PacketHeader(false, false, false, false, false, false, false, false);
+
+            Assert.AreEqual(expected, pHeader.SerializeData());
         }
 
         [TestMethod]
