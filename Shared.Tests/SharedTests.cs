@@ -80,7 +80,7 @@ namespace Shared.Tests
             byte expected = 0b10100110;
 
 
-            PacketHeader pHeader = new PacketHeader(false, false, false, false, false, false, false, false);
+            PacketHeader pHeader = new PacketHeader(true, false, true, false, false, true, true, false);
 
             Assert.AreEqual(expected, pHeader.SerializeData());
         }
