@@ -168,52 +168,121 @@ namespace Shared.Tests
     [TestClass]
     public class SongTests
     {
+        private const string _SONGNAME = "songNamePlaceholder";
+        private const string _ARTISTNAME = "artistPlaceholder";
+        private const string _ALBUMNAME = "albumPlaceholder";
+        private const float _DURATION = 1.0f;
+
         [TestMethod]
         public void SONGSHARED001_SetName_placeholder_placeholderSet()
         {
+            // Arrange
+            Song song = new();
 
+            // Act
+            song.SetName(_SONGNAME);
+            string actual = song.GetName();
+
+            // Assert
+            Assert.AreEqual(_SONGNAME, actual);
         }
 
         [TestMethod]
         public void SONGSHARED002_SetArtist_placeholder_placeholderSet()
         {
+            // Arrange
+            Song song = new();
 
+            // Act
+            song.SetArtist(_ARTISTNAME);
+            string actual = song.GetArtist();
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, actual);
         }
 
         [TestMethod]
         public void SONGSHARED003_SetDuration_placeholder_placeholderSet()
         {
+            // Arrange
+            Song song = new();
 
+            // Act
+            song.SetDuration(_DURATION);
+            float actual = song.GetDuration();
+
+            // Assert
+            Assert.AreEqual(_DURATION, actual);
         }
 
         [TestMethod]
         public void SONGSHARED004_SetAlbum_placeholder_placeholderSet()
         {
+            // Arrange
+            Song song = new();
 
+            // Act
+            song.SetAlbum(_ALBUMNAME);
+            string actual = song.GetAlbum();
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, actual);
         }
 
         [TestMethod]
         public void SONGSHARED005_GetName_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Song song = new();
+            song.SetName(_SONGNAME);
 
+            // Act
+            string actual = song.GetName();
+
+            // Assert
+            Assert.AreEqual(_SONGNAME, actual);
         }
 
         [TestMethod]
         public void SONGSHARED006_GetArtist_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Song song = new();
+            song.SetArtist(_ARTISTNAME);
 
+            // Act
+            string actual = song.GetArtist();
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, actual);
         }
 
         [TestMethod]
         public void SONGSHARED007_GetDuration_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Song song = new();
+            song.SetDuration(_DURATION);
 
+            // Act
+            float actual = song.GetDuration();
+
+            // Assert
+            Assert.AreEqual(_DURATION, actual);
         }
 
         [TestMethod]
         public void SONGSHARED008_GetAlbum_placeholder_returnsPlaceholder()
         {
+            // Arrange
+            Song song = new();
+            song.SetAlbum(_ALBUMNAME);
 
+            // Act
+            string actual = song.GetAlbum();
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, actual);
         }
     }
 }
