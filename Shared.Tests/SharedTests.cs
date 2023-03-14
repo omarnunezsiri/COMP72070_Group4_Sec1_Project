@@ -5,7 +5,7 @@ namespace Shared.Tests
     {
         private const string _PASSWORD = "passwordPlaceholder";
         private const string _USERNAME = "usernamePlaceholder";
-
+        
         [TestMethod]
         public void ACCSHARED001_GetPassword_placeholder_returnsPlaceholder()
         {
@@ -69,7 +69,7 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT001_SerializeHeader_CorrectBytesAllocated()
         {
-        
+
         }
 
         [TestMethod]
