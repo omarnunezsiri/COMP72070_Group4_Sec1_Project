@@ -68,6 +68,18 @@ namespace Shared.Tests
             // Assert
             Assert.AreEqual(_USERNAME, actual);
         }
+
+        [TestMethod]
+        public void ACCSHARED005_DefaultConstructor_ObjectInSafeState()
+        {
+
+        }
+
+        [TestMethod]
+        public void ACCSHARED006_ParameterizedConstructor_placeholders_Assigned()
+        {
+
+        }
     }
 
     [TestClass]
@@ -297,6 +309,18 @@ namespace Shared.Tests
             // Assert
             Assert.AreEqual(_ALBUMNAME, actual);
         }
+
+        [TestMethod]
+        public void SONGSHARED009_DefaultConstructor_ObjectInSafeState()
+        {
+
+        }
+
+        [TestMethod]
+        public void SONGSHARED010_ParameterizedConstructor_placeholders_Assigned()
+        {
+
+        }
     }
 
     [TestClass]
@@ -359,6 +383,18 @@ namespace Shared.Tests
 
             // Assert
             Assert.AreEqual(_bitmap, actual);
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED005_DefaultConstructor_ObjectInSafeState()
+        {
+
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED006_ParameterizedConstructor_placeholders_Assigned()
+        {
+
         }
     }
 
@@ -451,6 +487,18 @@ namespace Shared.Tests
 
             // Assert
             Assert.AreEqual(_ARTISTNAME, actual);
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED007_DefaultConstructor_ObjectInSafeState()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED008_ParameterizedConstructor_placeholders_Assigned()
+        {
+
         }
     }
 }
