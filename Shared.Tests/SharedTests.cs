@@ -72,13 +72,23 @@ namespace Shared.Tests
         [TestMethod]
         public void ACCSHARED005_DefaultConstructor_ObjectInSafeState()
         {
+            // Arrange and Act
+            Account account = new();
 
+            // Assert
+            Assert.AreEqual(string.Empty, account.getUsername(), "Username not set to safe state");
+            Assert.AreEqual(string.Empty, account.getPassword(), "Password not set to safe state");
         }
 
         [TestMethod]
         public void ACCSHARED006_ParameterizedConstructor_placeholders_Assigned()
         {
+            // Arrange and Act
+            Account account = new(_USERNAME, _PASSWORD);
 
+            // Assert
+            Assert.AreEqual(_USERNAME, account.getUsername(), "Username not set to placeholder");
+            Assert.AreEqual(_PASSWORD, account.getPassword(), "Password not set to placeholder");
         }
     }
 

@@ -57,9 +57,9 @@ namespace Server
         }
 
         // Serialize data
-       /* override public byte[] SerializeData()
+        override public byte[] SerializeData()
         {
-
-        }*/
+            throw new NotImplementedException();
+        }
     }
 }

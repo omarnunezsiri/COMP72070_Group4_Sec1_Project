@@ -11,6 +11,19 @@ namespace Server
         private string _password;
         private string _username;
 
+        public Account()
+        {
+            _password = string.Empty;
+            _username = string.Empty;
+        }
+
+        public Account(string username, string password)
+        {
+            /* Validations to be added */
+            _password = password;
+            _username = username;
+        }
+
         public string getPassword() { return _password;  }
         public void setPassword(string pw) { _password = pw;  }
 
