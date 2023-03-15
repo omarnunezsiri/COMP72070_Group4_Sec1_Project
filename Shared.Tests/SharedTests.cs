@@ -333,13 +333,27 @@ namespace Shared.Tests
         [TestMethod]
         public void SONGSHARED009_DefaultConstructor_ObjectInSafeState()
         {
+            // Arrange and Act
+            Song song = new();
 
+            // Assert
+            Assert.AreEqual(string.Empty, song.GetName(), "Song name not set to safe state");
+            Assert.AreEqual(string.Empty, song.GetAlbum(), "Song album not set to safe state");
+            Assert.AreEqual(string.Empty, song.GetArtist(), "Song artist not set to safe state");
+            Assert.AreEqual(0.0f, song.GetDuration(), "Song duration not set to safe state");
         }
 
         [TestMethod]
         public void SONGSHARED010_ParameterizedConstructor_placeholders_Assigned()
         {
+            // Arrange and Act
+            Song song = new(_SONGNAME, _ALBUMNAME, _ARTISTNAME, _DURATION);
 
+            // Assert
+            Assert.AreEqual(_SONGNAME, song.GetName(), "Song name not set to placeholder");
+            Assert.AreEqual(_ALBUMNAME, song.GetAlbum(), "Song album not set to placeholder");
+            Assert.AreEqual(_ARTISTNAME, song.GetArtist(), "Song artist not set to placeholder");
+            Assert.AreEqual(_DURATION, song.GetDuration(), "Song duration not set to placeholder");
         }
     }
 
@@ -347,6 +361,7 @@ namespace Shared.Tests
     public class ArtistTests
     {
         private Bitmap _bitmap = (Bitmap)Image.FromFile("placeholder.png");
+        private Bitmap _defaultBitmap = (Bitmap)Image.FromFile("default.png");
         private const string _ARTISTNAME = "artistPlaceholder";
 
         [TestMethod]
@@ -408,13 +423,25 @@ namespace Shared.Tests
         [TestMethod]
         public void ARTISTSHARED005_DefaultConstructor_ObjectInSafeState()
         {
+            // Arrange and Act
+            Artist artist = new();
 
+            bool imagesAreSame = Utils.CompareBitmaps(_defaultBitmap, artist.GetImage());
+
+            // Assert
+            Assert.AreEqual(string.Empty, artist.GetName(), "Artist name not set to safe state");
+            Assert.IsTrue(imagesAreSame, "Artist image not set to safe state");
         }
 
         [TestMethod]
         public void ARTISTSHARED006_ParameterizedConstructor_placeholders_Assigned()
         {
+            // Arrange and Act
+            Artist artist = new(_ARTISTNAME, _bitmap);
 
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, artist.GetName(), "Artist name not set to placeholder");
+            Assert.AreEqual(_bitmap, artist.GetImage(), "Artist image not set to placeholder");
         }
     }
 
