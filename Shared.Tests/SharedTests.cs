@@ -451,6 +451,7 @@ namespace Shared.Tests
         private const string _ALBUMNAME = "albumPlaceholder";
         private const string _ARTISTNAME = "artistPlaceholder";
         private Bitmap _bitmap = (Bitmap)Image.FromFile("placeholder.png");
+        private Bitmap _defaultBitmap = (Bitmap)Image.FromFile("default.png");
 
         [TestMethod]
         public void ALBUMSHARED001_SetName_placeholder_placeholderSet()
@@ -539,13 +540,27 @@ namespace Shared.Tests
         [TestMethod]
         public void ALBUMSHARED007_DefaultConstructor_ObjectInSafeState()
         {
+            // Arrange and Act
+            Album album = new();
 
+            bool imagesAreSame = Utils.CompareBitmaps(_defaultBitmap, album.GetImage());
+
+            // Assert
+            Assert.AreEqual(string.Empty, album.GetName(), "Album name not set to safe state");
+            Assert.AreEqual(string.Empty, album.GetArtist(), "Artist name not set to safe state");
+            Assert.IsTrue(imagesAreSame, "Album image not set to safe state");
         }
 
         [TestMethod]
         public void ALBUMSHARED008_ParameterizedConstructor_placeholders_Assigned()
         {
+            // Arrange and Act
+            Album album = new(_ALBUMNAME, _ARTISTNAME, _bitmap);
 
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, album.GetName(), "Album name not set to placeholder");
+            Assert.AreEqual(_ARTISTNAME, album.GetArtist(), "Artist name not set to placeholder");
+            Assert.AreEqual(_bitmap, album.GetImage(), "Album image not set to placeholder");
         }
     }
 }
