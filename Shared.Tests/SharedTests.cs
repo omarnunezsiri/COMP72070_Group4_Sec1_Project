@@ -91,8 +91,18 @@ namespace Shared.Tests
             // [ACCOUNT] [SONG] | [SIGNUP] [LOGIN] | [SYNC] [MEDIA] [DOWNLOAD] [LIST]
             byte expected = 0b10100110;
 
-
             PacketHeader pHeader = new PacketHeader(true, false, true, false, false, true, true, false);
+
+            Assert.AreEqual(expected, pHeader.SerializeData());
+        }
+
+        [TestMethod]
+        public void PACKETUNIT101_SerializeHeader_CorrectBytesAllocated()
+        {
+            // [ACCOUNT] [SONG] | [SIGNUP] [LOGIN] | [SYNC] [MEDIA] [DOWNLOAD] [LIST]
+            byte expected = 0b01011001;
+
+            PacketHeader pHeader = new PacketHeader(false, true, false, true, true, false, false, true);
 
             Assert.AreEqual(expected, pHeader.SerializeData());
         }
