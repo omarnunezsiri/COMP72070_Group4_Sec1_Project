@@ -120,7 +120,7 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT002_SerializeDownloadBody_CorrectBytesAllocated()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
@@ -156,80 +156,80 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT004_SerializeSyncBody_CorrectBytesAllocated()
         {
-
+            Assert.Fail();
 
         }
 
         [TestMethod]
         public void PACKETUNIT005_SerializeAccountBody_CorrectBytesAllocated()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT006_SerializeSearchBody_CorrectBytesAllocated()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT007_SerializeSongData_CorrectBytesAllocated()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT008_SerializeImageData_CorrectBytesAllocated()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT009_DeserializeHeader_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT010_DeserializeDownloadBody_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT011_DeserializeMediaBody_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT012_DeserializeSyncBody_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT013_DeserializeAccountBody_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT014_DeserializeSearchBody_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT015_DeserializeSongData_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void PACKETUNIT016_DeserializeImageData_CorrectMembersAssigned()
         {
-
+            Assert.Fail();
         }
     }
 

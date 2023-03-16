@@ -19,6 +19,19 @@ namespace Server
 
         private PacketHeader header;
 
+        protected byte SerializeBit(byte _serialized, bool bit)
+        {
+            byte serialized = _serialized;
+
+            byte one = 1;
+            byte zero = 0;
+
+            serialized <<= 1;
+            serialized += bit ? one : zero;
+
+            return serialized;
+        }
+
         public PacketBody()
         { }
 
