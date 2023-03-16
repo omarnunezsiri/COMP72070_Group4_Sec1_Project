@@ -100,6 +100,7 @@ namespace Server
                 serialized[pointer++] = (byte)((byte)(this.dataByteCount >> 0 * 8) & 0xFF);
 
                 // serialize data
+                this.data.CopyTo(serialized, pointer);
             }
 
             return serialized;
