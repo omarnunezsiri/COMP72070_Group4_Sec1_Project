@@ -42,7 +42,7 @@ namespace Server
         { }
 
         // Serialize
-        public byte SerializeData()
+        public byte Serialize()
         {
             byte serialized = new byte();
 

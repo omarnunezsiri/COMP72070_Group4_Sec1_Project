@@ -35,6 +35,6 @@ namespace Server
             return this.header;
         }
 
-        public abstract byte[] SerializeData();
+        public abstract byte[] Serialize();
     }
 }

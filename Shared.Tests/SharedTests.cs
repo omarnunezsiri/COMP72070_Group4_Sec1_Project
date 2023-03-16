@@ -103,7 +103,7 @@ namespace Shared.Tests
 
             PacketHeader pHeader = new PacketHeader(true, false, true, false, false, true, true, false);
 
-            Assert.AreEqual(expected, pHeader.SerializeData());
+            Assert.AreEqual(expected, pHeader.Serialize());
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace Shared.Tests
 
             PacketHeader pHeader = new PacketHeader(false, true, false, true, true, false, false, true);
 
-            Assert.AreEqual(expected, pHeader.SerializeData());
+            Assert.AreEqual(expected, pHeader.Serialize());
         }
 
         [TestMethod]
@@ -124,9 +124,33 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT003_SerializeMediaBody_CorrectBytesAllocated()
+        public void PACKETUNIT003_SerializeMediaBody_ServerSerialize()
         {
+            // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[2] { 0b00111000, 0b11000000 }; // 56 192
 
+            MediaControlBody mBody = new MediaControlBody(false, false, true, true, true, true, true, false);
+
+            byte[] serialized = mBody.Serialize();
+
+            // Put the two bytes into ints so they can be compared easily
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT103_SerializeMediaBody_ClientSerialize()
+        {
+            // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[2] { 0b10011000, 0b00000000 }; // 152 0
+
+            MediaControlBody mBody = new MediaControlBody(true, false, false, true, true);
+
+            byte[] serialized = mBody.Serialize();
+
+            // Put the two bytes into ints so they can be compared easily
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]
