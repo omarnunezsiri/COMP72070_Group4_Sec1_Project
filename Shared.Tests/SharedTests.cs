@@ -258,6 +258,28 @@ namespace Shared.Tests
         }
     }
 
+    [TestClass]
+    public class UtilsTests
+    {
+        
+        [TestMethod]
+        public void UTILSSHARED001_CompareBitmaps_DifferentSize_ReturnsFalse()
+        {
+
+        }
+
+        [TestMethod]
+        public void UTILSSHARED002_CompareBitmaps_DifferentPixels_ReturnsFalse()
+        {
+
+        }
+
+        [TestMethod]
+        public void UTILSSHARED003_CompareBitmaps_SameImage_ReturnsTrue()
+        {
+
+        }
+    }
 
     [TestClass]
     public class SongTests
