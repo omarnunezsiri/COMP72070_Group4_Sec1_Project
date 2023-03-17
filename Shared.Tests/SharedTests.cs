@@ -261,23 +261,56 @@ namespace Shared.Tests
     [TestClass]
     public class UtilsTests
     {
-        
+        private const int _X = 15;
+        private const int _Y = 15;
+        private const int _ANOTHERY = 20;
+
         [TestMethod]
         public void UTILSSHARED001_CompareBitmaps_DifferentSize_ReturnsFalse()
         {
+            // Arrange
+            Bitmap a = new(_X, _Y);
+            Bitmap b = new(_X, _ANOTHERY);
 
+            const bool EXPECTED = false;
+
+            // Act
+            bool sameBitmap = Utils.CompareBitmaps(a, b);
+
+            // Assert
+            Assert.AreEqual(EXPECTED, sameBitmap);
         }
 
         [TestMethod]
         public void UTILSSHARED002_CompareBitmaps_DifferentPixels_ReturnsFalse()
         {
+            // Arrange
+            Bitmap a = (Bitmap)Image.FromFile("firstpng.png");
+            Bitmap b = (Bitmap)Image.FromFile("second.jpg");
 
+            const bool EXPECTED = false;
+
+            // Act
+            bool sameBitmap = Utils.CompareBitmaps(a, b);
+
+            // Assert
+            Assert.AreEqual(EXPECTED, sameBitmap);
         }
 
         [TestMethod]
         public void UTILSSHARED003_CompareBitmaps_SameImage_ReturnsTrue()
         {
+            // Arrange
+            Bitmap a = (Bitmap)Image.FromFile("ubuntu.png");
+            Bitmap b = (Bitmap)Image.FromFile("ubuntu.png");
 
+            const bool EXPECTED = true;
+
+            // Act
+            bool sameBitmap = Utils.CompareBitmaps(a, b);
+
+            // Assert
+            Assert.AreEqual(EXPECTED, sameBitmap);
         }
     }
 
