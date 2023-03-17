@@ -18,10 +18,10 @@ namespace Server
             this.body = body;
         }
 
-        public Packet()
+       /* public Packet()
         {
             this.header = new PacketHeader();
             //
-        }
+        }*/
     }
 }

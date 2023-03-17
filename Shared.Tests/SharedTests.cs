@@ -120,7 +120,21 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT002_SerializeDownloadBody_CorrectBytesAllocated()
         {
-            Assert.Fail();
+            // [ISALBUMCOVER] [ISSONGFILE] [-] [-] [-] [-] [-] [-] | [ITEM HASH 8Bytes] [Block index 2bytes] [Total Block count 2bytes] [Data Bytecount 4bytes] [Data nbytes]
+
+            byte[] data = new byte[] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+            byte[] expected = new byte[17] { 0b10000000, 1, 2, 3, 4, 5, 6, 7, 8, 0x11, 0x12, 0x21, 0x22, 0x31, 0x32, 0x33, 0x34 };
+
+            byte[] fullExpected = new byte[data.Length + expected.Length];
+            expected.CopyTo(fullExpected, 0);
+            data.CopyTo(fullExpected, expected.Length);
+
+            UInt64 hash = 0x0102030405060708;
+            DownloadBody mBody = new DownloadBody(DownloadBody.Type.AlbumCover, hash, 0x1112, 0x2122, 0x31323334, data );
+
+            byte[] serialized = mBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(fullExpected, serialized));
         }
 
         [TestMethod]
@@ -132,8 +146,6 @@ namespace Shared.Tests
             MediaControlBody mBody = new MediaControlBody(false, false, true, true, true, true, true, false);
 
             byte[] serialized = mBody.Serialize();
-
-            // Put the two bytes into ints so they can be compared easily
 
             Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
@@ -147,8 +159,6 @@ namespace Shared.Tests
             MediaControlBody mBody = new MediaControlBody(true, false, false, true, true);
 
             byte[] serialized = mBody.Serialize();
-
-            // Put the two bytes into ints so they can be compared easily
 
             Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }

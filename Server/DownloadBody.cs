@@ -35,23 +35,23 @@ namespace Server
         // Constructor for sending a client request
         public DownloadBody(Type _type, UInt64 _hash)
         {
-            this.role = Role.Client;
+            this.role = PacketBody.Role.Client;
 
             this.type = _type;
             this.hash = _hash;
         }
 
         // Constructor for building a server response from scratch
-        public DownloadBody(Type _type, UInt64 _hash, UInt16 _blockIndex, UInt16 _totalBlocks, UInt16 _dataByteCount, byte[] _data)
+        public DownloadBody(Type _type, UInt64 _hash, UInt16 _blockIndex, UInt16 _totalBlocks, UInt32 _dataByteCount, byte[] _data)
             : this(_type, _hash)
         {
             this.appendServerResponse(_blockIndex, _totalBlocks, _dataByteCount, _data);
         }
 
         // Method for allowing the server to respond to a received packet
-        public void appendServerResponse(UInt16 _blockIndex, UInt16 _totalBlocks, UInt16 _dataByteCount, byte[] _data)
+        public void appendServerResponse(UInt16 _blockIndex, UInt16 _totalBlocks, UInt32 _dataByteCount, byte[] _data)
         {
-            this.role = Role.Server;
+            this.role = PacketBody.Role.Server;
 
             this.blockIndex = _blockIndex;
             this.totalBlocks = _totalBlocks;
@@ -68,7 +68,8 @@ namespace Server
         // Serialize data
         override public byte[] Serialize()
         {
-            byte[] serialized = new byte[17 + this.data.Length]; // maximum of 17 bytes (And then data bytes)
+            int dataLen = this.data == null ? 0 : this.data.Length;
+            byte[] serialized = new byte[17 + dataLen]; // maximum of 17 bytes (And then data bytes)
 
             int pointer = 0;
 
@@ -83,7 +84,7 @@ namespace Server
                 serialized[pointer++] = (byte)((byte)(this.hash >> (7 - i) * 8) & 0xFF);
             }
             
-            if (base.role == Role.Server)
+            if (this.role == Role.Server)
             {
                 // Serialize block index
                 serialized[pointer++] = (byte)((byte)(this.blockIndex >> 1 * 8) & 0xFF);
