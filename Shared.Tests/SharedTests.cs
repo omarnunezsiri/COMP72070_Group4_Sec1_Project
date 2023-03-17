@@ -118,7 +118,7 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT002_SerializeDownloadBody_CorrectBytesAllocated()
+        public void PACKETUNIT002_SerializeDownloadBody_ResponseSerialize()
         {
             // [ISALBUMCOVER] [ISSONGFILE] [-] [-] [-] [-] [-] [-] | [ITEM HASH 8Bytes] [Block index 2bytes] [Total Block count 2bytes] [Data Bytecount 4bytes] [Data nbytes]
 
@@ -135,6 +135,21 @@ namespace Shared.Tests
             byte[] serialized = mBody.Serialize();
 
             Assert.IsTrue(Enumerable.SequenceEqual(fullExpected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT102_SerializeDownloadBody_RequestSerialize()
+        {
+            // [ISALBUMCOVER] [ISSONGFILE] [-] [-] [-] [-] [-] [-] | [ITEM HASH 8Bytes] [Block index 2bytes] [Total Block count 2bytes] [Data Bytecount 4bytes] [Data nbytes]
+
+            byte[] expected = new byte[17] { 0b10000000, 1, 2, 3, 4, 5, 6, 7, 8,   0, 0, 0, 0, 0, 0, 0, 0 };
+
+            UInt64 hash = 0x0102030405060708;
+            DownloadBody mBody = new DownloadBody(DownloadBody.Type.AlbumCover, hash);
+
+            byte[] serialized = mBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]

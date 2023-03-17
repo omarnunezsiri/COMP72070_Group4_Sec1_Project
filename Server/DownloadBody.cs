@@ -74,8 +74,8 @@ namespace Server
             int pointer = 0;
 
             // Serialize the flags
-            serialized[pointer] = base.SerializeBit(serialized[0], this.type == Type.AlbumCover);
-            serialized[pointer] = base.SerializeBit(serialized[0], this.type == Type.SongFile);
+            serialized[pointer] = base.SerializeBit(serialized[pointer], this.type == Type.AlbumCover);
+            serialized[pointer] = base.SerializeBit(serialized[pointer], this.type == Type.SongFile);
             serialized[pointer++] <<= 6; // Shift the remaining 6 bits (align to MSB)
 
             // Serialize the hash
