@@ -671,64 +671,193 @@ namespace Shared.Tests
     [TestClass]
     public class FileHandlerTests
     {
+        private string _MP3FILENAME = "mymp3.mp3";
+        private string _IMAGENAME = "ubuntu.png";
+        private string _OUTPUTMP3 = "output.mp3";
+        private string _OUTPUTIMAGE = "output.png";
+        private string _UNEXISTINGMP3 = "hello.mp3";
+        private string _UNEXISTINGIMAGE = "wow.png";
+
         [TestMethod]
         public void FHSHARED001_writeMp3Bytes_byteArray_bytesWritten()
         {
-            Assert.Fail();
+            // Arrange
+            byte[] mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME); // assumes that readMp3Bytes works correctly
+            File.Delete(_OUTPUTMP3); // removes the file from dir if previous existence
+
+            // Act
+            bool bytesWritten = FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+
+            // Assert
+            Assert.IsTrue(bytesWritten);
         }
 
         [TestMethod]
         public void FHSHARED002_readMp3Bytes_byteArrayCreated()
         {
-            Assert.Fail();
+            // Arrange
+            Type expectedType = typeof(byte[]);
+
+            // Act
+            var mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME);
+
+            // Assert
+            Assert.AreEqual(expectedType, mp3bytes.GetType());
         }
 
         [TestMethod]
         public void FHSHARED003_writeImage_Bitmap_imageWritten()
         {
-            Assert.Fail();
+            // Arrange
+            Bitmap original = FileHandler.readImageBytes(_IMAGENAME); // assumes that readImageBytes works
+            File.Delete(_OUTPUTIMAGE); // removes the file from dir if previous existence
+
+            // Act
+            bool imageWritten = FileHandler.writeImageBytes(_OUTPUTIMAGE, original);
+
+            // Assert
+            Assert.IsTrue(imageWritten);
         }
 
         [TestMethod]
         public void FHSHARED004_readImage_existingImage_imageCreated()
         {
-            Assert.Fail();
+            // Arrange
+            Type expectedType = typeof(Bitmap);
+
+            // Act
+            var image = FileHandler.readImageBytes(_IMAGENAME);
+
+            // Assert
+            Assert.AreEqual(expectedType, image.GetType());
+
         }
 
         [TestMethod]
-        public void FHSHARED005_readMp3Bytes_unexistingFile_returnsFalse()
+        public void FHSHARED005_readMp3Bytes_unexistingFile_throwsException()
         {
-            Assert.Fail();
+            // Arrange
+            const bool EXPECTED = true;
+
+            // Act
+
+            bool notFoundThrown = false;
+
+            try
+            {
+                var mp3bytes = FileHandler.readMp3Bytes(_UNEXISTINGMP3);
+            }
+            catch (FileNotFoundException)
+            {
+                notFoundThrown = true;
+            }
+
+            // Assert
+            Assert.AreEqual(EXPECTED, notFoundThrown, "FileNotFoundException wasn't thrown.");
         }
 
         [TestMethod]
         public void FHSHARED006_writeMp3Bytes_emptyByteArray_returnsFalse()
         {
-            Assert.Fail();
+            // Arrange
+            byte[] mp3bytes = new byte[0]; // assumes that readMp3Bytes works correctly
+
+            // Act
+            bool bytesWritten = FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+
+            // Assert
+            Assert.IsFalse(bytesWritten);
         }
 
         [TestMethod]
-        public void FHSHARED007_readImage_unexistingImage_returnsFalse()
+        public void FHSHARED007_readImage_unexistingImage_throwsException()
         {
-            Assert.Fail();
+            // Arrange
+            bool exceptionThrown = false;
+
+            // Act
+
+            try
+            {
+                FileHandler.readImageBytes(_UNEXISTINGIMAGE);
+            }
+            catch (FileNotFoundException)
+            {
+                exceptionThrown = true;
+            }
+
+            // Assert
+            Assert.IsTrue(exceptionThrown);
+        }
+
+
+        [TestMethod]
+        public void FHSHARED008_writeMp3Bytes_byteArray_fileExists()
+        {
+            // Arrange
+            byte[] mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME); // assumes that readMp3Bytes works correctly
+            File.Delete(_OUTPUTMP3); // removes the file from dir if previous existence
+
+            // Act
+            FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+
+            // Assert
+            Assert.IsTrue(File.Exists(_OUTPUTMP3));
         }
 
         [TestMethod]
-        public void FHSHARED008_writeImage_emptyImage_returnsFalse()
+        public void FHSHARED009_readMp3Bytes_expectedLength()
         {
-            Assert.Fail();
+            // Arrange
+            const long EXPECTEDLENGTH = 2505799;
+
+            // Act
+            var mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME);
+
+            // Assert
+            Assert.AreEqual(EXPECTEDLENGTH, mp3bytes.Length, "Length of byte array is not the same as expected");
         }
 
         [TestMethod]
-        public void FHSHARED009_writeMp3Bytes_unexistingFile_returnsFalse()
+        public void FHSHARED010_writeMp3Bytes_byteArray_contentWritten()
         {
-            Assert.Fail();
+            // Arrange
+            byte[] mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME); // assumes that readMp3Bytes works correctly
+            File.Delete(_OUTPUTMP3); // removes the file from dir if previous existence
+
+            // Act
+            FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+
+            byte[] anotherbytes = FileHandler.readMp3Bytes(_OUTPUTMP3);
+
+            // Assert
+            Assert.IsTrue(mp3bytes.SequenceEqual(anotherbytes));
         }
 
         [TestMethod]
-        public void FHSHARED010_writeImage_unexistingFile_returnsFalse()
+        public void FHSHARED011_writeImage_Bitmap_contentWritten()
         {
-            Assert.Fail();
+            // Arrange
+            Bitmap bitmap = FileHandler.readImageBytes(_IMAGENAME); // assumes that readImageBytes works correctly
+            File.Delete(_OUTPUTIMAGE); // removes the file from dir if previous existence
+
+            // Act
+            FileHandler.writeImageBytes(_OUTPUTIMAGE, bitmap);
+
+            Bitmap anotherBitmap = FileHandler.readImageBytes(_OUTPUTIMAGE);
+
+            // Assert
+            Assert.IsTrue(Utils.CompareBitmaps(bitmap, anotherBitmap));
+        }
+
+        [TestMethod]
+        public void FHSHARED012_writeMp3Bytes_nullByteArray_returnsFalse()
+        {
+            // Arrange and Act
+            bool bytesWritten = FileHandler.writeMp3Bytes(_OUTPUTMP3, null);
+
+            // Assert
+            Assert.IsFalse(bytesWritten);
         }
     }
 }
