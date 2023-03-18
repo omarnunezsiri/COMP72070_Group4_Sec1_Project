@@ -667,4 +667,68 @@ namespace Shared.Tests
             Assert.AreEqual(_bitmap, album.GetImage(), "Album image not set to placeholder");
         }
     }
+
+    [TestClass]
+    public class FileHandlerTests
+    {
+        [TestMethod]
+        public void FHSHARED001_writeMp3Bytes_byteArray_bytesWritten()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED002_readMp3Bytes_byteArrayCreated()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED003_writeImage_Bitmap_imageWritten()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED004_readImage_existingImage_imageCreated()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED005_readMp3Bytes_unexistingFile_returnsFalse()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED006_writeMp3Bytes_emptyByteArray_returnsFalse()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED007_readImage_unexistingImage_returnsFalse()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED008_writeImage_emptyImage_returnsFalse()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED009_writeMp3Bytes_unexistingFile_returnsFalse()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void FHSHARED010_writeImage_unexistingFile_returnsFalse()
+        {
+            Assert.Fail();
+        }
+    }
 }
