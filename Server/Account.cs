@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public class Account
+    public class Account : ISerializable
     {
         private string _password;
         private string _username;
@@ -19,9 +19,13 @@ namespace Server
 
         public Account(string username, string password)
         {
-            /* Validations to be added */
             _password = password;
             _username = username;
+        }
+
+        public Account(byte[] accountBytes)
+        {
+            throw new NotImplementedException();
         }
 
         public string getPassword() { return _password;  }
@@ -29,5 +33,10 @@ namespace Server
 
         public string getUsername() { return _username; }
         public void setUsername(string username) { _username = username; }
+
+        public byte[] Serialize()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

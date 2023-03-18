@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public class Song
+    public class Song : ISerializable
     {
         private string _name;
         private string _artist;
@@ -29,6 +29,11 @@ namespace Server
             _album = album;
         }
 
+        public Song(byte[] songBytes)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetName() { return _name; }
         public string GetArtist() { return _artist; }
         public float GetDuration() { return _duration; }
@@ -38,5 +43,10 @@ namespace Server
         public void SetArtist(string artist) { _artist = artist; }
         public void SetDuration(float duration) { _duration = duration; }
         public void SetAlbum(string album) { _album = album; }
+
+        public byte[] Serialize()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

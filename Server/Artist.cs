@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public class Artist
+    public class Artist : ISerializable
     {
         private string _name;
         private Bitmap _image;
@@ -29,10 +29,20 @@ namespace Server
             _image = image;
         }
 
+        public Artist(byte[] artistBytes)
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetName() { return _name; }
         public Bitmap GetImage() { return _image; }
 
         public void SetName(string name) { _name = name; }
         public void SetImage(Bitmap image) { _image = image; }
+
+        public byte[] Serialize()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

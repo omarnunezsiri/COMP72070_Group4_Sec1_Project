@@ -860,4 +860,56 @@ namespace Shared.Tests
             Assert.IsFalse(bytesWritten);
         }
     }
+
+    [TestClass]
+    public class SerializableTests
+    {
+        [TestMethod]
+        public void ACCSHARED007_Serialize_AccountObject_byteArrayReturned()
+        {
+
+        }
+
+        [TestMethod]
+        public void ACCSHARED008_Deserialize_byteArray_AccountObjectCreated()
+        {
+
+        }
+
+        [TestMethod]
+        public void SONGSHARED011_Serialize_SongObject_byteArrayReturned()
+        {
+
+        }
+
+        [TestMethod]
+        public void SONGSHARED012_Deserialize_byteArray_SongObjectCreated()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED009_Serialize_AlbumObject_byteArrayReturned()
+        {
+
+        }
+
+        [TestMethod]
+        public void ALBUMSHARED010_Deserialize_byteArray_AlbumCreated()
+        {
+
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED007_Serialize_Artist_byteArrayReturned()
+        {
+
+        }
+
+        [TestMethod]
+        public void ARTISTSHARED008_Deserialize_byteArray_ArtistCreated()
+        {
+
+        }
+    }
 }
