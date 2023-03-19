@@ -864,16 +864,39 @@ namespace Shared.Tests
     [TestClass]
     public class SerializableTests
     {
+        private const string _USERNAME = "user";
+        private const string _PASSWORD = "pass";
+
         [TestMethod]
         public void ACCSHARED007_Serialize_AccountObject_byteArrayReturned()
         {
+            // Arrange
+            Account account = new Account(_USERNAME, _PASSWORD);
 
+            // [USERNAMELENGTH 1byte] [USERNAME lengthBytes] | [PASSWORDLENGTH 1byte] [PASSWORD lengthBytes]
+            byte[] expected = new byte[] {4, 117, 115, 101, 114, 4, 112, 97, 115, 115};
+
+            // Act
+            byte[] serialized = account.Serialize();
+
+            // Assert
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]
         public void ACCSHARED008_Deserialize_byteArray_AccountObjectCreated()
         {
+            // Arrange
 
+            // [USERNAMELENGTH 1byte] [USERNAME lengthBytes] | [PASSWORDLENGTH 1byte] [PASSWORD lengthBytes]
+            byte[] serialized = new byte[] { 4, 117, 115, 101, 114, 4, 112, 97, 115, 115 };
+
+            // Act
+            Account account = new Account(serialized);
+
+            // Assert
+            Assert.AreEqual(_USERNAME, account.getUsername(), "Username wasn't parsed properly");
+            Assert.AreEqual(_PASSWORD, account.getPassword(), "Password wasn't parsed properly");
         }
 
         [TestMethod]
