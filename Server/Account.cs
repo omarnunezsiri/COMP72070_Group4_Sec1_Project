@@ -28,11 +28,11 @@ namespace Server
             int offset = 0;
             byte len = accountBytes[offset++];
 
-            _username = BitConverter.ToString(accountBytes, offset, len);
+            _username = Encoding.ASCII.GetString(accountBytes, offset, len);
             offset += len;
 
             len = accountBytes[offset++];
-            _password = BitConverter.ToString(accountBytes, offset, len);
+            _password = Encoding.ASCII.GetString(accountBytes, offset, len);
         }
 
         public string getPassword() { return _password;  }
