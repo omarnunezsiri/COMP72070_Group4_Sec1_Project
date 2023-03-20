@@ -181,10 +181,42 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT004_SerializeSyncBody_CorrectBytesAllocated()
+        public void PACKETUNIT004_SerializeSyncBody_PlayingSerialize()
         {
-            Assert.Fail();
+            // [TIMECODE 8bytes] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[9] { 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000010, 0b10000000};
 
+            SyncBody sBody = new SyncBody(2, SyncBody.State.Playing);
+
+            byte[] serialized = sBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT104_SerializeSyncBody_PauseSerialize()
+        {
+            // [TIMECODE 8bytes] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[9] { 0b00110000, 0b00001100, 0b00100000, 0b11000101, 0b00111110, 0b10001000, 0b11101000, 0b00111000, 0b01000000 };
+
+            SyncBody sBody = new SyncBody(0x300C20C53E88E838, SyncBody.State.Paused);
+
+            byte[] serialized = sBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT204_SerializeSyncBody_IdleSerialize()
+        {
+            // [TIMECODE 8bytes] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[9] { 0b00110000, 0b00001100, 0b00100000, 0b11000101, 0b00111110, 0b10001000, 0b11101000, 0b00111000, 0b00100000 };
+
+            SyncBody sBody = new SyncBody(0x300C20C53E88E838, SyncBody.State.Idle);
+
+            byte[] serialized = sBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]
