@@ -12,8 +12,6 @@ namespace Server
 {
     public class SyncBody : PacketBody
     {
-        // Deciding not to use enums for greater flexibility in testing
-
         // [TIMECODE 8bytes] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
 
         public enum State
@@ -51,7 +49,7 @@ namespace Server
         // Construct from serialized input
         public SyncBody(byte[] serialized)
         {
-
+            // TODO Set State and timecode from serialized data
         }
 
         // Serialize data
@@ -80,6 +78,24 @@ namespace Server
             return serialized;
         }
 
+        public void SetState(State _state)
+        {
+            this.state = _state;
+        }
 
+        public void SetTimecode(UInt64 _timecode)
+        {
+            this.timecode = _timecode;
+        }
+
+        public State GetState()
+        {
+            return this.state;
+        }
+
+        public UInt64 GetTimecode()
+        {
+            return this.timecode;
+        }
     }
 }

@@ -222,6 +222,7 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT005_SerializeAccountBody_CorrectBytesAllocated()
         {
+            // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
             Assert.Fail();
         }
 

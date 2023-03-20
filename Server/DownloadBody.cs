@@ -62,7 +62,7 @@ namespace Server
         // Construct from serialized input
         public DownloadBody(byte serialized)
         {
-
+            // TODO : Deserialize
         }
 
         // Serialize data
@@ -107,6 +107,64 @@ namespace Server
             return serialized;
         }
 
-       
+        public void SetType(Type _type)
+        {
+            this.type = _type;
+        }
+
+        public void SetHash(UInt64 _hash)
+        {
+            this.hash = _hash;
+        }
+
+        public void SetBlockIndex(UInt16 _blockIndex)
+        {
+            this.blockIndex = _blockIndex;
+        }
+
+        public void SetTotalBlocks(UInt16 _totalBlocks)
+        {
+            this.totalBlocks = _totalBlocks;
+        }
+
+        public void SetDataByteCount(UInt32 _dataByteCount)
+        {
+            this.dataByteCount = _dataByteCount;
+        }
+
+        public void SetData(byte[] _data)
+        {
+            this.data = _data;
+        }
+
+        public Type GetType()
+        {
+            return this.type;
+        }
+
+        public UInt64 GetHash()
+        {
+            return this.hash;
+        }
+
+        public UInt16 GetBlockIndex()
+        {
+            return this.blockIndex;
+        }
+
+        public UInt16 GetTotalBlocks()
+        {
+            return this.totalBlocks;
+        }
+
+        public UInt32 GetDataByteCount()
+        {
+            return this.dataByteCount;
+        }
+
+        public byte[] GetData()
+        {
+            return this.data;
+        }
     }
 }
