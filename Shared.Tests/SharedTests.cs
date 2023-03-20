@@ -901,6 +901,8 @@ namespace Shared.Tests
         private const string _SONGNAME = "name";
         private const string _SONGALBUM = "album";
         private const string _SONGARTIST = "artist";
+        private const string _ARTISTNAME = "aname";
+        private Bitmap artistImage = (Bitmap)Image.FromFile("second.jpg");
         private const float _SONGDURATION = 3.12f;
 
         [TestMethod]
@@ -984,13 +986,40 @@ namespace Shared.Tests
         [TestMethod]
         public void ARTISTSHARED007_Serialize_Artist_byteArrayReturned()
         {
-            Assert.Fail();
+            // Arrange
+            Artist artist = new Artist(_ARTISTNAME, artistImage);
+
+            byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
+            byte[] bitmapBytes = Utils.GetBitmapBytes(artist.GetImage());
+
+            byte[] expected = new byte[nameBytes.Length + bitmapBytes.Length];
+            nameBytes.CopyTo(expected, 0);
+            bitmapBytes.CopyTo(expected, nameBytes.Length);
+
+            // Act
+            byte[] serialized = artist.Serialize();
+
+            // Assert
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]
         public void ARTISTSHARED008_Deserialize_byteArray_ArtistCreated()
         {
-            Assert.Fail();
+            // Arrange
+            byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
+            byte[] bitmapBytes = Utils.GetBitmapBytes(artistImage);
+
+            byte[] serialized = new byte[nameBytes.Length + bitmapBytes.Length];
+            nameBytes.CopyTo(serialized, 0);
+            bitmapBytes.CopyTo(serialized, nameBytes.Length);
+
+            // Act
+            Artist artist = new(serialized);
+
+            // Assert
+            Assert.AreEqual(_ARTISTNAME, artist.GetName(), "Name not parsed properly");
+            Assert.IsTrue(Utils.CompareBitmaps(artistImage, artist.GetImage()), "Image not parsed properly");
         }
     }
 }

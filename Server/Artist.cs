@@ -31,7 +31,16 @@ namespace Server
 
         public Artist(byte[] artistBytes)
         {
-            throw new NotImplementedException();
+            int offset = 0;
+            byte len = artistBytes[offset++];
+
+            _name = Encoding.ASCII.GetString(artistBytes, offset, len);
+            offset += len;
+
+            byte[] imageBytes = artistBytes.Skip(offset)
+                                           .ToArray();
+
+            _image = Utils.GetBitmapFromBytes(imageBytes);
         }
 
         public string GetName() { return _name; }
@@ -42,7 +51,21 @@ namespace Server
 
         public byte[] Serialize()
         {
-            throw new NotImplementedException();
+            byte[] imageBytes = Utils.GetBitmapBytes(_image);
+
+            int offset = 0;
+            byte[] serialized = new byte[sizeof(byte) + _name.Length + imageBytes.Length];
+
+            byte len = Convert.ToByte(_name.Length);
+            serialized[offset++] = len;
+
+            byte[] nameBytes = Encoding.ASCII.GetBytes(_name);
+            nameBytes.CopyTo(serialized, offset);
+            offset += len;
+
+            imageBytes.CopyTo(serialized, offset);
+
+            return serialized;
         }
     }
 }
