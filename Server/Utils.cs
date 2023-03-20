@@ -28,5 +28,25 @@ namespace Server
 
             return true;
         }
+
+        public static byte[] GetBitmapBytes(Bitmap bmp)
+        {
+            using(MemoryStream memoryStream = new())
+            {
+                bmp.Save(memoryStream, bmp.RawFormat);
+
+                return memoryStream.ToArray();
+            }
+        }
+
+        public static Bitmap GetBitmapFromBytes(byte[] bytes)
+        {
+            using(MemoryStream stream = new MemoryStream())
+            {
+                stream.Write(bytes, 0, bytes.Length);
+
+                return new Bitmap(stream);
+            }
+        }
     }
 }

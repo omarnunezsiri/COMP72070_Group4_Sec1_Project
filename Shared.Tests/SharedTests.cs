@@ -314,6 +314,36 @@ namespace Shared.Tests
             // Assert
             Assert.AreEqual(EXPECTED, sameBitmap);
         }
+
+        [TestMethod]
+        public void UTILSSHARED004_GetBitmapBytes_Bitmap_CanParseBitmap()
+        {
+            // Arrange
+            Bitmap bmp = (Bitmap)Image.FromFile("ubuntu.png");
+
+            // Act
+            byte[] bitmapBytes = Utils.GetBitmapBytes(bmp);
+
+            Bitmap anotherBmp = Utils.GetBitmapFromBytes(bitmapBytes); // assumes that method works properly
+
+            // Assert
+            Assert.IsTrue(Utils.CompareBitmaps(bmp, anotherBmp));
+        }
+
+        [TestMethod]
+        public void UTILSSHARED005_GetBitmapFromBytes_byteArray_BitmapParsed()
+        {
+            // Arrange
+            Bitmap bmp = (Bitmap)Image.FromFile("second.jpg");
+
+            byte[] bitmapBytes = Utils.GetBitmapBytes(bmp); // assumes that method works properly
+
+            // Act
+            Bitmap anotherBmp = Utils.GetBitmapFromBytes(bitmapBytes);
+
+            // Assert
+            Assert.IsTrue(Utils.CompareBitmaps(anotherBmp, bmp));
+        }
     }
 
     [TestClass]
@@ -942,25 +972,25 @@ namespace Shared.Tests
         [TestMethod]
         public void ALBUMSHARED009_Serialize_AlbumObject_byteArrayReturned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void ALBUMSHARED010_Deserialize_byteArray_AlbumCreated()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void ARTISTSHARED007_Serialize_Artist_byteArrayReturned()
         {
-
+            Assert.Fail();
         }
 
         [TestMethod]
         public void ARTISTSHARED008_Deserialize_byteArray_ArtistCreated()
         {
-
+            Assert.Fail();
         }
     }
 }

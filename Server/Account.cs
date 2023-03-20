@@ -46,7 +46,7 @@ namespace Server
             int offset = 0;
 
             // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
-            byte[] accountBytes = new byte[2 * (sizeof(byte)) + _username.Length + _password.Length];
+            byte[] accountBytes = new byte[Constants.AccountIndividualBytes * (sizeof(byte)) + _username.Length + _password.Length];
 
             byte len = Convert.ToByte(_username.Length);
             accountBytes[offset++] = len;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Server
-{
+{ 
     public class Song : ISerializable
     {
         private string _name;
@@ -64,7 +64,7 @@ namespace Server
             int offset = 0;
 
             // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
-            byte[] songBytes = new byte[3 * sizeof(byte) + _name.Length + _artist.Length + _album.Length + sizeof(float)];
+            byte[] songBytes = new byte[Constants.SongIndividualBytes * sizeof(byte) + _name.Length + _artist.Length + _album.Length + sizeof(float)];
 
             byte len = Convert.ToByte(_name.Length);
             songBytes[offset++] = len;
