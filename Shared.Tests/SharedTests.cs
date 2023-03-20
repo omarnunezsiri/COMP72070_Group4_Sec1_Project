@@ -3,7 +3,9 @@
   will be made for the Windows platform only. */
 #pragma warning disable CA1416 
 
+using Server;
 using System.Drawing;
+using System.Xml.Linq;
 
 namespace Shared.Tests
 {
@@ -866,6 +868,10 @@ namespace Shared.Tests
     {
         private const string _USERNAME = "user";
         private const string _PASSWORD = "pass";
+        private const string _SONGNAME = "name";
+        private const string _SONGALBUM = "album";
+        private const string _SONGARTIST = "artist";
+        private const float _SONGDURATION = 3.12f;
 
         [TestMethod]
         public void ACCSHARED007_Serialize_AccountObject_byteArrayReturned()
@@ -902,13 +908,35 @@ namespace Shared.Tests
         [TestMethod]
         public void SONGSHARED011_Serialize_SongObject_byteArrayReturned()
         {
+            // Arrange
+            Song song = new Song(_SONGNAME, _SONGALBUM, _SONGARTIST, _SONGDURATION);
 
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
+            byte[] expected = new byte[] { 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
+
+            // Act
+            byte[] serialized = song.Serialize();
+
+            // Assert
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]
         public void SONGSHARED012_Deserialize_byteArray_SongObjectCreated()
         {
+            // Arrange
 
+            // [NAMELENGTH 1byte][NAME nBytes] | [ARTISTLENGTH 1byte][ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte][ALBUM nBytes]
+            byte[] serialized = new byte[] { 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
+
+            // Act
+            Song song = new Song(serialized);
+
+            // Assert
+            Assert.AreEqual(_SONGNAME, song.GetName(), "Name wasn't parsed properly");
+            Assert.AreEqual(_SONGARTIST, song.GetArtist(), "Artist wasn't parsed properly");
+            Assert.AreEqual(_SONGALBUM, song.GetAlbum(), "Album wasn't parsed properly");
+            Assert.AreEqual(_SONGDURATION, song.GetDuration(), "Duration wasn't parsed properly");
         }
 
         [TestMethod]

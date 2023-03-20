@@ -31,7 +31,22 @@ namespace Server
 
         public Song(byte[] songBytes)
         {
-            throw new NotImplementedException();
+            int offset = 0;
+            byte len = songBytes[offset++];
+
+            _name = Encoding.ASCII.GetString(songBytes, offset, len);
+            offset += len;
+
+            len = songBytes[offset++];
+            _artist = Encoding.ASCII.GetString(songBytes, offset, len);
+
+            offset += len;
+
+            _duration = BitConverter.ToSingle(songBytes, offset);
+            offset += sizeof(float);
+
+            len = songBytes[offset++];
+            _album = Encoding.ASCII.GetString(songBytes, offset, len);
         }
 
         public string GetName() { return _name; }
@@ -46,7 +61,36 @@ namespace Server
 
         public byte[] Serialize()
         {
-            throw new NotImplementedException();
+            int offset = 0;
+
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
+            byte[] songBytes = new byte[3 * sizeof(byte) + _name.Length + _artist.Length + _album.Length + sizeof(float)];
+
+            byte len = Convert.ToByte(_name.Length);
+            songBytes[offset++] = len;
+
+            byte[] nameBytes = Encoding.ASCII.GetBytes(_name);
+            nameBytes.CopyTo(songBytes, offset);
+            offset += len;
+
+            len = Convert.ToByte(_artist.Length);
+            songBytes[offset++] = len;
+
+            byte[] artistBytes = Encoding.ASCII.GetBytes(_artist);
+            artistBytes.CopyTo(songBytes, offset);
+            offset += len;
+
+            byte[] durationBytes = BitConverter.GetBytes(_duration);
+            durationBytes.CopyTo(songBytes, offset);
+            offset += durationBytes.Length;
+
+            len = Convert.ToByte(_album.Length);
+            songBytes[offset++] = len;
+
+            byte[] albumBytes = Encoding.ASCII.GetBytes(_album);
+            albumBytes.CopyTo(songBytes, offset);
+
+            return songBytes;
         }
     }
 }
