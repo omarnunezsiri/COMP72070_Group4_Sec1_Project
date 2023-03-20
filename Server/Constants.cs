@@ -10,6 +10,6 @@ namespace Server
     {
         public const int SongIndividualBytes = 3;
         public const int AccountIndividualBytes = 2;
-        public const string DefaultImageFile = "default.png"
+        public const string DefaultImageFile = "default.png";
     }
 }
