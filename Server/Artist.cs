@@ -20,7 +20,7 @@ namespace Server
         public Artist()
         {
             _name = string.Empty;
-            _image = (Bitmap)Image.FromFile("default.png");
+            _image = (Bitmap)Image.FromFile(Constants.DefaultImageFile);
         }
 
         public Artist(string name, Bitmap image)

@@ -22,7 +22,7 @@ namespace Server
         {
             _name = string.Empty;
             _artist = string.Empty;
-            _image = (Bitmap)Image.FromFile("default.png");
+            _image = (Bitmap)Image.FromFile(Constants.DefaultImageFile);
         }
 
         public Album(string name, string artist, Bitmap image)
