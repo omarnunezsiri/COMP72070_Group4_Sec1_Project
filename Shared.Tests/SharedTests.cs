@@ -902,7 +902,10 @@ namespace Shared.Tests
         private const string _SONGALBUM = "album";
         private const string _SONGARTIST = "artist";
         private const string _ARTISTNAME = "aname";
+        private const string _ALBUMNAME = "album";
+        private const string _ALBUMARTIST = "deborah";
         private Bitmap artistImage = (Bitmap)Image.FromFile("second.jpg");
+        private Bitmap albumImage = (Bitmap)Image.FromFile("default.png");
         private const float _SONGDURATION = 3.12f;
 
         [TestMethod]
@@ -974,13 +977,47 @@ namespace Shared.Tests
         [TestMethod]
         public void ALBUMSHARED009_Serialize_AlbumObject_byteArrayReturned()
         {
-            Assert.Fail();
+            // Arrange
+            Album album = new Album(_ALBUMNAME, _ALBUMARTIST, albumImage);
+
+            byte[] nameBytes = new byte[] { 5, 97, 108, 98, 117, 109 };
+            byte[] artistBytes = new byte[] { 7, 100, 101, 98, 111, 114, 97, 104 };
+            byte[] imageBytes = Utils.GetBitmapBytes(album.GetImage());
+
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAP nBytes]
+            byte[] expected = new byte[nameBytes.Length + artistBytes.Length + imageBytes.Length];
+            nameBytes.CopyTo(expected, 0);
+            artistBytes.CopyTo(expected, nameBytes.Length);
+            imageBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length);
+
+            // Act
+            byte[] serialized = album.Serialize();
+
+            // Assert
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
         }
 
         [TestMethod]
         public void ALBUMSHARED010_Deserialize_byteArray_AlbumCreated()
         {
-            Assert.Fail();
+            // Arrange
+            byte[] nameBytes = new byte[] { 5, 97, 108, 98, 117, 109 };
+            byte[] artistBytes = new byte[] { 7, 100, 101, 98, 111, 114, 97, 104 };
+            byte[] imageBytes = Utils.GetBitmapBytes(albumImage);
+
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAP nBytes]
+            byte[] serialized = new byte[nameBytes.Length + artistBytes.Length + imageBytes.Length];
+            nameBytes.CopyTo(serialized, 0);
+            artistBytes.CopyTo(serialized, nameBytes.Length);
+            imageBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length);
+
+            // Act
+            Album album = new(serialized);
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, album.GetName(), "Name not parsed properly");
+            Assert.AreEqual(_ALBUMARTIST, album.GetArtist(), "Artist not parsed properly");
+            Assert.IsTrue(Utils.CompareBitmaps(albumImage, album.GetImage()), "Image not parsed properly");
         }
 
         [TestMethod]
@@ -992,6 +1029,7 @@ namespace Shared.Tests
             byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
             byte[] bitmapBytes = Utils.GetBitmapBytes(artist.GetImage());
 
+            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAP nBytes]
             byte[] expected = new byte[nameBytes.Length + bitmapBytes.Length];
             nameBytes.CopyTo(expected, 0);
             bitmapBytes.CopyTo(expected, nameBytes.Length);
@@ -1010,6 +1048,7 @@ namespace Shared.Tests
             byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
             byte[] bitmapBytes = Utils.GetBitmapBytes(artistImage);
 
+            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAP nBytes]
             byte[] serialized = new byte[nameBytes.Length + bitmapBytes.Length];
             nameBytes.CopyTo(serialized, 0);
             bitmapBytes.CopyTo(serialized, nameBytes.Length);
