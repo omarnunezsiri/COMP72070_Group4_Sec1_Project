@@ -155,12 +155,12 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT003_SerializeMediaBody_ServerSerialize()
+        public void PACKETUNIT003_SerializeMediaBody_PlayPaused()
         {
             // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
-            byte[] expected = new byte[2] { 0b00111000, 0b11000000 }; // 56 192
+            byte[] expected = new byte[2] { 0b10000000, 0b01000000 }; // 56 192
 
-            MediaControlBody mBody = new MediaControlBody(false, false, true, true, true, true, true, false);
+            MediaControlBody mBody = new MediaControlBody(MediaControlBody.Action.Play, MediaControlBody.State.Paused);
 
             byte[] serialized = mBody.Serialize();
 
@@ -168,12 +168,51 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT103_SerializeMediaBody_ClientSerialize()
+        public void PACKETUNIT103_SerializeMediaBody_PausePlaying()
         {
             // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
-            byte[] expected = new byte[2] { 0b10011000, 0b00000000 }; // 152 0
+            byte[] expected = new byte[2] { 0b01000000, 0b10000000 }; // 56 192
 
-            MediaControlBody mBody = new MediaControlBody(true, false, false, true, true);
+            MediaControlBody mBody = new MediaControlBody(MediaControlBody.Action.Pause, MediaControlBody.State.Playing);
+
+            byte[] serialized = mBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT203_SerializeMediaBody_PreviousIdle()
+        {
+            // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[2] { 0b00100000, 0b00100000 }; // 56 192
+
+            MediaControlBody mBody = new MediaControlBody(MediaControlBody.Action.Previous, MediaControlBody.State.Idle);
+
+            byte[] serialized = mBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT303_SerializeMediaBody_SkipPaused()
+        {
+            // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[2] { 0b00010000, 0b01000000 }; // 56 192
+
+            MediaControlBody mBody = new MediaControlBody(MediaControlBody.Action.Skip, MediaControlBody.State.Paused);
+
+            byte[] serialized = mBody.Serialize();
+
+            Assert.IsTrue(Enumerable.SequenceEqual(expected, serialized));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT403_SerializeMediaBody_GetStatePlaying()
+        {
+            // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
+            byte[] expected = new byte[2] { 0b00001000, 0b10000000 }; // 56 192
+
+            MediaControlBody mBody = new MediaControlBody(MediaControlBody.Action.GetState, MediaControlBody.State.Playing);
 
             byte[] serialized = mBody.Serialize();
 
@@ -223,7 +262,10 @@ namespace Shared.Tests
         public void PACKETUNIT005_SerializeAccountBody_CorrectBytesAllocated()
         {
             // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
-            Assert.Fail();
+            String username = "myUsername";
+            String password = "someWeirdPassword";
+
+            Account acc = new Account(username, password);
         }
 
         [TestMethod]

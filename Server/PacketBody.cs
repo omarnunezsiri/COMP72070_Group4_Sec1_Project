@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public abstract class PacketBody
+    public abstract class PacketBody : ISerializable
     {
         internal enum Role
         {

@@ -14,45 +14,49 @@ namespace Server
         // [PLAY] [PAUSE] [PREVIOUS] [SKIP/NEXT] [GETSTATE] [-] [-] [-] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
 
         // Action commands
-        private bool play;
-        private bool pause;
-        private bool previous;
-        private bool skip;
-        private bool getState;
+        public enum Action
+        {
+            Play,
+            Pause,
+            Previous,
+            Skip,
+            GetState
+        };
+
+        private Action action;
 
 
         // Current media state response
-        private bool playing;
-        private bool paused;
-        private bool idle;
+        public enum State
+        {
+            Playing,
+            Paused,
+            Idle
+        }
+
+        private State state;
 
         // Constructor for sending a client request
-        public MediaControlBody(bool _play, bool _pause, bool _previous, bool _skip, bool _getState)
+        public MediaControlBody(Action _action)
         {
             this.role = Role.Client;
 
-            this.play = _play;
-            this.pause = _pause;
-            this.previous = _previous;
-            this.skip = _skip;
-            this.getState = _getState;
+            this.action = _action;
         }
 
         // Constructor for building a server response from scratch
-        public MediaControlBody(bool _play, bool _pause, bool _previous, bool _skip, bool _getState, bool _playing, bool _paused, bool _idle)
-            : this(_play, _pause, _previous, _skip, _getState)
+        public MediaControlBody(Action _action, State _state)
+            : this(_action)
         {
-            this.appendServerResponse(_playing, _paused, _idle);
+            this.appendServerResponse(_state);
         }
 
         // Method for allowing the server to respond to a received packet
-        public void appendServerResponse(bool _playing, bool _paused, bool _idle)
+        public void appendServerResponse(State _state)
         {
             this.role = Role.Server;
 
-            this.playing = _playing;
-            this.paused = _paused;
-            this.idle = _idle;
+            this.state = _state;
         }
 
         // Construct from serialized input
@@ -66,88 +70,43 @@ namespace Server
         {
             byte[] serialized = new byte[2]; // maximum of two bytes
 
-            serialized[0] = base.SerializeBit(serialized[0], this.play);
-            serialized[0] = base.SerializeBit(serialized[0], this.pause);
-            serialized[0] = base.SerializeBit(serialized[0], this.previous);
-            serialized[0] = base.SerializeBit(serialized[0], this.skip);
-            serialized[0] = base.SerializeBit(serialized[0], this.getState);
+            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Play);
+            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Pause);
+            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Previous);
+            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Skip);
+            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.GetState);
             serialized[0] <<= 3; // Shift the remaining 3 bits (align to MSB)
 
             if (base.role == Role.Server)
             {
-                serialized[1] = base.SerializeBit(serialized[1], this.playing);
-                serialized[1] = base.SerializeBit(serialized[1], this.paused);
-                serialized[1] = base.SerializeBit(serialized[1], this.idle);
+                serialized[1] = base.SerializeBit(serialized[1], this.state == State.Playing);
+                serialized[1] = base.SerializeBit(serialized[1], this.state == State.Paused);
+                serialized[1] = base.SerializeBit(serialized[1], this.state == State.Idle);
                 serialized[1] <<= 5; // Shift the remaining 5 bits (align to MSB)
             }
 
             return serialized;
         }
 
-        public void SetPlay(bool _play)
+        public void SetAction(Action _action)
         {
-            this.play = _play;
-        }
-        public void SetPause(bool _pause)
-        {
-            this.pause = _pause;
-        }
-        public void SetPrevious(bool _previous)
-        {
-            this.previous = _previous;
-        }
-        public void SetSkip(bool _skip)
-        {
-            this.skip = _skip;
-        }
-        public void SetGetState(bool _getState)
-        {
-            this.getState = _getState;
-        }
-        public void SetStatePlaying(bool _playing)
-        {
-            this.playing = _playing;
-        }
-        public void SetStatePaused(bool _paused)
-        {
-            this.paused = _paused;
-        }
-        public void SetStateIdle(bool _idle)
-        {
-            this.idle = _idle;
+            this.action = _action;
         }
 
-        public bool GetPlay()
+        public void SetState(State _state)
         {
-            return this.play;
+            this.state = _state;
         }
-        public bool GetPause()
+
+        public Action GetAction()
         {
-            return this.pause;
+            return this.action;
         }
-        public bool GetPrevious()
+
+        public State GetState()
         {
-            return this.previous;
+            return this.state;
         }
-        public bool GetSkip()
-        {
-            return this.skip;
-        }
-        public bool GetIsAskingForState()
-        {
-            return this.getState;
-        }
-        public bool GetStatePlaying()
-        {
-            return this.playing;
-        }
-        public bool GetStatePaused()
-        {
-            return this.paused;
-        }
-        public bool GetStateIdle()
-        {
-            return this.idle;
-        }
+        
     }
 }
