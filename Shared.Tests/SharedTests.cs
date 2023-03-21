@@ -5,6 +5,8 @@
 
 using Server;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Shared.Tests
@@ -259,13 +261,63 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT005_SerializeAccountBody_CorrectBytesAllocated()
+        public void PACKETUNIT005_SerializeAccountBody_CorrectUsernameLength()
         {
             // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
             String username = "myUsername";
             String password = "someWeirdPassword";
 
             Account acc = new Account(username, password);
+
+            byte[] bytes = acc.Serialize();
+
+            Assert.AreEqual(username.Length, bytes[0]);
+        }
+
+        [TestMethod]
+        public void PACKETUNIT105_SerializeAccountBody_CorrectPasswordLength()
+        {
+            // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
+            String username = "mySillyUsernameIsThisThingRightHere";
+            String password = "someWeirdPassword";
+
+            Account acc = new Account(username, password);
+
+            byte[] bytes = acc.Serialize();
+
+            Assert.AreEqual(password.Length, bytes[username.Length+1]);
+        }
+
+        [TestMethod]
+        public void PACKETUNIT205_SerializeAccountBody_CorrectUsername()
+        {
+            // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
+            String username = "myUsername";
+            String password = "someWeirdPassword";
+
+            Account acc = new Account(username, password);
+
+            byte[] bytes = acc.Serialize();
+
+            String str = Encoding.ASCII.GetString(bytes, 1, username.Length);
+
+            Assert.AreEqual(username, str);
+        }
+
+        [TestMethod]
+        public void PACKETUNIT305_SerializeAccountBody_CorrectPassword()
+        {
+            // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
+            String username = "myUsername";
+            String password = "someWeirdPassword";
+
+            Account acc = new Account(username, password);
+
+            byte[] bytes = acc.Serialize();
+
+            String str = Encoding.ASCII.GetString(bytes, 2 + username.Length, password.Length);
+
+            Assert.AreEqual(password, str);
         }
 
         [TestMethod]
