@@ -63,7 +63,8 @@ namespace Server
             byte[] imageBytes = Utils.GetBitmapBytes(_image);
 
             int offset = 0;
-            byte[] serialized = new byte[Constants.AlbumIndividualBytes * sizeof(byte) + _name.Length + _artist.Length + imageBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] serialized = new byte[Constants.AlbumIndividualBytes * sizeof(byte) + _name.Length + _artist.Length + sizeof(int) + imageBytes.Length];
 
             byte len = Convert.ToByte(_name.Length);
             serialized[offset++] = len;
@@ -76,6 +77,11 @@ namespace Server
 
             Encoding.ASCII.GetBytes(_artist).CopyTo(serialized, offset);
             offset += len;
+
+            byte[] imageLengthBytes = BitConverter.GetBytes(imageBytes.Length);
+            imageLengthBytes.CopyTo(serialized, offset);
+
+            offset += sizeof(int);
 
             imageBytes.CopyTo(serialized, offset);
             return serialized;

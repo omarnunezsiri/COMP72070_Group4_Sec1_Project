@@ -1110,12 +1110,14 @@ namespace Shared.Tests
             byte[] nameBytes = new byte[] { 5, 97, 108, 98, 117, 109 };
             byte[] artistBytes = new byte[] { 7, 100, 101, 98, 111, 114, 97, 104 };
             byte[] imageBytes = Utils.GetBitmapBytes(album.GetImage());
+            byte[] imageLengthBytes = BitConverter.GetBytes(imageBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAP nBytes]
-            byte[] expected = new byte[nameBytes.Length + artistBytes.Length + imageBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] expected = new byte[nameBytes.Length + artistBytes.Length + sizeof(int) + imageBytes.Length];
             nameBytes.CopyTo(expected, 0);
             artistBytes.CopyTo(expected, nameBytes.Length);
-            imageBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length);
+            imageLengthBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length);
+            imageBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length + sizeof(int));
 
             // Act
             byte[] serialized = album.Serialize();
@@ -1131,12 +1133,14 @@ namespace Shared.Tests
             byte[] nameBytes = new byte[] { 5, 97, 108, 98, 117, 109 };
             byte[] artistBytes = new byte[] { 7, 100, 101, 98, 111, 114, 97, 104 };
             byte[] imageBytes = Utils.GetBitmapBytes(albumImage);
+            byte[] imageLengthBytes = BitConverter.GetBytes(imageBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAP nBytes]
-            byte[] serialized = new byte[nameBytes.Length + artistBytes.Length + imageBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] serialized = new byte[nameBytes.Length + artistBytes.Length + sizeof(int) + imageBytes.Length];
             nameBytes.CopyTo(serialized, 0);
             artistBytes.CopyTo(serialized, nameBytes.Length);
-            imageBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length);
+            imageLengthBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length);
+            imageBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length + sizeof(int));
 
             // Act
             Album album = new(serialized);
@@ -1155,11 +1159,13 @@ namespace Shared.Tests
 
             byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
             byte[] bitmapBytes = Utils.GetBitmapBytes(artist.GetImage());
+            byte[] bitmapLength = BitConverter.GetBytes(bitmapBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAP nBytes]
-            byte[] expected = new byte[nameBytes.Length + bitmapBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] expected = new byte[nameBytes.Length + sizeof(int) + bitmapBytes.Length];
             nameBytes.CopyTo(expected, 0);
-            bitmapBytes.CopyTo(expected, nameBytes.Length);
+            bitmapLength.CopyTo(expected, nameBytes.Length);
+            bitmapBytes.CopyTo(expected, nameBytes.Length + sizeof(int));
 
             // Act
             byte[] serialized = artist.Serialize();
@@ -1174,11 +1180,13 @@ namespace Shared.Tests
             // Arrange
             byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
             byte[] bitmapBytes = Utils.GetBitmapBytes(artistImage);
+            byte[] bitmapLengthBytes = BitConverter.GetBytes(bitmapBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAP nBytes]
-            byte[] serialized = new byte[nameBytes.Length + bitmapBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] serialized = new byte[nameBytes.Length + sizeof(int) + bitmapBytes.Length];
             nameBytes.CopyTo(serialized, 0);
-            bitmapBytes.CopyTo(serialized, nameBytes.Length);
+            bitmapLengthBytes.CopyTo(serialized, nameBytes.Length);
+            bitmapBytes.CopyTo(serialized, nameBytes.Length + sizeof(int));
 
             // Act
             Artist artist = new(serialized);
