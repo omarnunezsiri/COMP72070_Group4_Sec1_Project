@@ -37,7 +37,11 @@ namespace Server
             _name = Encoding.ASCII.GetString(artistBytes, offset, len);
             offset += len;
 
+            int imageLengthBytes = BitConverter.ToInt32(artistBytes, offset);
+            offset += sizeof(int);
+
             byte[] imageBytes = artistBytes.Skip(offset)
+                                           .Take(imageLengthBytes)
                                            .ToArray();
 
             _image = Utils.GetBitmapFromBytes(imageBytes);
