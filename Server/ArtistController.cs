@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,19 +17,50 @@ namespace Server
     {
         Dictionary<string, Artist> artists;
 
-        public ArtistController() { }
+        public ArtistController() 
+        {
+            artists = new();
+        }
 
         public bool AddArtist(string artistName, Bitmap artistImage)
         {
-            throw new NotImplementedException();
+            return artists.TryAdd(artistName, new Artist(artistName, artistImage));
         }
 
-        public Artist FindArtist(string hash) { throw new NotImplementedException(); }
+        public Artist FindArtist(string hash) 
+        {
+            bool found = artists.ContainsKey(hash);
 
-        public Dictionary<string, Artist> ViewArtists() { throw new NotImplementedException(); }
+            if (!found) { throw new KeyNotFoundException("Artist not found."); }
 
-        public bool DeleteArtist(string hash) { throw new NotImplementedException(); }
+            return artists[hash];
+        }
 
-        public bool UpdateArtist(string hash, string criteria, object o) { throw new NotImplementedException(); }
+        public Dictionary<string, Artist> ViewArtists() { return artists; }
+
+        public bool DeleteArtist(string hash) { return artists.Remove(hash); }
+
+        public bool UpdateArtist(string hash, string criteria, object o) 
+        {
+            bool actionDone = false;
+
+            Artist artist = FindArtist(hash); // can throw a KeyNotFoundException exception
+
+            if (criteria == "name")
+            {
+                artist.SetName((string)o);
+                DeleteArtist(hash);
+
+                if (AddArtist(artist.GetName(), artist.GetImage())) // no duplicates
+                    actionDone = true;
+            }
+            else if (criteria == "image")
+            {
+                artist.SetImage((Bitmap)o);
+                actionDone = true;
+            }   
+
+            return actionDone;
+        }
     }
 }
