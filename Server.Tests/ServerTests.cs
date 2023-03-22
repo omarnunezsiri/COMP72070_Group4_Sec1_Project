@@ -140,20 +140,10 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistController = new();
-            bool exceptionThrown = false;
 
-            // Act
-            try
-            {
-                artistController.FindArtist(_UNEXISTING);
-            }
-            catch (KeyNotFoundException)
-            {
-                exceptionThrown = true;
-            }
-
-            // Assert
-            Assert.IsTrue(exceptionThrown, "KeyNotFoundException wasn't thrown");
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.FindArtist(_UNEXISTING));
+            Assert.AreEqual("Artist not found.", ex.Message);
         }
 
         [TestMethod]
