@@ -44,8 +44,12 @@ namespace Server
             _artist = Encoding.ASCII.GetString(albumBytes, offset, len);
             offset += len;
 
+            int imageLengthBytes = BitConverter.ToInt32(albumBytes, offset);
+            offset += sizeof(int);
+
             byte[] imageBytes = albumBytes.Skip(offset)
-                                           .ToArray();
+                                          .Take(imageLengthBytes)
+                                          .ToArray();
 
             _image = Utils.GetBitmapFromBytes(imageBytes);
         }
