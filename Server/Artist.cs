@@ -54,7 +54,7 @@ namespace Server
             byte[] imageBytes = Utils.GetBitmapBytes(_image);
 
             int offset = 0;
-            byte[] serialized = new byte[sizeof(byte) + _name.Length + imageBytes.Length];
+            byte[] serialized = new byte[sizeof(byte) + _name.Length + sizeof(int) + imageBytes.Length];
 
             byte len = Convert.ToByte(_name.Length);
             serialized[offset++] = len;
@@ -62,6 +62,10 @@ namespace Server
             byte[] nameBytes = Encoding.ASCII.GetBytes(_name);
             nameBytes.CopyTo(serialized, offset);
             offset += len;
+
+            byte[] imageLengthBytes = BitConverter.GetBytes(imageBytes.Length);
+            imageLengthBytes.CopyTo(serialized, offset); 
+            offset += sizeof(int);
 
             imageBytes.CopyTo(serialized, offset);
 
