@@ -172,4 +172,209 @@ namespace Server.Tests
             Assert.IsFalse(updated);
         }
     }
+
+    [TestClass]
+    public class AlbumControllerTests
+    {
+        private Bitmap _image = (Bitmap)Image.FromFile("default.png");
+        private Bitmap _anotherImage = (Bitmap)Image.FromFile("second.jpg");
+        private const string _ALBUMNAME = "album";
+        private const string _ALBUMNAME2 = "album2";
+        private const string _ARTISTNAME = "artist";
+        private const string _ARTISTNAME2 = "anotherartist";
+        
+        [TestMethod]
+        public void ALBUMUNIT001_AddAlbum_AlbumAdded()
+        {
+            // Arrange
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            Album album = albumController.FindAlbum(_ALBUMNAME);
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, album.GetName());
+            Assert.AreEqual(_ARTISTNAME, album.GetArtist());
+            Assert.IsTrue(Utils.CompareBitmaps(_image, album.GetImage()));
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT002_ViewAlbums_CollectionReturned()
+        {
+            // Arrange
+            const int ExpectedSize = 1;
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            var collection = albumController.ViewAlbums();
+
+            // Assert
+            Assert.IsTrue(collection.Count == ExpectedSize);
+            Assert.AreEqual(_ALBUMNAME, collection[_ALBUMNAME].GetName());
+            Assert.AreEqual(_ARTISTNAME, collection[_ALBUMNAME].GetArtist());
+            Assert.AreEqual(_image, collection[_ALBUMNAME].GetImage());
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT003_DeleteAlbum_AlbumNotFound()
+        {
+            // Arrange
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            albumController.DeleteAlbum(_ALBUMNAME);
+
+            // Arrange
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.FindAlbum(_ALBUMNAME));
+            Assert.AreEqual("Album not found.", ex.Message);
+        }
+
+
+        [TestMethod]
+        public void ALBUMUNIT004_UpdateAlbumName_AlbumUpdated()
+        {
+            // Arrange
+            bool updated = false;
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            albumController.UpdateAlbum(_ALBUMNAME, "name", _ALBUMNAME2);
+
+            try
+            {
+                Album album = albumController.FindAlbum(_ALBUMNAME2); // hash updated
+                updated = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            // Assert
+            Assert.IsTrue(updated);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT005_UpdateAlbumArtist_AlbumUpdated()
+        {
+            bool updated = false;
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            albumController.UpdateAlbum(_ALBUMNAME, "artist", _ARTISTNAME2);
+
+            Album album = albumController.FindAlbum(_ALBUMNAME);
+
+            if (album.GetArtist() == _ARTISTNAME2)
+                updated = true;
+
+            // Assert
+            Assert.IsTrue(updated);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT006_UpdateAlbumImage_AlbumUpdated()
+        {
+            // Arrange
+            bool updated = false;
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            albumController.UpdateAlbum(_ALBUMNAME, "image", _anotherImage);
+
+            Album album = albumController.FindAlbum(_ALBUMNAME);
+
+            updated = Utils.CompareBitmaps(album.GetImage(), _anotherImage);
+
+            // Assert
+            Assert.IsTrue(updated);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT007_AddExistingAlbum_ReturnsFalse()
+        {
+            // Arrange
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            bool added = albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Assert
+            Assert.IsFalse(added);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT008_DeleteUnexistingAlbum_ReturnsFalse()
+        {
+            // Arrange
+            AlbumController albumController = new();
+
+            // Act
+            bool deleted = albumController.DeleteAlbum(_ALBUMNAME);
+
+            // Assert
+            Assert.IsFalse(deleted);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT009_FindAlbum_AlbumReturned()
+        {
+            // Arrange
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+
+            // Act
+            Album album = albumController.FindAlbum(_ALBUMNAME);
+
+            // Assert
+            Assert.AreEqual(_ALBUMNAME, album.GetName());
+            Assert.AreEqual(_ARTISTNAME, album.GetArtist());
+            Assert.IsTrue(Utils.CompareBitmaps(_image, album.GetImage()));
+        }
+
+
+        [TestMethod]
+        public void ALBUMUNIT010_FindUnexistingAlbum_ExceptionThrown()
+        {
+            // Arrange
+            AlbumController albumController = new();
+
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.FindAlbum(_ALBUMNAME));
+            Assert.AreEqual("Album not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT011_UpdateUnexistingAlbum_ExceptionThrown()
+        {
+            // Arrange
+            AlbumController albumController = new();
+
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.UpdateAlbum(_ALBUMNAME, "name", new object()));
+            Assert.AreEqual("Album not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ALBUMUNIT012_UpdateHashToDuplicate_ReturnsFalse()
+        {
+            // Arrange
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_ALBUMNAME2, _ARTISTNAME2, _anotherImage);
+
+            // Act
+            bool updated = albumController.UpdateAlbum(_ALBUMNAME, "name", _ALBUMNAME2); // duplicate hash
+
+            // Assert
+            Assert.IsFalse(updated);
+        }
+    }
 }
