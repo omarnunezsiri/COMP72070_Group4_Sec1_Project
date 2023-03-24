@@ -63,9 +63,9 @@ namespace Server
             if (this.role == Role.Server)
             {
                 // Serialize the hash
-                for (int i = 0; i < sizeof(UInt64); i++)
+                for (int i = 1; i <= sizeof(UInt64); i++)
                 {
-                    serialized[pointer++] = (byte)((byte)(this.timecode >> (sizeof(UInt64) - 1 - i) * 8) & 0xFF);
+                    serialized[pointer++] = (byte)((byte)(this.timecode >> (sizeof(UInt64) - i) * 8) & 0xFF);
                 }
 
                 // Serialize the flags

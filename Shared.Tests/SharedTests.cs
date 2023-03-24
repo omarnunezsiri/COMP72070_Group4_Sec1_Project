@@ -321,9 +321,69 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT006_SerializeSearchBody_CorrectBytesAllocated()
+        public void PACKETUNIT006_SerializeSearchBody_FilterMatch()
         {
-            Assert.Fail();
+            // [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
+            String filter = "cool song please";
+            UInt64 context = 0x0030120340210120;
+
+            SearchBody sBody = new SearchBody(context, filter);
+
+            byte[] serial = sBody.Serialize();
+
+            Assert.AreEqual(filter.Length, serial[0]);
+            Assert.AreEqual(filter, Encoding.ASCII.GetString(serial, 1, filter.Length));
+        }
+
+        [TestMethod]
+        public void PACKETUNIT106_SerializeSearchBody_ContextHash()
+        {
+            // [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
+            String filter = "cool song please";
+            UInt64 context = 0x123456789ABCDEF0;
+            /*
+                        byte[] res = Encoding.ASCII.GetBytes("here is my response");*/
+
+            SearchBody sBody = new SearchBody(context, filter);
+
+            byte[] serial = sBody.Serialize();
+
+            UInt64 result = 0;
+            for (int i = 1; i <= 8; i++)
+            {
+                byte b = serial[filter.Length + i];
+                result <<= 8;
+
+                Console.WriteLine("shifted 0x{0:X2}", result);
+                result += b;
+
+
+                Console.WriteLine("      + 0x{0:X2}", b);
+                Console.WriteLine("      = 0x{0:X2}\n", result);
+            }
+
+
+            Assert.AreEqual(context, result);
+        }
+
+        [TestMethod]
+        public void PACKETUNIT206_SerializeSearchBody_Response()
+        {
+            // [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
+            String filter = "cool song please";
+            String serverResponse = "Cool_song.mp3";
+            UInt64 context = 0x123456789ABCDEF0;
+
+            byte[] res = Encoding.ASCII.GetBytes(serverResponse);
+
+            SearchBody sBody = new SearchBody(context, filter, res);
+
+            byte[] serial = sBody.Serialize();
+
+            int position = 1 + serial[0] + sizeof(UInt64);
+
+            Assert.AreEqual(serverResponse.Length, serial[position++] << 8 + serial[position++]);// + serial[position]);
+            Assert.AreEqual(serverResponse, Encoding.ASCII.GetString(serial, position, serial[position-1]));
         }
 
         [TestMethod]

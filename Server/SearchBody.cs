@@ -8,50 +8,48 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-// This is a copy of syncbody for now
 
-/*
+// [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
 
 namespace Server
 {
-    public class SyncBody : PacketBody
+    public class SearchBody : PacketBody
     {
-        // [TIMECODE 8bytes] | [PLAYING] [PAUSED] [IDLE] [-] [-] [-] [-] [-]
-
-        public enum State
-        {
-            Playing,
-            Paused,
-            Idle
-        }
+        UInt64 context;
+        String filter;
 
         // Response information
-        UInt64 timecode; // milliseconds since the start
-        State state;
+        byte[] response;
+        
 
         // Constructor for sending a client request
-        public SyncBody()
+        public SearchBody(UInt64 context, String filter)
         {
             this.role = PacketBody.Role.Client;
+
+            this.context = context;
+            this.filter = filter;
+            
+            this.response = Encoding.ASCII.GetBytes("init");
         }
 
         // Constructor for building a server response from scratch
-        public SyncBody(UInt64 _timecode, State _state)
+        public SearchBody(UInt64 context, String filter, byte[] songData) :
+            this(context, filter)
         {
-            this.appendServerResponse(_timecode, _state);
+            this.appendServerResponse(songData);
         }
 
         // Method for allowing the server to respond to a received packet
-        public void appendServerResponse(UInt64 _timecode, State _state)
+        public void appendServerResponse(byte[] songData)
         {
             this.role = PacketBody.Role.Server;
 
-            this.state = _state;
-            this.timecode = _timecode;
+            this.response = songData;
         }
 
         // Construct from serialized input
-        public SyncBody(byte[] serialized)
+        public SearchBody(byte[] serialized)
         {
             // TODO Set State and timecode from serialized data
         }
@@ -59,48 +57,36 @@ namespace Server
         // Serialize data
         override public byte[] Serialize()
         {
-            byte[] serialized = new byte[sizeof(UInt64) + 1]; // maximum of 2 bytes
+            byte[] serialized = new byte[this.filter.Length + this.response.Length + 1 + sizeof(UInt64) + sizeof(UInt16)]; // maximum of 2 bytes
 
             int pointer = 0;
 
+            // serialize the length of the filter
+            serialized[pointer++] = (byte)this.filter.Length;
+
+            // Serialize the filter
+            byte[] filterBytes = Encoding.ASCII.GetBytes(this.filter);
+            filterBytes.CopyTo(serialized, pointer);
+            pointer += filterBytes.Length;
+
+            // Serialize the hash
+            for (int i = 1; i <= sizeof(UInt64); i++)
+            {
+                serialized[pointer++] = (byte)((byte)(this.context >> (sizeof(UInt64) - i) * 8) & 0xFF);
+            }
 
             if (this.role == Role.Server)
             {
-                // Serialize the hash
-                for (int i = 0; i < sizeof(UInt64); i++)
+                // Serialize the data length
+                for (int i = 1; i <= sizeof(UInt16); i++)
                 {
-                    serialized[pointer++] = (byte)((byte)(this.timecode >> (sizeof(UInt64) - 1 - i) * 8) & 0xFF);
+                    serialized[pointer++] = (byte)((byte)((UInt16)this.response.Length >> (sizeof(UInt16) - i) * 8) & 0xFF);
                 }
 
-                // Serialize the flags
-                serialized[pointer] = base.SerializeBit(serialized[pointer], this.state == State.Playing);
-                serialized[pointer] = base.SerializeBit(serialized[pointer], this.state == State.Paused);
-                serialized[pointer] = base.SerializeBit(serialized[pointer], this.state == State.Idle);
-                serialized[pointer++] <<= 5; // Shift the remaining 5 bits (align to MSB)
+                
             }
 
             return serialized;
         }
-
-        public void SetState(State _state)
-        {
-            this.state = _state;
-        }
-
-        public void SetTimecode(UInt64 _timecode)
-        {
-            this.timecode = _timecode;
-        }
-
-        public State GetState()
-        {
-            return this.state;
-        }
-
-        public UInt64 GetTimecode()
-        {
-            return this.timecode;
-        }
     }
 }
-*/
