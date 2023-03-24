@@ -21,9 +21,9 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistController = new ArtistController();
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
 
             // Act
+            artistController.AddArtist(_ARTISTNAME, _artistImage);
             Artist artist = artistController.FindArtist(_ARTISTNAME); // assumes that find works
 
             // Assert
@@ -188,9 +188,9 @@ namespace Server.Tests
         {
             // Arrange
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
 
             // Act
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
             Album album = albumController.FindAlbum(_ALBUMNAME);
 
             // Assert
@@ -372,6 +372,191 @@ namespace Server.Tests
 
             // Act
             bool updated = albumController.UpdateAlbum(_ALBUMNAME, "name", _ALBUMNAME2); // duplicate hash
+
+            // Assert
+            Assert.IsFalse(updated);
+        }
+    }
+
+    [TestClass]
+    public class AccountControllerTests
+    {
+        private const string _USERNAME = "username";
+        private const string _PASSWORD = "password";
+        private const string _USERNAME2 = "username2";
+        private const string _PASSWORD2 = "password2";
+
+        [TestMethod]
+        public void ACCUNIT001_AddAccount_AccountAdded()
+        {
+            // Arrange
+            AccountController accountController = new();
+
+            // Act
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+            Account account = accountController.FindAccount(_USERNAME);
+
+            // Assert
+            Assert.AreEqual(_USERNAME, account.getUsername());
+            Assert.AreEqual(_PASSWORD, account.getPassword());
+        }
+
+        [TestMethod]
+        public void ACCUNIT002_ViewAccounts_CollectionReturned()
+        {
+            // Arrange
+            const int ExpectedSize = 1;
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            var collection = accountController.ViewAccounts();
+
+            // Assert
+            Assert.AreEqual(ExpectedSize, collection.Count);
+            Assert.AreEqual(_USERNAME, collection[_USERNAME].getUsername());
+            Assert.AreEqual(_PASSWORD, collection[_USERNAME].getPassword());
+        }
+
+        [TestMethod]
+        public void ACCUNIT003_DeleteAccounts_AccountNotFound()
+        {
+            // Arrange
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            accountController.DeleteAccount(_USERNAME);
+
+            // Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.FindAccount(_USERNAME));
+            Assert.AreEqual("Account not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ACCUNIT004_AccountAuth_Success()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void ACCUNIT005_AccountAuth_Fail()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void ACCUNIT006_UpdateAccountUsername_AccountUpdated()
+        {
+            // Arrange
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            accountController.UpdateAccount(_USERNAME, "username", _USERNAME2);
+
+            // Assert
+            Assert.AreEqual(_USERNAME2, accountController.FindAccount(_USERNAME2).getUsername());
+        }
+
+        [TestMethod]
+        public void ACCUNIT007_UpdateAccountPassword_AccountUpdated()
+        {
+            // Arrange
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            accountController.UpdateAccount(_USERNAME, "password", _PASSWORD2);
+
+            // Assert
+            Assert.AreEqual(_PASSWORD2, accountController.FindAccount(_USERNAME).getPassword());
+        }
+
+        [TestMethod]
+        public void ACCUNIT008_AddExistingAccount_ReturnsFalse()
+        {
+            // Arrange
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            bool added = accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Assert
+            Assert.IsFalse(added);
+        }
+
+        [TestMethod]
+        public void ACCUNIT009_DeleteUnexistingAccount_ReturnsFalse()
+        {
+            // Arrange
+            AccountController accountController = new();
+
+            // Act
+            bool deleted = accountController.DeleteAccount(_USERNAME);
+
+            // Assert
+            Assert.IsFalse(deleted);
+        }
+
+        [TestMethod]
+        public void ACCUNIT010_FindAccountInCollection_AccountReturned()
+        {
+            // Arrange
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            Account account = accountController.FindAccount(_USERNAME);
+
+            // Assert
+            Assert.AreEqual(_USERNAME, account.getUsername());
+            Assert.AreEqual(_PASSWORD, account.getPassword());
+        }
+
+        [TestMethod]
+        public void ACCUNIT011_FindUnexistingAccount_ExceptionThrown()
+        {
+            // Arrange
+            AccountController accountController = new();
+
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.FindAccount(_USERNAME));
+            Assert.AreEqual("Account not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ACCUNIT012_UpdateUnexistingAccount_ExceptionThrown()
+        {
+            // Arrange
+            AccountController accountController = new();
+
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.UpdateAccount(_USERNAME, "username", new object()));
+            Assert.AreEqual("Account not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void ACCUNIT013_UpdateHashToDuplicate_ReturnsFalse()
+        {
+            // Arrange
+            AccountController accountController = new();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_USERNAME2, _PASSWORD2);
+
+            // Act
+            bool updated = accountController.UpdateAccount(_USERNAME, "username", _USERNAME2);
 
             // Assert
             Assert.IsFalse(updated);
