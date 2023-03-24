@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="forward-button.png" />
+    <None Remove="play-button.png" />
+    <None Remove="rewind-button.png" />
+    <None Remove="silly music player-1 %284%29.png" />
+    <None Remove="silly music player-1 %285%29.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="forward-button.png" />
+    <Resource Include="play-button.png" />
+    <Resource Include="rewind-button.png" />
+    <Resource Include="silly music player-1 (4).png" />
+    <Resource Include="silly music player-1 (5).png" />
+  </ItemGroup>
+
+</Project>
