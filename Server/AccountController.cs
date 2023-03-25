@@ -56,5 +56,25 @@ namespace Server
 
             return actionDone;
         }
+
+       public bool AuthAccount(string username, string password) 
+       {
+            bool auth;
+
+            try
+            {
+                Account account = FindAccount(username);
+                if (account.getPassword() == password)
+                    auth = true;
+                else
+                    auth = false;
+            }
+            catch (KeyNotFoundException)
+            {
+                auth = false;
+            }
+
+            return auth;
+       }
     }
 }

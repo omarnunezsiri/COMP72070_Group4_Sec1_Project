@@ -437,22 +437,28 @@ namespace Server.Tests
         public void ACCUNIT004_AccountAuth_Success()
         {
             // Arrange
+            AccountController controller = new();
+            controller.AddAccount(_USERNAME, _PASSWORD);
 
             // Act
+            bool auth = controller.AuthAccount(_USERNAME, _PASSWORD);
 
             // Assert
-            Assert.Fail();
+            Assert.IsTrue(auth);
         }
 
         [TestMethod]
-        public void ACCUNIT005_AccountAuth_Fail()
+        public void ACCUNIT005_AccountAuth_IncorrectHash_Fail()
         {
             // Arrange
+            AccountController controller = new();
+            controller.AddAccount(_USERNAME, _PASSWORD);
 
             // Act
+            bool auth = controller.AuthAccount(_USERNAME2, _PASSWORD);
 
             // Assert
-            Assert.Fail();
+            Assert.IsFalse(auth);
         }
 
         [TestMethod]
@@ -560,6 +566,20 @@ namespace Server.Tests
 
             // Assert
             Assert.IsFalse(updated);
+        }
+
+        [TestMethod]
+        public void ACCUNIT014_AccountAuth_IncorrectPassword_Fail()
+        {
+            // Arrange
+            AccountController controller = new();
+            controller.AddAccount(_USERNAME, _PASSWORD);
+
+            // Act
+            bool auth = controller.AuthAccount(_USERNAME, _PASSWORD2);
+
+            // Assert
+            Assert.IsFalse(auth);
         }
     }
 
