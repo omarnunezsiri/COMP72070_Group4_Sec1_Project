@@ -562,4 +562,204 @@ namespace Server.Tests
             Assert.IsFalse(updated);
         }
     }
+
+    [TestClass]
+    public class SongControllerTests
+    {
+        private const string _NAME = "name";
+        private const string _ARTIST = "artist";
+        private const string _ALBUM = "album";
+        private const string _NAME2 = "anotherName";
+        private const string _ARTIST2 = "artist2";
+        private const string _ALBUM2 = "album2";
+        private const float _DURATION = 3.12f;
+        private const float _DURATION2 = 4.5f;
+
+        [TestMethod]
+        public void SONGUNIT001_AddSong_SongAdded()
+        {
+            // Arrange
+            SongController controller = new();
+
+            // Act
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            Song song = controller.FindSong(_NAME);
+
+            // Assert
+            Assert.AreEqual(_NAME, song.GetName());
+            Assert.AreEqual(_ALBUM, song.GetAlbum());
+            Assert.AreEqual(_ARTIST, song.GetArtist());
+            Assert.AreEqual(_DURATION, song.GetDuration());
+        }
+
+
+        [TestMethod]
+        public void SONGUNIT002_ViewSongs_CollectionReturned()
+        {
+            // Arrange
+            const int ExpectedSize = 1;
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            var collection = controller.ViewSongs();
+
+            // Assert
+            Assert.IsTrue(collection.Count == ExpectedSize);
+        }
+
+        [TestMethod]
+        public void SONGUNIT003_DeleteSong_SongNotFound()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            controller.DeleteSong(_NAME);
+
+            // Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.FindSong(_NAME));
+            Assert.AreEqual("Song not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void SONGUNIT004_UpdateSong_Name_NameUpdated()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            controller.UpdateSong(_NAME, "name", _NAME2);
+
+            // Assert
+            Assert.IsNotNull(controller.FindSong(_NAME2));
+        }
+
+
+        [TestMethod]
+        public void SONGUNIT005_UpdateSong_Artist_ArtistUpdated()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            controller.UpdateSong(_NAME, "artist", _ARTIST2);
+
+            // Assert
+            Assert.AreEqual(_ARTIST2, controller.ViewSongs()[_NAME].GetArtist());
+        }
+
+
+        [TestMethod]
+        public void SONGUNIT006_UpdateSong_Duration_DurationUpdated()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            controller.UpdateSong(_NAME, "duration", _DURATION2);
+
+            // Assert
+            Assert.AreEqual(_DURATION2, controller.ViewSongs()[_NAME].GetDuration());
+        }
+
+        [TestMethod]
+        public void SONGUNIT007_UpdateSong_Album_AlbumUpdated()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            controller.UpdateSong(_NAME, "album", _ALBUM2);
+
+            // Assert
+            Assert.AreEqual(_ALBUM2, controller.ViewSongs()[_NAME].GetAlbum());
+        }
+
+        [TestMethod]
+        public void SONGUNIT008_AddExistingSong_ReturnsFalse()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            bool added = controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Assert
+            Assert.IsFalse(added);
+        }
+
+        [TestMethod]
+        public void SONGUNIT009_DeleteUnexistingSong_ReturnsFalse()
+        {
+            // Arrange
+            SongController controller = new();
+
+            // Act
+            bool deleted = controller.DeleteSong(_NAME);
+
+            // Assert
+            Assert.IsFalse(deleted);
+        }
+
+        [TestMethod]
+        public void SONGUNIT010_FindSong_SongReturned()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+
+            // Act
+            Song song = controller.FindSong(_NAME);
+
+            // Assert
+            Assert.AreEqual(_NAME, song.GetName());
+            Assert.AreEqual(_ALBUM, song.GetAlbum());
+            Assert.AreEqual(_ARTIST, song.GetArtist());
+            Assert.AreEqual(_DURATION, song.GetDuration());
+        }
+
+        [TestMethod]
+        public void SONGUNIT011_FindUnexistingSong_ExceptionThrown()
+        {
+            // Arrange
+            SongController controller = new();
+
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.FindSong(_NAME));
+            Assert.AreEqual("Song not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void SONGUNIT012_UpdateUnexistingSong_ExceptionThrown()
+        {
+            // Arrange
+            SongController controller = new();
+
+            // Act and Assert
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.UpdateSong(_NAME, "name", new object()));
+            Assert.AreEqual("Song not found.", ex.Message);
+        }
+
+        [TestMethod]
+        public void SONGUNIT013_UpdateHashToDuplicate_ReturnsFalse()
+        {
+            // Arrange
+            SongController controller = new();
+            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_NAME2, _ALBUM2, _ARTIST2, _DURATION2);
+
+            // Act
+            bool updated = controller.UpdateSong(_NAME, "name", _NAME2); // duplicate hash
+
+            // Assert
+            Assert.IsFalse(updated);
+        }
+    }
 }
