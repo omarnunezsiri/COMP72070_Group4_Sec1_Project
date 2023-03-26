@@ -12,5 +12,9 @@ namespace Server
         public const int AccountIndividualBytes = 2;
         public const int AlbumIndividualBytes = 2;
         public const string DefaultImageFile = "default.png";
+        public const string AccountsFile = "accounts.txt";
+        public const string SongsFile = "songs.txt";
+        public const string ArtistsFile = "artists.txt";
+        public const string AlbumsFile = "albums.txt";
     }
 }

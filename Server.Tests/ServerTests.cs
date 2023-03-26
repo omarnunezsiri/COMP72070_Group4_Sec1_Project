@@ -782,4 +782,261 @@ namespace Server.Tests
             Assert.IsFalse(updated);
         }
     }
+
+    [TestClass]
+    public class FileHandlerTests
+    {
+        /* Account members */
+        private const string _USERNAME = "username";
+        private const string _PASSWORD = "password";
+        private const string _USERNAME2 = "username2";
+
+        /* Song members*/
+        private const string _SONGNAME = "song";
+        private const string _SONGNAME2 = "song2";
+        private const float _DURATION = 3.12f;
+
+        /* Album members*/
+        private const string _ALBUMNAME = "album";
+        private const string _ALBUMNAME2 = "album2";
+        private Bitmap _albumImg = (Bitmap)Image.FromFile("album.png");
+        private Bitmap _albumImg2 = (Bitmap)Image.FromFile("album2.png");
+
+        /* Artist members*/
+        private const string _ARTISTNAME = "deborah";
+        private const string _ARTISTNAME2 = "justin";
+        private Bitmap _image = (Bitmap)Image.FromFile("deborah.png");
+        private Bitmap _image2 = (Bitmap)Image.FromFile("justin.jpeg");
+
+        [TestMethod]
+        public void FHUNIT001_WriteSongs_CollectionInDataFile()
+        {
+            // Arrange
+            string[] Expected = new string[] {"song,album,deborah,3.12", "song2,album,deborah,3.12"};
+
+            // Act
+            SongController songController = new();
+            songController.AddSong(_SONGNAME, _ALBUMNAME, _ARTISTNAME, _DURATION);
+            songController.AddSong(_SONGNAME2, _ALBUMNAME, _ARTISTNAME, _DURATION);
+
+            FileHandler.WriteSongs(songController, Constants.SongsFile);
+            string[] actual = File.ReadAllLines(Constants.SongsFile);
+
+            // Assert
+            Assert.IsTrue(Expected.SequenceEqual(actual));
+        }
+
+        [TestMethod]
+        public void FHUNIT002_WriteAccounts_CollectionInDataFile()
+        {
+            // Arrange
+            string[] Expected = new string[] {"username,password", "username2,password"};
+
+            AccountController accountController = new AccountController();
+            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_USERNAME2, _PASSWORD);
+
+            // Act
+            FileHandler.WriteAccounts(accountController, Constants.AccountsFile);
+            string[] actual = File.ReadAllLines(Constants.AccountsFile);
+
+            // Assert
+            Assert.IsTrue(Expected.SequenceEqual(actual));
+        }
+
+        [TestMethod]
+        public void FHUNIT003_WriteAlbums_CollectionInDataFile()
+        {
+            // Arrange
+            string[] Expected = new string[] {"Png,album,deborah", "Png,album2,deborah"};
+
+            AlbumController albumController = new();
+            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_ALBUMNAME2, _ARTISTNAME, _image);
+
+            // Act
+            FileHandler.WriteAlbums(albumController, Constants.AlbumsFile);
+            string[] actual = File.ReadAllLines(Constants.AlbumsFile);
+
+            // Assert
+            Assert.IsTrue(Expected.SequenceEqual(actual));
+        }
+
+        [TestMethod]
+        public void FHUNIT004_WriteArtists_CollectionInDataFile()
+        {
+            // Arrange
+            string[] Expected = new string[] {"Png,deborah", "Jpeg,justin"};
+
+            ArtistController artistController = new();
+            artistController.AddArtist(_ARTISTNAME, _image);
+            artistController.AddArtist(_ARTISTNAME2, _image2);
+
+            // Act
+            FileHandler.WriteArtists(artistController, Constants.ArtistsFile);
+            string[] actual = File.ReadAllLines(Constants.ArtistsFile);
+
+            // Assert
+            Assert.IsTrue(Expected.SequenceEqual(actual));
+        }
+
+        [TestMethod]
+        public void FHUNIT005_ReadSongs_ControllerPopulated()
+        {
+            // Arrange
+            bool parsedFirst = false;
+            bool parsedSecond = false;
+
+            string[] data = new string[] { "song,album,deborah,3.12", "song2,album,deborah,3.12" };
+            File.WriteAllLines(Constants.SongsFile, data);
+
+            // Act
+            SongController songController = new();
+            FileHandler.ReadSongs(songController, Constants.SongsFile);
+
+            Song song1 = songController.FindSong(_SONGNAME);
+            Song song2 = songController.FindSong(_SONGNAME2);
+
+            if (song1.GetAlbum() == _ALBUMNAME && song1.GetArtist() == _ARTISTNAME && song1.GetDuration() == _DURATION)
+                parsedFirst = true;
+
+            if (song2.GetAlbum() == _ALBUMNAME && song2.GetArtist() == _ARTISTNAME && song2.GetDuration() == _DURATION)
+                parsedSecond = true;
+
+            // Assert
+            Assert.IsTrue(parsedFirst & parsedSecond); // bitwise AND flags
+        }
+
+
+        [TestMethod]
+        public void FHUNIT006_ReadAccounts_ControllerPopulated()
+        {
+            // Arrange
+            bool parsedFirst = false;
+            bool parsedSecond = false;
+
+            string[] data = new string[] { "username,password", "username2,password" };
+            File.WriteAllLines(Constants.AccountsFile, data);
+
+            // Act
+            AccountController accountController = new();
+            FileHandler.ReadAccounts(accountController, Constants.AccountsFile);
+
+            Account account1 = accountController.FindAccount(_USERNAME);
+            Account account2 = accountController.FindAccount(_USERNAME2);
+
+            if (account1.getPassword() == _PASSWORD)
+                parsedFirst = true;
+
+            if(account2.getPassword() == _PASSWORD)
+                parsedSecond = true;
+
+            // Assert
+            Assert.IsTrue(parsedFirst & parsedSecond); // bitwise AND flags 
+        }
+
+
+        [TestMethod]
+        public void FHUNIT007_ReadAlbums_ControllerPopulated()
+        {
+            // Arrange
+            bool parsedFirst = false;
+            bool parsedSecond = false;
+
+            string[] data = new string[] { "Png,album,deborah", "Png,album2,deborah" };
+            File.WriteAllLines(Constants.AlbumsFile, data);
+
+            // Act
+            AlbumController albumController = new();
+            FileHandler.ReadAlbums(albumController, Constants.AlbumsFile);
+
+            Album album1 = albumController.FindAlbum(_ALBUMNAME);
+            Album album2 = albumController.FindAlbum(_ALBUMNAME2);
+
+            if (album1.GetArtist() == _ARTISTNAME && Utils.CompareBitmaps(_albumImg, album1.GetImage()))
+                parsedFirst = true;
+
+            if (album2.GetArtist() == _ARTISTNAME && Utils.CompareBitmaps(_albumImg2, album2.GetImage()))
+                parsedSecond = true;
+
+            // Assert
+            Assert.IsTrue(parsedFirst & parsedSecond); // bitwise AND flags
+        }
+
+        [TestMethod]
+        public void FHUNIT008_ReadArtists_ControllerPopulated()
+        {
+            // Arrange
+            bool parsedFirst = false;
+            bool parsedSecond = false;
+
+            string[] data = new string[] { "Png,deborah", "Jpeg,justin" };
+            File.WriteAllLines(Constants.ArtistsFile, data);
+
+            // Act
+            ArtistController artistController = new();
+            FileHandler.ReadArtists(artistController, Constants.ArtistsFile);
+
+            Artist artist1 = artistController.FindArtist(_ARTISTNAME);
+            Artist artist2 = artistController.FindArtist(_ARTISTNAME2);
+
+            if (Utils.CompareBitmaps(artist1.GetImage(), _image))
+                parsedFirst = true;
+
+            if (Utils.CompareBitmaps(artist2.GetImage(), _image2))
+                parsedSecond = true;
+            
+            // Assert
+            Assert.IsTrue(parsedFirst & parsedSecond); // bitwise AND flags
+        }
+
+        [TestMethod]
+        public void FHUNIT009_ReadAccounts_FileDoesntExist_ExceptionThrown()
+        {
+            // Arrange
+            File.Delete(Constants.AccountsFile); // ensures that the file doesn't exist
+
+            AccountController controller = new();
+
+            // Act and Assert
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAccounts(controller, Constants.AccountsFile));
+        }
+
+        [TestMethod]
+        public void FHUNIT010_ReadSongs_FileDoesntExist_ExceptionThrown()
+        {
+            // Arrange
+            File.Delete(Constants.SongsFile); // ensures that the file doesn't exist
+
+            SongController controller = new();
+
+            // Act and Assert
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadSongs(controller, Constants.SongsFile));
+        }
+
+        [TestMethod]
+        public void FHUNIT011_ReadArtists_FileDoesntExist_ExceptionThrown()
+        {
+            // Arrange
+            File.Delete(Constants.ArtistsFile); // ensures that the file doesn't exist
+
+            ArtistController controller = new();
+
+            // Act and Assert
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadArtists(controller, Constants.ArtistsFile));
+        }
+
+
+        [TestMethod]
+        public void FHUNIT012_ReadAlbums_FileDoesntExist_ExceptionThrown()
+        {
+            // Arrange
+            File.Delete(Constants.AlbumsFile); // ensures that the file doesn't exist
+
+            AlbumController controller = new();
+
+            // Act and Assert
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAlbums(controller, Constants.AlbumsFile));
+        }
+    }
 }
