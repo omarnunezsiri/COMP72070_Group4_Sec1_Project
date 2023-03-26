@@ -40,28 +40,46 @@ namespace Client
 
         private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
         {
-            usernameTB.Text = "Username";
+            TextBox tb = (TextBox)sender;
+
+            // user hasn't entered a username;
+            if (tb.Text == string.Empty)
+            {
+                usernameTB.Text = "Username";
+            }
         }
 
         private void usernameTB_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
 
-            tb.Text = string.Empty;
+            // username is placeholder
+            if(tb.Text == "Username")
+            {
+                tb.Text = string.Empty;
+            }
         }
 
         private void PasswordBox_GotFocus(object sender, RoutedEventArgs e)
         {
             PasswordBox pb = (PasswordBox)sender;
 
-            pb.Password = string.Empty;
+            // password is placeholder
+            if(pb.Password == "Password")
+            {
+                pb.Password = string.Empty;
+            }
         }
 
         private void PasswordBox_LostFocus(object sender, RoutedEventArgs e)
         {
             PasswordBox pb = (PasswordBox)sender;
 
-            pb.Password = "Password";
+            // user hasn't entered a password
+            if(pb.Password == string.Empty) 
+            {
+                pb.Password = "Password";
+            }
         }
     }
 }
