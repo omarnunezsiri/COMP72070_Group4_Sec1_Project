@@ -14,21 +14,21 @@ namespace Shared.Tests
     [TestClass]
     public class AccountTests
     {
-        private const string _PASSWORD = "passwordPlaceholder";
-        private const string _USERNAME = "usernamePlaceholder";
+        private const string _Password = "passwordPlaceholder";
+        private const string _Username = "usernamePlaceholder";
         
         [TestMethod]
         public void ACCSHARED001_GetPassword_placeholder_returnsPlaceholder()
         {
             // Arrange
             Account account = new Account();
-            account.setPassword(_PASSWORD);
+            account.setPassword(_Password);
 
             // Act
             string actual = account.getPassword();
 
             // Assert
-            Assert.AreEqual(_PASSWORD, actual);
+            Assert.AreEqual(_Password, actual);
         }
 
         [TestMethod]
@@ -36,13 +36,13 @@ namespace Shared.Tests
         {
             // Arrange
             Account account = new Account();
-            account.setUsername(_USERNAME);
+            account.setUsername(_Username);
 
             // Act
             string actual = account.getUsername();
 
             // Assert
-            Assert.AreEqual(_USERNAME, actual);
+            Assert.AreEqual(_Username, actual);
         }
 
         [TestMethod]
@@ -52,11 +52,11 @@ namespace Shared.Tests
             Account account = new Account();
 
             // Act
-            account.setPassword(_PASSWORD);
+            account.setPassword(_Password);
             string actual = account.getPassword();
 
             // Assert
-            Assert.AreEqual(_PASSWORD, actual);
+            Assert.AreEqual(_Password, actual);
         }
 
         [TestMethod]
@@ -66,11 +66,11 @@ namespace Shared.Tests
             Account account = new Account();
 
             // Act
-            account.setUsername(_USERNAME);
+            account.setUsername(_Username);
             string actual = account.getUsername();
 
             // Assert
-            Assert.AreEqual(_USERNAME, actual);
+            Assert.AreEqual(_Username, actual);
         }
 
         [TestMethod]
@@ -88,11 +88,11 @@ namespace Shared.Tests
         public void ACCSHARED006_ParameterizedConstructor_placeholders_Assigned()
         {
             // Arrange and Act
-            Account account = new(_USERNAME, _PASSWORD);
+            Account account = new(_Username, _Password);
 
             // Assert
-            Assert.AreEqual(_USERNAME, account.getUsername(), "Username not set to placeholder");
-            Assert.AreEqual(_PASSWORD, account.getPassword(), "Password not set to placeholder");
+            Assert.AreEqual(_Username, account.getUsername(), "Username not set to placeholder");
+            Assert.AreEqual(_Password, account.getPassword(), "Password not set to placeholder");
         }
     }
 
@@ -452,14 +452,14 @@ namespace Shared.Tests
     {
         private const int _X = 15;
         private const int _Y = 15;
-        private const int _ANOTHERY = 20;
+        private const int _AnotherY = 20;
 
         [TestMethod]
         public void UTILSSHARED001_CompareBitmaps_DifferentSize_ReturnsFalse()
         {
             // Arrange
             Bitmap a = new(_X, _Y);
-            Bitmap b = new(_X, _ANOTHERY);
+            Bitmap b = new(_X, _AnotherY);
 
             const bool EXPECTED = false;
 
@@ -536,10 +536,10 @@ namespace Shared.Tests
     [TestClass]
     public class SongTests
     {
-        private const string _SONGNAME = "songNamePlaceholder";
-        private const string _ARTISTNAME = "artistPlaceholder";
-        private const string _ALBUMNAME = "albumPlaceholder";
-        private const float _DURATION = 1.0f;
+        private const string _SongName = "songNamePlaceholder";
+        private const string _ArtistName = "artistPlaceholder";
+        private const string _AlbumName = "albumPlaceholder";
+        private const float _Duration = 1.0f;
 
         [TestMethod]
         public void SONGSHARED001_SetName_placeholder_placeholderSet()
@@ -548,11 +548,11 @@ namespace Shared.Tests
             Song song = new();
 
             // Act
-            song.SetName(_SONGNAME);
+            song.SetName(_SongName);
             string actual = song.GetName();
 
             // Assert
-            Assert.AreEqual(_SONGNAME, actual);
+            Assert.AreEqual(_SongName, actual);
         }
 
         [TestMethod]
@@ -562,11 +562,11 @@ namespace Shared.Tests
             Song song = new();
 
             // Act
-            song.SetArtist(_ARTISTNAME);
+            song.SetArtist(_ArtistName);
             string actual = song.GetArtist();
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, actual);
+            Assert.AreEqual(_ArtistName, actual);
         }
 
         [TestMethod]
@@ -576,11 +576,11 @@ namespace Shared.Tests
             Song song = new();
 
             // Act
-            song.SetDuration(_DURATION);
+            song.SetDuration(_Duration);
             float actual = song.GetDuration();
 
             // Assert
-            Assert.AreEqual(_DURATION, actual);
+            Assert.AreEqual(_Duration, actual);
         }
 
         [TestMethod]
@@ -590,11 +590,11 @@ namespace Shared.Tests
             Song song = new();
 
             // Act
-            song.SetAlbum(_ALBUMNAME);
+            song.SetAlbum(_AlbumName);
             string actual = song.GetAlbum();
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, actual);
+            Assert.AreEqual(_AlbumName, actual);
         }
 
         [TestMethod]
@@ -602,13 +602,13 @@ namespace Shared.Tests
         {
             // Arrange
             Song song = new();
-            song.SetName(_SONGNAME);
+            song.SetName(_SongName);
 
             // Act
             string actual = song.GetName();
 
             // Assert
-            Assert.AreEqual(_SONGNAME, actual);
+            Assert.AreEqual(_SongName, actual);
         }
 
         [TestMethod]
@@ -616,13 +616,13 @@ namespace Shared.Tests
         {
             // Arrange
             Song song = new();
-            song.SetArtist(_ARTISTNAME);
+            song.SetArtist(_ArtistName);
 
             // Act
             string actual = song.GetArtist();
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, actual);
+            Assert.AreEqual(_ArtistName, actual);
         }
 
         [TestMethod]
@@ -630,13 +630,13 @@ namespace Shared.Tests
         {
             // Arrange
             Song song = new();
-            song.SetDuration(_DURATION);
+            song.SetDuration(_Duration);
 
             // Act
             float actual = song.GetDuration();
 
             // Assert
-            Assert.AreEqual(_DURATION, actual);
+            Assert.AreEqual(_Duration, actual);
         }
 
         [TestMethod]
@@ -644,13 +644,13 @@ namespace Shared.Tests
         {
             // Arrange
             Song song = new();
-            song.SetAlbum(_ALBUMNAME);
+            song.SetAlbum(_AlbumName);
 
             // Act
             string actual = song.GetAlbum();
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, actual);
+            Assert.AreEqual(_AlbumName, actual);
         }
 
         [TestMethod]
@@ -670,13 +670,13 @@ namespace Shared.Tests
         public void SONGSHARED010_ParameterizedConstructor_placeholders_Assigned()
         {
             // Arrange and Act
-            Song song = new(_SONGNAME, _ALBUMNAME, _ARTISTNAME, _DURATION);
+            Song song = new(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Assert
-            Assert.AreEqual(_SONGNAME, song.GetName(), "Song name not set to placeholder");
-            Assert.AreEqual(_ALBUMNAME, song.GetAlbum(), "Song album not set to placeholder");
-            Assert.AreEqual(_ARTISTNAME, song.GetArtist(), "Song artist not set to placeholder");
-            Assert.AreEqual(_DURATION, song.GetDuration(), "Song duration not set to placeholder");
+            Assert.AreEqual(_SongName, song.GetName(), "Song name not set to placeholder");
+            Assert.AreEqual(_AlbumName, song.GetAlbum(), "Song album not set to placeholder");
+            Assert.AreEqual(_ArtistName, song.GetArtist(), "Song artist not set to placeholder");
+            Assert.AreEqual(_Duration, song.GetDuration(), "Song duration not set to placeholder");
         }
     }
 
@@ -685,7 +685,7 @@ namespace Shared.Tests
     {
         private Bitmap _bitmap = (Bitmap)Image.FromFile("placeholder.png");
         private Bitmap _defaultBitmap = (Bitmap)Image.FromFile("default.png");
-        private const string _ARTISTNAME = "artistPlaceholder";
+        private const string _ArtistName = "artistPlaceholder";
 
         [TestMethod]
         public void ARTISTSHARED001_SetName_placeholder_placeholderSet()
@@ -694,11 +694,11 @@ namespace Shared.Tests
             Artist artist = new();
 
             // Act
-            artist.SetName(_ARTISTNAME);
+            artist.SetName(_ArtistName);
             string actual = artist.GetName();
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, actual);
+            Assert.AreEqual(_ArtistName, actual);
         }
 
         [TestMethod]
@@ -720,13 +720,13 @@ namespace Shared.Tests
         {
             // Arrange
             Artist artist = new();
-            artist.SetName(_ARTISTNAME);
+            artist.SetName(_ArtistName);
 
             // Act
             string actual = artist.GetName();
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, actual);
+            Assert.AreEqual(_ArtistName, actual);
         }
 
         [TestMethod]
@@ -760,10 +760,10 @@ namespace Shared.Tests
         public void ARTISTSHARED006_ParameterizedConstructor_placeholders_Assigned()
         {
             // Arrange and Act
-            Artist artist = new(_ARTISTNAME, _bitmap);
+            Artist artist = new(_ArtistName, _bitmap);
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, artist.GetName(), "Artist name not set to placeholder");
+            Assert.AreEqual(_ArtistName, artist.GetName(), "Artist name not set to placeholder");
             Assert.AreEqual(_bitmap, artist.GetImage(), "Artist image not set to placeholder");
         }
     }
@@ -771,8 +771,8 @@ namespace Shared.Tests
     [TestClass]
     public class AlbumTests
     {
-        private const string _ALBUMNAME = "albumPlaceholder";
-        private const string _ARTISTNAME = "artistPlaceholder";
+        private const string _AlbumName = "albumPlaceholder";
+        private const string _ArtistName = "artistPlaceholder";
         private Bitmap _bitmap = (Bitmap)Image.FromFile("placeholder.png");
         private Bitmap _defaultBitmap = (Bitmap)Image.FromFile("default.png");
 
@@ -783,11 +783,11 @@ namespace Shared.Tests
             Album album = new();
 
             // Act
-            album.SetName(_ALBUMNAME);
+            album.SetName(_AlbumName);
             string actual = album.GetName();
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, actual);
+            Assert.AreEqual(_AlbumName, actual);
         }
 
         [TestMethod]
@@ -797,11 +797,11 @@ namespace Shared.Tests
             Album album = new();
 
             // Act
-            album.SetArtist(_ARTISTNAME);
+            album.SetArtist(_ArtistName);
             string actual = album.GetArtist();
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, actual);
+            Assert.AreEqual(_ArtistName, actual);
         }
 
         [TestMethod]
@@ -823,13 +823,13 @@ namespace Shared.Tests
         {
             // Arrange
             Album album = new();
-            album.SetName(_ALBUMNAME);
+            album.SetName(_AlbumName);
 
             // Act
             string actual = album.GetName();
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, actual);
+            Assert.AreEqual(_AlbumName, actual);
         }
 
         [TestMethod]
@@ -851,13 +851,13 @@ namespace Shared.Tests
         {
             // Arrange
             Album album = new();
-            album.SetArtist(_ARTISTNAME);
+            album.SetArtist(_ArtistName);
 
             // Act
             string actual = album.GetArtist();
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, actual);
+            Assert.AreEqual(_ArtistName, actual);
         }
 
         [TestMethod]
@@ -878,11 +878,11 @@ namespace Shared.Tests
         public void ALBUMSHARED008_ParameterizedConstructor_placeholders_Assigned()
         {
             // Arrange and Act
-            Album album = new(_ALBUMNAME, _ARTISTNAME, _bitmap);
+            Album album = new(_AlbumName, _ArtistName, _bitmap);
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, album.GetName(), "Album name not set to placeholder");
-            Assert.AreEqual(_ARTISTNAME, album.GetArtist(), "Artist name not set to placeholder");
+            Assert.AreEqual(_AlbumName, album.GetName(), "Album name not set to placeholder");
+            Assert.AreEqual(_ArtistName, album.GetArtist(), "Artist name not set to placeholder");
             Assert.AreEqual(_bitmap, album.GetImage(), "Album image not set to placeholder");
         }
     }
@@ -890,22 +890,22 @@ namespace Shared.Tests
     [TestClass]
     public class FileHandlerTests
     {
-        private string _MP3FILENAME = "mymp3.mp3";
-        private string _IMAGENAME = "ubuntu.png";
-        private string _OUTPUTMP3 = "output.mp3";
-        private string _OUTPUTIMAGE = "output.png";
-        private string _UNEXISTINGMP3 = "hello.mp3";
-        private string _UNEXISTINGIMAGE = "wow.png";
+        private string _Mp3FileName = "mymp3.mp3";
+        private string _ImageName = "ubuntu.png";
+        private string _OutputMp3 = "output.mp3";
+        private string _OutputImage = "output.png";
+        private string _UnexistingMp3 = "hello.mp3";
+        private string _UnexistingImage = "wow.png";
 
         [TestMethod]
         public void FHSHARED001_writeMp3Bytes_byteArray_bytesWritten()
         {
             // Arrange
-            byte[] mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME); // assumes that readMp3Bytes works correctly
-            File.Delete(_OUTPUTMP3); // removes the file from dir if previous existence
+            byte[] mp3bytes = FileHandler.readMp3Bytes(_Mp3FileName); // assumes that readMp3Bytes works correctly
+            File.Delete(_OutputMp3); // removes the file from dir if previous existence
 
             // Act
-            bool bytesWritten = FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+            bool bytesWritten = FileHandler.writeMp3Bytes(_OutputMp3, mp3bytes);
 
             // Assert
             Assert.IsTrue(bytesWritten);
@@ -918,7 +918,7 @@ namespace Shared.Tests
             Type expectedType = typeof(byte[]);
 
             // Act
-            var mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME);
+            var mp3bytes = FileHandler.readMp3Bytes(_Mp3FileName);
 
             // Assert
             Assert.AreEqual(expectedType, mp3bytes.GetType());
@@ -928,11 +928,11 @@ namespace Shared.Tests
         public void FHSHARED003_writeImage_Bitmap_imageWritten()
         {
             // Arrange
-            Bitmap original = FileHandler.readImageBytes(_IMAGENAME); // assumes that readImageBytes works
-            File.Delete(_OUTPUTIMAGE); // removes the file from dir if previous existence
+            Bitmap original = FileHandler.readImageBytes(_ImageName); // assumes that readImageBytes works
+            File.Delete(_OutputImage); // removes the file from dir if previous existence
 
             // Act
-            bool imageWritten = FileHandler.writeImageBytes(_OUTPUTIMAGE, original);
+            bool imageWritten = FileHandler.writeImageBytes(_OutputImage, original);
 
             // Assert
             Assert.IsTrue(imageWritten);
@@ -945,7 +945,7 @@ namespace Shared.Tests
             Type expectedType = typeof(Bitmap);
 
             // Act
-            var image = FileHandler.readImageBytes(_IMAGENAME);
+            var image = FileHandler.readImageBytes(_ImageName);
 
             // Assert
             Assert.AreEqual(expectedType, image.GetType());
@@ -964,7 +964,7 @@ namespace Shared.Tests
 
             try
             {
-                var mp3bytes = FileHandler.readMp3Bytes(_UNEXISTINGMP3);
+                var mp3bytes = FileHandler.readMp3Bytes(_UnexistingMp3);
             }
             catch (FileNotFoundException)
             {
@@ -982,7 +982,7 @@ namespace Shared.Tests
             byte[] mp3bytes = new byte[0]; // assumes that readMp3Bytes works correctly
 
             // Act
-            bool bytesWritten = FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+            bool bytesWritten = FileHandler.writeMp3Bytes(_OutputMp3, mp3bytes);
 
             // Assert
             Assert.IsFalse(bytesWritten);
@@ -998,7 +998,7 @@ namespace Shared.Tests
 
             try
             {
-                FileHandler.readImageBytes(_UNEXISTINGIMAGE);
+                FileHandler.readImageBytes(_UnexistingImage);
             }
             catch (FileNotFoundException)
             {
@@ -1014,14 +1014,14 @@ namespace Shared.Tests
         public void FHSHARED008_writeMp3Bytes_byteArray_fileExists()
         {
             // Arrange
-            byte[] mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME); // assumes that readMp3Bytes works correctly
-            File.Delete(_OUTPUTMP3); // removes the file from dir if previous existence
+            byte[] mp3bytes = FileHandler.readMp3Bytes(_Mp3FileName); // assumes that readMp3Bytes works correctly
+            File.Delete(_OutputMp3); // removes the file from dir if previous existence
 
             // Act
-            FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+            FileHandler.writeMp3Bytes(_OutputMp3, mp3bytes);
 
             // Assert
-            Assert.IsTrue(File.Exists(_OUTPUTMP3));
+            Assert.IsTrue(File.Exists(_OutputMp3));
         }
 
         [TestMethod]
@@ -1031,7 +1031,7 @@ namespace Shared.Tests
             const long EXPECTEDLENGTH = 2505799;
 
             // Act
-            var mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME);
+            var mp3bytes = FileHandler.readMp3Bytes(_Mp3FileName);
 
             // Assert
             Assert.AreEqual(EXPECTEDLENGTH, mp3bytes.Length, "Length of byte array is not the same as expected");
@@ -1041,13 +1041,13 @@ namespace Shared.Tests
         public void FHSHARED010_writeMp3Bytes_byteArray_contentWritten()
         {
             // Arrange
-            byte[] mp3bytes = FileHandler.readMp3Bytes(_MP3FILENAME); // assumes that readMp3Bytes works correctly
-            File.Delete(_OUTPUTMP3); // removes the file from dir if previous existence
+            byte[] mp3bytes = FileHandler.readMp3Bytes(_Mp3FileName); // assumes that readMp3Bytes works correctly
+            File.Delete(_OutputMp3); // removes the file from dir if previous existence
 
             // Act
-            FileHandler.writeMp3Bytes(_OUTPUTMP3, mp3bytes);
+            FileHandler.writeMp3Bytes(_OutputMp3, mp3bytes);
 
-            byte[] anotherbytes = FileHandler.readMp3Bytes(_OUTPUTMP3);
+            byte[] anotherbytes = FileHandler.readMp3Bytes(_OutputMp3);
 
             // Assert
             Assert.IsTrue(mp3bytes.SequenceEqual(anotherbytes));
@@ -1057,13 +1057,13 @@ namespace Shared.Tests
         public void FHSHARED011_writeImage_Bitmap_contentWritten()
         {
             // Arrange
-            Bitmap bitmap = FileHandler.readImageBytes(_IMAGENAME); // assumes that readImageBytes works correctly
-            File.Delete(_OUTPUTIMAGE); // removes the file from dir if previous existence
+            Bitmap bitmap = FileHandler.readImageBytes(_ImageName); // assumes that readImageBytes works correctly
+            File.Delete(_OutputImage); // removes the file from dir if previous existence
 
             // Act
-            FileHandler.writeImageBytes(_OUTPUTIMAGE, bitmap);
+            FileHandler.writeImageBytes(_OutputImage, bitmap);
 
-            Bitmap anotherBitmap = FileHandler.readImageBytes(_OUTPUTIMAGE);
+            Bitmap anotherBitmap = FileHandler.readImageBytes(_OutputImage);
 
             // Assert
             Assert.IsTrue(Utils.CompareBitmaps(bitmap, anotherBitmap));
@@ -1073,7 +1073,7 @@ namespace Shared.Tests
         public void FHSHARED012_writeMp3Bytes_nullByteArray_returnsFalse()
         {
             // Arrange and Act
-            bool bytesWritten = FileHandler.writeMp3Bytes(_OUTPUTMP3, null);
+            bool bytesWritten = FileHandler.writeMp3Bytes(_OutputMp3, null);
 
             // Assert
             Assert.IsFalse(bytesWritten);
@@ -1083,23 +1083,23 @@ namespace Shared.Tests
     [TestClass]
     public class SerializableTests
     {
-        private const string _USERNAME = "user";
-        private const string _PASSWORD = "pass";
-        private const string _SONGNAME = "name";
-        private const string _SONGALBUM = "album";
-        private const string _SONGARTIST = "artist";
-        private const string _ARTISTNAME = "aname";
-        private const string _ALBUMNAME = "album";
-        private const string _ALBUMARTIST = "deborah";
-        private Bitmap artistImage = (Bitmap)Image.FromFile("second.jpg");
-        private Bitmap albumImage = (Bitmap)Image.FromFile("default.png");
-        private const float _SONGDURATION = 3.12f;
+        private const string _Username = "user";
+        private const string _Password = "pass";
+        private const string _SongName = "name";
+        private const string _SongAlbum = "album";
+        private const string _SongArtist = "artist";
+        private const string _ArtistName = "aname";
+        private const string _AlbumName = "album";
+        private const string _AlbumArtist = "deborah";
+        private Bitmap _artistImage = (Bitmap)Image.FromFile("second.jpg");
+        private Bitmap _albumImage = (Bitmap)Image.FromFile("default.png");
+        private const float _SongDuration = 3.12f;
 
         [TestMethod]
         public void ACCSHARED007_Serialize_AccountObject_byteArrayReturned()
         {
             // Arrange
-            Account account = new Account(_USERNAME, _PASSWORD);
+            Account account = new Account(_Username, _Password);
 
             // [USERNAMELENGTH 1byte] [USERNAME lengthBytes] | [PASSWORDLENGTH 1byte] [PASSWORD lengthBytes]
             byte[] expected = new byte[] {4, 117, 115, 101, 114, 4, 112, 97, 115, 115};
@@ -1123,15 +1123,15 @@ namespace Shared.Tests
             Account account = new Account(serialized);
 
             // Assert
-            Assert.AreEqual(_USERNAME, account.getUsername(), "Username wasn't parsed properly");
-            Assert.AreEqual(_PASSWORD, account.getPassword(), "Password wasn't parsed properly");
+            Assert.AreEqual(_Username, account.getUsername(), "Username wasn't parsed properly");
+            Assert.AreEqual(_Password, account.getPassword(), "Password wasn't parsed properly");
         }
 
         [TestMethod]
         public void SONGSHARED011_Serialize_SongObject_byteArrayReturned()
         {
             // Arrange
-            Song song = new Song(_SONGNAME, _SONGALBUM, _SONGARTIST, _SONGDURATION);
+            Song song = new Song(_SongName, _SongAlbum, _SongArtist, _SongDuration);
 
             // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
             byte[] expected = new byte[] { 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
@@ -1155,27 +1155,29 @@ namespace Shared.Tests
             Song song = new Song(serialized);
 
             // Assert
-            Assert.AreEqual(_SONGNAME, song.GetName(), "Name wasn't parsed properly");
-            Assert.AreEqual(_SONGARTIST, song.GetArtist(), "Artist wasn't parsed properly");
-            Assert.AreEqual(_SONGALBUM, song.GetAlbum(), "Album wasn't parsed properly");
-            Assert.AreEqual(_SONGDURATION, song.GetDuration(), "Duration wasn't parsed properly");
+            Assert.AreEqual(_SongName, song.GetName(), "Name wasn't parsed properly");
+            Assert.AreEqual(_SongArtist, song.GetArtist(), "Artist wasn't parsed properly");
+            Assert.AreEqual(_SongAlbum, song.GetAlbum(), "Album wasn't parsed properly");
+            Assert.AreEqual(_SongDuration, song.GetDuration(), "Duration wasn't parsed properly");
         }
 
         [TestMethod]
         public void ALBUMSHARED009_Serialize_AlbumObject_byteArrayReturned()
         {
             // Arrange
-            Album album = new Album(_ALBUMNAME, _ALBUMARTIST, albumImage);
+            Album album = new Album(_AlbumName, _AlbumArtist, _albumImage);
 
             byte[] nameBytes = new byte[] { 5, 97, 108, 98, 117, 109 };
             byte[] artistBytes = new byte[] { 7, 100, 101, 98, 111, 114, 97, 104 };
             byte[] imageBytes = Utils.GetBitmapBytes(album.GetImage());
+            byte[] imageLengthBytes = BitConverter.GetBytes(imageBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAP nBytes]
-            byte[] expected = new byte[nameBytes.Length + artistBytes.Length + imageBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] expected = new byte[nameBytes.Length + artistBytes.Length + sizeof(int) + imageBytes.Length];
             nameBytes.CopyTo(expected, 0);
             artistBytes.CopyTo(expected, nameBytes.Length);
-            imageBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length);
+            imageLengthBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length);
+            imageBytes.CopyTo(expected, nameBytes.Length + artistBytes.Length + sizeof(int));
 
             // Act
             byte[] serialized = album.Serialize();
@@ -1190,36 +1192,40 @@ namespace Shared.Tests
             // Arrange
             byte[] nameBytes = new byte[] { 5, 97, 108, 98, 117, 109 };
             byte[] artistBytes = new byte[] { 7, 100, 101, 98, 111, 114, 97, 104 };
-            byte[] imageBytes = Utils.GetBitmapBytes(albumImage);
+            byte[] imageBytes = Utils.GetBitmapBytes(_albumImage);
+            byte[] imageLengthBytes = BitConverter.GetBytes(imageBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAP nBytes]
-            byte[] serialized = new byte[nameBytes.Length + artistBytes.Length + imageBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] serialized = new byte[nameBytes.Length + artistBytes.Length + sizeof(int) + imageBytes.Length];
             nameBytes.CopyTo(serialized, 0);
             artistBytes.CopyTo(serialized, nameBytes.Length);
-            imageBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length);
+            imageLengthBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length);
+            imageBytes.CopyTo(serialized, nameBytes.Length + artistBytes.Length + sizeof(int));
 
             // Act
             Album album = new(serialized);
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, album.GetName(), "Name not parsed properly");
-            Assert.AreEqual(_ALBUMARTIST, album.GetArtist(), "Artist not parsed properly");
-            Assert.IsTrue(Utils.CompareBitmaps(albumImage, album.GetImage()), "Image not parsed properly");
+            Assert.AreEqual(_AlbumName, album.GetName(), "Name not parsed properly");
+            Assert.AreEqual(_AlbumArtist, album.GetArtist(), "Artist not parsed properly");
+            Assert.IsTrue(Utils.CompareBitmaps(_albumImage, album.GetImage()), "Image not parsed properly");
         }
 
         [TestMethod]
         public void ARTISTSHARED007_Serialize_Artist_byteArrayReturned()
         {
             // Arrange
-            Artist artist = new Artist(_ARTISTNAME, artistImage);
+            Artist artist = new Artist(_ArtistName, _artistImage);
 
             byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
             byte[] bitmapBytes = Utils.GetBitmapBytes(artist.GetImage());
+            byte[] bitmapLength = BitConverter.GetBytes(bitmapBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAP nBytes]
-            byte[] expected = new byte[nameBytes.Length + bitmapBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] expected = new byte[nameBytes.Length + sizeof(int) + bitmapBytes.Length];
             nameBytes.CopyTo(expected, 0);
-            bitmapBytes.CopyTo(expected, nameBytes.Length);
+            bitmapLength.CopyTo(expected, nameBytes.Length);
+            bitmapBytes.CopyTo(expected, nameBytes.Length + sizeof(int));
 
             // Act
             byte[] serialized = artist.Serialize();
@@ -1233,19 +1239,21 @@ namespace Shared.Tests
         {
             // Arrange
             byte[] nameBytes = new byte[] { 5, 97, 110, 97, 109, 101 };
-            byte[] bitmapBytes = Utils.GetBitmapBytes(artistImage);
+            byte[] bitmapBytes = Utils.GetBitmapBytes(_artistImage);
+            byte[] bitmapLengthBytes = BitConverter.GetBytes(bitmapBytes.Length);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAP nBytes]
-            byte[] serialized = new byte[nameBytes.Length + bitmapBytes.Length];
+            // [NAMELENGTH 1byte] [NAME nBytes] | [BITMAPLENGTH 4bytes] [BITMAP nBytes]
+            byte[] serialized = new byte[nameBytes.Length + sizeof(int) + bitmapBytes.Length];
             nameBytes.CopyTo(serialized, 0);
-            bitmapBytes.CopyTo(serialized, nameBytes.Length);
+            bitmapLengthBytes.CopyTo(serialized, nameBytes.Length);
+            bitmapBytes.CopyTo(serialized, nameBytes.Length + sizeof(int));
 
             // Act
             Artist artist = new(serialized);
 
             // Assert
-            Assert.AreEqual(_ARTISTNAME, artist.GetName(), "Name not parsed properly");
-            Assert.IsTrue(Utils.CompareBitmaps(artistImage, artist.GetImage()), "Image not parsed properly");
+            Assert.AreEqual(_ArtistName, artist.GetName(), "Name not parsed properly");
+            Assert.IsTrue(Utils.CompareBitmaps(_artistImage, artist.GetImage()), "Image not parsed properly");
         }
     }
 }
