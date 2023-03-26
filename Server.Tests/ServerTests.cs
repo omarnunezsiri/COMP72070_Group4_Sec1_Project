@@ -12,9 +12,9 @@ namespace Server.Tests
     {
         private Bitmap _artistImage = (Bitmap)Image.FromFile("default.png");
         private Bitmap _artistImage2 = (Bitmap)Image.FromFile("second.jpg");
-        private const string _ARTISTNAME = "deborah george";
-        private const string _ARTISTNAME2 = "justin bieber";
-        private const string _UNEXISTING = "unexisting";
+        private const string _ArtistName = "deborah george";
+        private const string _ArtistName2 = "justin bieber";
+        private const string _UnexistingHash = "unexisting";
 
         [TestMethod]
         public void ARTISTUNIT001_AddArtist_ArtistAdded()
@@ -23,12 +23,12 @@ namespace Server.Tests
             ArtistController artistController = new ArtistController();
 
             // Act
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
-            Artist artist = artistController.FindArtist(_ARTISTNAME); // assumes that find works
+            artistController.AddArtist(_ArtistName, _artistImage);
+            Artist artist = artistController.FindArtist(_ArtistName); // assumes that find works
 
             // Assert
             Assert.IsNotNull(artist);
-            Assert.AreEqual(_ARTISTNAME, artist.GetName(), "Name is not as expected");
+            Assert.AreEqual(_ArtistName, artist.GetName(), "Name is not as expected");
             Assert.AreEqual(_artistImage, artist.GetImage(), "Image is not as expected");
         }
 
@@ -38,15 +38,15 @@ namespace Server.Tests
             // Arrange
             const int ExpectedSize = 1;
             ArtistController artistController = new();
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
+            artistController.AddArtist(_ArtistName, _artistImage);
 
             // Act
             Dictionary<string, Artist> artists = artistController.ViewArtists();
 
             // Assert
             Assert.AreEqual(ExpectedSize, artists.Count);
-            Assert.AreEqual(_ARTISTNAME, artists[_ARTISTNAME].GetName());
-            Assert.AreEqual(_artistImage, artists[_ARTISTNAME].GetImage());
+            Assert.AreEqual(_ArtistName, artists[_ArtistName].GetName());
+            Assert.AreEqual(_artistImage, artists[_ArtistName].GetImage());
         }
 
         [TestMethod]
@@ -54,13 +54,13 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistController = new();
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
+            artistController.AddArtist(_ArtistName, _artistImage);
 
             // Act
-            artistController.DeleteArtist(_ARTISTNAME);
+            artistController.DeleteArtist(_ArtistName);
 
             // Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.FindArtist(_ARTISTNAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.FindArtist(_ArtistName));
             Assert.AreEqual("Artist not found.", ex.Message);
         }
 
@@ -69,13 +69,13 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistsController = new();
-            artistsController.AddArtist(_ARTISTNAME, _artistImage);
+            artistsController.AddArtist(_ArtistName, _artistImage);
 
             // Act
-            artistsController.UpdateArtist(_ARTISTNAME, "name", _ARTISTNAME2);
+            artistsController.UpdateArtist(_ArtistName, "name", _ArtistName2);
 
             // Assert
-            Assert.IsNotNull(artistsController.FindArtist(_ARTISTNAME2));
+            Assert.IsNotNull(artistsController.FindArtist(_ArtistName2));
         }
 
         [TestMethod]
@@ -83,13 +83,13 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistsController = new();
-            artistsController.AddArtist(_ARTISTNAME, _artistImage);
+            artistsController.AddArtist(_ArtistName, _artistImage);
 
             // Act
-            artistsController.UpdateArtist(_ARTISTNAME, "image", _artistImage2);
+            artistsController.UpdateArtist(_ArtistName, "image", _artistImage2);
 
             // Assert
-            Assert.IsTrue(Utils.CompareBitmaps(artistsController.FindArtist(_ARTISTNAME).GetImage(), _artistImage2));
+            Assert.IsTrue(Utils.CompareBitmaps(artistsController.FindArtist(_ArtistName).GetImage(), _artistImage2));
         }
 
         [TestMethod]
@@ -97,10 +97,10 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistController = new();
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
+            artistController.AddArtist(_ArtistName, _artistImage);
 
             // Act
-            bool added = artistController.AddArtist(_ARTISTNAME, _artistImage);
+            bool added = artistController.AddArtist(_ArtistName, _artistImage);
 
             // Assert
             Assert.IsFalse(added);
@@ -113,7 +113,7 @@ namespace Server.Tests
             ArtistController artistController = new();
 
             // Act
-            bool deleted = artistController.DeleteArtist(_ARTISTNAME);
+            bool deleted = artistController.DeleteArtist(_ArtistName);
 
             // Assert
             Assert.IsFalse(deleted);
@@ -124,14 +124,14 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistController = new();
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
+            artistController.AddArtist(_ArtistName, _artistImage);
 
             // Act
-            Artist artist = artistController.FindArtist(_ARTISTNAME);
+            Artist artist = artistController.FindArtist(_ArtistName);
 
             // Assert
             Assert.IsNotNull(artist);
-            Assert.AreEqual(_ARTISTNAME, artist.GetName(), "Name is not as expected");
+            Assert.AreEqual(_ArtistName, artist.GetName(), "Name is not as expected");
             Assert.AreEqual(_artistImage, artist.GetImage(), "Image is not as expected");
         }
 
@@ -142,7 +142,7 @@ namespace Server.Tests
             ArtistController artistController = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.FindArtist(_UNEXISTING));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.FindArtist(_UnexistingHash));
             Assert.AreEqual("Artist not found.", ex.Message);
         }
 
@@ -153,7 +153,7 @@ namespace Server.Tests
             ArtistController artistController = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.UpdateArtist(_ARTISTNAME, "name", new object()));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => artistController.UpdateArtist(_ArtistName, "name", new object()));
             Assert.AreEqual("Artist not found.", ex.Message);
         }
 
@@ -162,11 +162,11 @@ namespace Server.Tests
         {
             // Arrange
             ArtistController artistController = new();
-            artistController.AddArtist(_ARTISTNAME, _artistImage);
-            artistController.AddArtist(_ARTISTNAME2, _artistImage2);
+            artistController.AddArtist(_ArtistName, _artistImage);
+            artistController.AddArtist(_ArtistName2, _artistImage2);
 
             // Act
-            bool updated = artistController.UpdateArtist(_ARTISTNAME, "name", _ARTISTNAME2); // cloning hash
+            bool updated = artistController.UpdateArtist(_ArtistName, "name", _ArtistName2); // cloning hash
 
             // Assert
             Assert.IsFalse(updated);
@@ -178,10 +178,10 @@ namespace Server.Tests
     {
         private Bitmap _image = (Bitmap)Image.FromFile("default.png");
         private Bitmap _anotherImage = (Bitmap)Image.FromFile("second.jpg");
-        private const string _ALBUMNAME = "album";
-        private const string _ALBUMNAME2 = "album2";
-        private const string _ARTISTNAME = "artist";
-        private const string _ARTISTNAME2 = "anotherartist";
+        private const string _AlbumName = "album";
+        private const string _AlbumName2 = "album2";
+        private const string _ArtistName = "artist";
+        private const string _ArtistName2 = "anotherartist";
         
         [TestMethod]
         public void ALBUMUNIT001_AddAlbum_AlbumAdded()
@@ -190,12 +190,12 @@ namespace Server.Tests
             AlbumController albumController = new();
 
             // Act
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
-            Album album = albumController.FindAlbum(_ALBUMNAME);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
+            Album album = albumController.FindAlbum(_AlbumName);
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, album.GetName());
-            Assert.AreEqual(_ARTISTNAME, album.GetArtist());
+            Assert.AreEqual(_AlbumName, album.GetName());
+            Assert.AreEqual(_ArtistName, album.GetArtist());
             Assert.IsTrue(Utils.CompareBitmaps(_image, album.GetImage()));
         }
 
@@ -205,16 +205,16 @@ namespace Server.Tests
             // Arrange
             const int ExpectedSize = 1;
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
             var collection = albumController.ViewAlbums();
 
             // Assert
             Assert.IsTrue(collection.Count == ExpectedSize);
-            Assert.AreEqual(_ALBUMNAME, collection[_ALBUMNAME].GetName());
-            Assert.AreEqual(_ARTISTNAME, collection[_ALBUMNAME].GetArtist());
-            Assert.AreEqual(_image, collection[_ALBUMNAME].GetImage());
+            Assert.AreEqual(_AlbumName, collection[_AlbumName].GetName());
+            Assert.AreEqual(_ArtistName, collection[_AlbumName].GetArtist());
+            Assert.AreEqual(_image, collection[_AlbumName].GetImage());
         }
 
         [TestMethod]
@@ -222,13 +222,13 @@ namespace Server.Tests
         {
             // Arrange
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
-            albumController.DeleteAlbum(_ALBUMNAME);
+            albumController.DeleteAlbum(_AlbumName);
 
             // Arrange
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.FindAlbum(_ALBUMNAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.FindAlbum(_AlbumName));
             Assert.AreEqual("Album not found.", ex.Message);
         }
 
@@ -239,14 +239,14 @@ namespace Server.Tests
             // Arrange
             bool updated = false;
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
-            albumController.UpdateAlbum(_ALBUMNAME, "name", _ALBUMNAME2);
+            albumController.UpdateAlbum(_AlbumName, "name", _AlbumName2);
 
             try
             {
-                Album album = albumController.FindAlbum(_ALBUMNAME2); // hash updated
+                Album album = albumController.FindAlbum(_AlbumName2); // hash updated
                 updated = true;
             }
             catch (Exception)
@@ -263,14 +263,14 @@ namespace Server.Tests
         {
             bool updated = false;
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
-            albumController.UpdateAlbum(_ALBUMNAME, "artist", _ARTISTNAME2);
+            albumController.UpdateAlbum(_AlbumName, "artist", _ArtistName2);
 
-            Album album = albumController.FindAlbum(_ALBUMNAME);
+            Album album = albumController.FindAlbum(_AlbumName);
 
-            if (album.GetArtist() == _ARTISTNAME2)
+            if (album.GetArtist() == _ArtistName2)
                 updated = true;
 
             // Assert
@@ -283,12 +283,12 @@ namespace Server.Tests
             // Arrange
             bool updated = false;
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
-            albumController.UpdateAlbum(_ALBUMNAME, "image", _anotherImage);
+            albumController.UpdateAlbum(_AlbumName, "image", _anotherImage);
 
-            Album album = albumController.FindAlbum(_ALBUMNAME);
+            Album album = albumController.FindAlbum(_AlbumName);
 
             updated = Utils.CompareBitmaps(album.GetImage(), _anotherImage);
 
@@ -301,10 +301,10 @@ namespace Server.Tests
         {
             // Arrange
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
-            bool added = albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            bool added = albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Assert
             Assert.IsFalse(added);
@@ -317,7 +317,7 @@ namespace Server.Tests
             AlbumController albumController = new();
 
             // Act
-            bool deleted = albumController.DeleteAlbum(_ALBUMNAME);
+            bool deleted = albumController.DeleteAlbum(_AlbumName);
 
             // Assert
             Assert.IsFalse(deleted);
@@ -328,14 +328,14 @@ namespace Server.Tests
         {
             // Arrange
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
 
             // Act
-            Album album = albumController.FindAlbum(_ALBUMNAME);
+            Album album = albumController.FindAlbum(_AlbumName);
 
             // Assert
-            Assert.AreEqual(_ALBUMNAME, album.GetName());
-            Assert.AreEqual(_ARTISTNAME, album.GetArtist());
+            Assert.AreEqual(_AlbumName, album.GetName());
+            Assert.AreEqual(_ArtistName, album.GetArtist());
             Assert.IsTrue(Utils.CompareBitmaps(_image, album.GetImage()));
         }
 
@@ -347,7 +347,7 @@ namespace Server.Tests
             AlbumController albumController = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.FindAlbum(_ALBUMNAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.FindAlbum(_AlbumName));
             Assert.AreEqual("Album not found.", ex.Message);
         }
 
@@ -358,7 +358,7 @@ namespace Server.Tests
             AlbumController albumController = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.UpdateAlbum(_ALBUMNAME, "name", new object()));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => albumController.UpdateAlbum(_AlbumName, "name", new object()));
             Assert.AreEqual("Album not found.", ex.Message);
         }
 
@@ -367,11 +367,11 @@ namespace Server.Tests
         {
             // Arrange
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
-            albumController.AddAlbum(_ALBUMNAME2, _ARTISTNAME2, _anotherImage);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _image);
+            albumController.AddAlbum(_AlbumName2, _ArtistName2, _anotherImage);
 
             // Act
-            bool updated = albumController.UpdateAlbum(_ALBUMNAME, "name", _ALBUMNAME2); // duplicate hash
+            bool updated = albumController.UpdateAlbum(_AlbumName, "name", _AlbumName2); // duplicate hash
 
             // Assert
             Assert.IsFalse(updated);
@@ -381,10 +381,10 @@ namespace Server.Tests
     [TestClass]
     public class AccountControllerTests
     {
-        private const string _USERNAME = "username";
-        private const string _PASSWORD = "password";
-        private const string _USERNAME2 = "username2";
-        private const string _PASSWORD2 = "password2";
+        private const string _Username = "username";
+        private const string _Password = "password";
+        private const string _Username2 = "username2";
+        private const string _Password2 = "password2";
 
         [TestMethod]
         public void ACCUNIT001_AddAccount_AccountAdded()
@@ -393,12 +393,12 @@ namespace Server.Tests
             AccountController accountController = new();
 
             // Act
-            accountController.AddAccount(_USERNAME, _PASSWORD);
-            Account account = accountController.FindAccount(_USERNAME);
+            accountController.AddAccount(_Username, _Password);
+            Account account = accountController.FindAccount(_Username);
 
             // Assert
-            Assert.AreEqual(_USERNAME, account.getUsername());
-            Assert.AreEqual(_PASSWORD, account.getPassword());
+            Assert.AreEqual(_Username, account.getUsername());
+            Assert.AreEqual(_Password, account.getPassword());
         }
 
         [TestMethod]
@@ -407,15 +407,15 @@ namespace Server.Tests
             // Arrange
             const int ExpectedSize = 1;
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
 
             // Act
             var collection = accountController.ViewAccounts();
 
             // Assert
             Assert.AreEqual(ExpectedSize, collection.Count);
-            Assert.AreEqual(_USERNAME, collection[_USERNAME].getUsername());
-            Assert.AreEqual(_PASSWORD, collection[_USERNAME].getPassword());
+            Assert.AreEqual(_Username, collection[_Username].getUsername());
+            Assert.AreEqual(_Password, collection[_Username].getPassword());
         }
 
         [TestMethod]
@@ -423,13 +423,13 @@ namespace Server.Tests
         {
             // Arrange
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
 
             // Act
-            accountController.DeleteAccount(_USERNAME);
+            accountController.DeleteAccount(_Username);
 
             // Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.FindAccount(_USERNAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.FindAccount(_Username));
             Assert.AreEqual("Account not found.", ex.Message);
         }
 
@@ -438,10 +438,10 @@ namespace Server.Tests
         {
             // Arrange
             AccountController controller = new();
-            controller.AddAccount(_USERNAME, _PASSWORD);
+            controller.AddAccount(_Username, _Password);
 
             // Act
-            bool auth = controller.AuthAccount(_USERNAME, _PASSWORD);
+            bool auth = controller.AuthAccount(_Username, _Password);
 
             // Assert
             Assert.IsTrue(auth);
@@ -452,10 +452,10 @@ namespace Server.Tests
         {
             // Arrange
             AccountController controller = new();
-            controller.AddAccount(_USERNAME, _PASSWORD);
+            controller.AddAccount(_Username, _Password);
 
             // Act
-            bool auth = controller.AuthAccount(_USERNAME2, _PASSWORD);
+            bool auth = controller.AuthAccount(_Username2, _Password);
 
             // Assert
             Assert.IsFalse(auth);
@@ -466,13 +466,13 @@ namespace Server.Tests
         {
             // Arrange
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
 
             // Act
-            accountController.UpdateAccount(_USERNAME, "username", _USERNAME2);
+            accountController.UpdateAccount(_Username, "username", _Username2);
 
             // Assert
-            Assert.AreEqual(_USERNAME2, accountController.FindAccount(_USERNAME2).getUsername());
+            Assert.AreEqual(_Username2, accountController.FindAccount(_Username2).getUsername());
         }
 
         [TestMethod]
@@ -480,13 +480,13 @@ namespace Server.Tests
         {
             // Arrange
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
 
             // Act
-            accountController.UpdateAccount(_USERNAME, "password", _PASSWORD2);
+            accountController.UpdateAccount(_Username, "password", _Password2);
 
             // Assert
-            Assert.AreEqual(_PASSWORD2, accountController.FindAccount(_USERNAME).getPassword());
+            Assert.AreEqual(_Password2, accountController.FindAccount(_Username).getPassword());
         }
 
         [TestMethod]
@@ -494,10 +494,10 @@ namespace Server.Tests
         {
             // Arrange
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
 
             // Act
-            bool added = accountController.AddAccount(_USERNAME, _PASSWORD);
+            bool added = accountController.AddAccount(_Username, _Password);
 
             // Assert
             Assert.IsFalse(added);
@@ -510,7 +510,7 @@ namespace Server.Tests
             AccountController accountController = new();
 
             // Act
-            bool deleted = accountController.DeleteAccount(_USERNAME);
+            bool deleted = accountController.DeleteAccount(_Username);
 
             // Assert
             Assert.IsFalse(deleted);
@@ -521,14 +521,14 @@ namespace Server.Tests
         {
             // Arrange
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
 
             // Act
-            Account account = accountController.FindAccount(_USERNAME);
+            Account account = accountController.FindAccount(_Username);
 
             // Assert
-            Assert.AreEqual(_USERNAME, account.getUsername());
-            Assert.AreEqual(_PASSWORD, account.getPassword());
+            Assert.AreEqual(_Username, account.getUsername());
+            Assert.AreEqual(_Password, account.getPassword());
         }
 
         [TestMethod]
@@ -538,7 +538,7 @@ namespace Server.Tests
             AccountController accountController = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.FindAccount(_USERNAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.FindAccount(_Username));
             Assert.AreEqual("Account not found.", ex.Message);
         }
 
@@ -549,7 +549,7 @@ namespace Server.Tests
             AccountController accountController = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.UpdateAccount(_USERNAME, "username", new object()));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => accountController.UpdateAccount(_Username, "username", new object()));
             Assert.AreEqual("Account not found.", ex.Message);
         }
 
@@ -558,11 +558,11 @@ namespace Server.Tests
         {
             // Arrange
             AccountController accountController = new();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
-            accountController.AddAccount(_USERNAME2, _PASSWORD2);
+            accountController.AddAccount(_Username, _Password);
+            accountController.AddAccount(_Username2, _Password2);
 
             // Act
-            bool updated = accountController.UpdateAccount(_USERNAME, "username", _USERNAME2);
+            bool updated = accountController.UpdateAccount(_Username, "username", _Username2);
 
             // Assert
             Assert.IsFalse(updated);
@@ -573,10 +573,10 @@ namespace Server.Tests
         {
             // Arrange
             AccountController controller = new();
-            controller.AddAccount(_USERNAME, _PASSWORD);
+            controller.AddAccount(_Username, _Password);
 
             // Act
-            bool auth = controller.AuthAccount(_USERNAME, _PASSWORD2);
+            bool auth = controller.AuthAccount(_Username, _Password2);
 
             // Assert
             Assert.IsFalse(auth);
@@ -586,14 +586,14 @@ namespace Server.Tests
     [TestClass]
     public class SongControllerTests
     {
-        private const string _NAME = "name";
-        private const string _ARTIST = "artist";
-        private const string _ALBUM = "album";
-        private const string _NAME2 = "anotherName";
-        private const string _ARTIST2 = "artist2";
-        private const string _ALBUM2 = "album2";
-        private const float _DURATION = 3.12f;
-        private const float _DURATION2 = 4.5f;
+        private const string _SongName = "name";
+        private const string _ArtistName = "artist";
+        private const string _AlbumName = "album";
+        private const string _SongName2 = "anotherName";
+        private const string _ArtistName2 = "artist2";
+        private const string _AlbumName2 = "album2";
+        private const float _Duration = 3.12f;
+        private const float _Duration2 = 4.5f;
 
         [TestMethod]
         public void SONGUNIT001_AddSong_SongAdded()
@@ -602,14 +602,14 @@ namespace Server.Tests
             SongController controller = new();
 
             // Act
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
-            Song song = controller.FindSong(_NAME);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
+            Song song = controller.FindSong(_SongName);
 
             // Assert
-            Assert.AreEqual(_NAME, song.GetName());
-            Assert.AreEqual(_ALBUM, song.GetAlbum());
-            Assert.AreEqual(_ARTIST, song.GetArtist());
-            Assert.AreEqual(_DURATION, song.GetDuration());
+            Assert.AreEqual(_SongName, song.GetName());
+            Assert.AreEqual(_AlbumName, song.GetAlbum());
+            Assert.AreEqual(_ArtistName, song.GetArtist());
+            Assert.AreEqual(_Duration, song.GetDuration());
         }
 
 
@@ -619,7 +619,7 @@ namespace Server.Tests
             // Arrange
             const int ExpectedSize = 1;
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
             var collection = controller.ViewSongs();
@@ -633,13 +633,13 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            controller.DeleteSong(_NAME);
+            controller.DeleteSong(_SongName);
 
             // Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.FindSong(_NAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.FindSong(_SongName));
             Assert.AreEqual("Song not found.", ex.Message);
         }
 
@@ -648,13 +648,13 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            controller.UpdateSong(_NAME, "name", _NAME2);
+            controller.UpdateSong(_SongName, "name", _SongName2);
 
             // Assert
-            Assert.IsNotNull(controller.FindSong(_NAME2));
+            Assert.IsNotNull(controller.FindSong(_SongName2));
         }
 
 
@@ -663,13 +663,13 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            controller.UpdateSong(_NAME, "artist", _ARTIST2);
+            controller.UpdateSong(_SongName, "artist", _ArtistName2);
 
             // Assert
-            Assert.AreEqual(_ARTIST2, controller.ViewSongs()[_NAME].GetArtist());
+            Assert.AreEqual(_ArtistName2, controller.ViewSongs()[_SongName].GetArtist());
         }
 
 
@@ -678,13 +678,13 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            controller.UpdateSong(_NAME, "duration", _DURATION2);
+            controller.UpdateSong(_SongName, "duration", _Duration2);
 
             // Assert
-            Assert.AreEqual(_DURATION2, controller.ViewSongs()[_NAME].GetDuration());
+            Assert.AreEqual(_Duration2, controller.ViewSongs()[_SongName].GetDuration());
         }
 
         [TestMethod]
@@ -692,13 +692,13 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            controller.UpdateSong(_NAME, "album", _ALBUM2);
+            controller.UpdateSong(_SongName, "album", _AlbumName2);
 
             // Assert
-            Assert.AreEqual(_ALBUM2, controller.ViewSongs()[_NAME].GetAlbum());
+            Assert.AreEqual(_AlbumName2, controller.ViewSongs()[_SongName].GetAlbum());
         }
 
         [TestMethod]
@@ -706,10 +706,10 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            bool added = controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            bool added = controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Assert
             Assert.IsFalse(added);
@@ -722,7 +722,7 @@ namespace Server.Tests
             SongController controller = new();
 
             // Act
-            bool deleted = controller.DeleteSong(_NAME);
+            bool deleted = controller.DeleteSong(_SongName);
 
             // Assert
             Assert.IsFalse(deleted);
@@ -733,16 +733,16 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
 
             // Act
-            Song song = controller.FindSong(_NAME);
+            Song song = controller.FindSong(_SongName);
 
             // Assert
-            Assert.AreEqual(_NAME, song.GetName());
-            Assert.AreEqual(_ALBUM, song.GetAlbum());
-            Assert.AreEqual(_ARTIST, song.GetArtist());
-            Assert.AreEqual(_DURATION, song.GetDuration());
+            Assert.AreEqual(_SongName, song.GetName());
+            Assert.AreEqual(_AlbumName, song.GetAlbum());
+            Assert.AreEqual(_ArtistName, song.GetArtist());
+            Assert.AreEqual(_Duration, song.GetDuration());
         }
 
         [TestMethod]
@@ -752,7 +752,7 @@ namespace Server.Tests
             SongController controller = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.FindSong(_NAME));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.FindSong(_SongName));
             Assert.AreEqual("Song not found.", ex.Message);
         }
 
@@ -763,7 +763,7 @@ namespace Server.Tests
             SongController controller = new();
 
             // Act and Assert
-            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.UpdateSong(_NAME, "name", new object()));
+            Exception ex = Assert.ThrowsException<KeyNotFoundException>(() => controller.UpdateSong(_SongName, "name", new object()));
             Assert.AreEqual("Song not found.", ex.Message);
         }
 
@@ -772,11 +772,11 @@ namespace Server.Tests
         {
             // Arrange
             SongController controller = new();
-            controller.AddSong(_NAME, _ALBUM, _ARTIST, _DURATION);
-            controller.AddSong(_NAME2, _ALBUM2, _ARTIST2, _DURATION2);
+            controller.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
+            controller.AddSong(_SongName2, _AlbumName2, _ArtistName2, _Duration2);
 
             // Act
-            bool updated = controller.UpdateSong(_NAME, "name", _NAME2); // duplicate hash
+            bool updated = controller.UpdateSong(_SongName, "name", _SongName2); // duplicate hash
 
             // Assert
             Assert.IsFalse(updated);
@@ -787,26 +787,26 @@ namespace Server.Tests
     public class FileHandlerTests
     {
         /* Account members */
-        private const string _USERNAME = "username";
-        private const string _PASSWORD = "password";
-        private const string _USERNAME2 = "username2";
+        private const string _Username = "username";
+        private const string _Password = "password";
+        private const string _Username2 = "username2";
 
         /* Song members*/
-        private const string _SONGNAME = "song";
-        private const string _SONGNAME2 = "song2";
-        private const float _DURATION = 3.12f;
+        private const string _SongName = "song";
+        private const string _SongName2 = "song2";
+        private const float _Duration = 3.12f;
 
         /* Album members*/
-        private const string _ALBUMNAME = "album";
-        private const string _ALBUMNAME2 = "album2";
+        private const string _AlbumName = "album";
+        private const string _AlbumName2 = "album2";
         private Bitmap _albumImg = (Bitmap)Image.FromFile("album.png");
         private Bitmap _albumImg2 = (Bitmap)Image.FromFile("album2.png");
 
         /* Artist members*/
-        private const string _ARTISTNAME = "deborah";
-        private const string _ARTISTNAME2 = "justin";
-        private Bitmap _image = (Bitmap)Image.FromFile("deborah.png");
-        private Bitmap _image2 = (Bitmap)Image.FromFile("justin.jpeg");
+        private const string _ArtistName = "deborah";
+        private const string _ArtistName2 = "justin";
+        private Bitmap _artistImage = (Bitmap)Image.FromFile("deborah.png");
+        private Bitmap _artistImage2 = (Bitmap)Image.FromFile("justin.jpeg");
 
         [TestMethod]
         public void FHUNIT001_WriteSongs_CollectionInDataFile()
@@ -816,8 +816,8 @@ namespace Server.Tests
 
             // Act
             SongController songController = new();
-            songController.AddSong(_SONGNAME, _ALBUMNAME, _ARTISTNAME, _DURATION);
-            songController.AddSong(_SONGNAME2, _ALBUMNAME, _ARTISTNAME, _DURATION);
+            songController.AddSong(_SongName, _AlbumName, _ArtistName, _Duration);
+            songController.AddSong(_SongName2, _AlbumName, _ArtistName, _Duration);
 
             FileHandler.WriteSongs(songController, Constants.SongsFile);
             string[] actual = File.ReadAllLines(Constants.SongsFile);
@@ -833,8 +833,8 @@ namespace Server.Tests
             string[] Expected = new string[] {"username,password", "username2,password"};
 
             AccountController accountController = new AccountController();
-            accountController.AddAccount(_USERNAME, _PASSWORD);
-            accountController.AddAccount(_USERNAME2, _PASSWORD);
+            accountController.AddAccount(_Username, _Password);
+            accountController.AddAccount(_Username2, _Password);
 
             // Act
             FileHandler.WriteAccounts(accountController, Constants.AccountsFile);
@@ -851,8 +851,8 @@ namespace Server.Tests
             string[] Expected = new string[] {"Png,album,deborah", "Png,album2,deborah"};
 
             AlbumController albumController = new();
-            albumController.AddAlbum(_ALBUMNAME, _ARTISTNAME, _image);
-            albumController.AddAlbum(_ALBUMNAME2, _ARTISTNAME, _image);
+            albumController.AddAlbum(_AlbumName, _ArtistName, _artistImage);
+            albumController.AddAlbum(_AlbumName2, _ArtistName, _artistImage);
 
             // Act
             FileHandler.WriteAlbums(albumController, Constants.AlbumsFile);
@@ -869,8 +869,8 @@ namespace Server.Tests
             string[] Expected = new string[] {"Png,deborah", "Jpeg,justin"};
 
             ArtistController artistController = new();
-            artistController.AddArtist(_ARTISTNAME, _image);
-            artistController.AddArtist(_ARTISTNAME2, _image2);
+            artistController.AddArtist(_ArtistName, _artistImage);
+            artistController.AddArtist(_ArtistName2, _artistImage2);
 
             // Act
             FileHandler.WriteArtists(artistController, Constants.ArtistsFile);
@@ -894,13 +894,13 @@ namespace Server.Tests
             SongController songController = new();
             FileHandler.ReadSongs(songController, Constants.SongsFile);
 
-            Song song1 = songController.FindSong(_SONGNAME);
-            Song song2 = songController.FindSong(_SONGNAME2);
+            Song song1 = songController.FindSong(_SongName);
+            Song song2 = songController.FindSong(_SongName2);
 
-            if (song1.GetAlbum() == _ALBUMNAME && song1.GetArtist() == _ARTISTNAME && song1.GetDuration() == _DURATION)
+            if (song1.GetAlbum() == _AlbumName && song1.GetArtist() == _ArtistName && song1.GetDuration() == _Duration)
                 parsedFirst = true;
 
-            if (song2.GetAlbum() == _ALBUMNAME && song2.GetArtist() == _ARTISTNAME && song2.GetDuration() == _DURATION)
+            if (song2.GetAlbum() == _AlbumName && song2.GetArtist() == _ArtistName && song2.GetDuration() == _Duration)
                 parsedSecond = true;
 
             // Assert
@@ -922,13 +922,13 @@ namespace Server.Tests
             AccountController accountController = new();
             FileHandler.ReadAccounts(accountController, Constants.AccountsFile);
 
-            Account account1 = accountController.FindAccount(_USERNAME);
-            Account account2 = accountController.FindAccount(_USERNAME2);
+            Account account1 = accountController.FindAccount(_Username);
+            Account account2 = accountController.FindAccount(_Username2);
 
-            if (account1.getPassword() == _PASSWORD)
+            if (account1.getPassword() == _Password)
                 parsedFirst = true;
 
-            if(account2.getPassword() == _PASSWORD)
+            if(account2.getPassword() == _Password)
                 parsedSecond = true;
 
             // Assert
@@ -950,13 +950,13 @@ namespace Server.Tests
             AlbumController albumController = new();
             FileHandler.ReadAlbums(albumController, Constants.AlbumsFile);
 
-            Album album1 = albumController.FindAlbum(_ALBUMNAME);
-            Album album2 = albumController.FindAlbum(_ALBUMNAME2);
+            Album album1 = albumController.FindAlbum(_AlbumName);
+            Album album2 = albumController.FindAlbum(_AlbumName2);
 
-            if (album1.GetArtist() == _ARTISTNAME && Utils.CompareBitmaps(_albumImg, album1.GetImage()))
+            if (album1.GetArtist() == _ArtistName && Utils.CompareBitmaps(_albumImg, album1.GetImage()))
                 parsedFirst = true;
 
-            if (album2.GetArtist() == _ARTISTNAME && Utils.CompareBitmaps(_albumImg2, album2.GetImage()))
+            if (album2.GetArtist() == _ArtistName && Utils.CompareBitmaps(_albumImg2, album2.GetImage()))
                 parsedSecond = true;
 
             // Assert
@@ -977,13 +977,13 @@ namespace Server.Tests
             ArtistController artistController = new();
             FileHandler.ReadArtists(artistController, Constants.ArtistsFile);
 
-            Artist artist1 = artistController.FindArtist(_ARTISTNAME);
-            Artist artist2 = artistController.FindArtist(_ARTISTNAME2);
+            Artist artist1 = artistController.FindArtist(_ArtistName);
+            Artist artist2 = artistController.FindArtist(_ArtistName2);
 
-            if (Utils.CompareBitmaps(artist1.GetImage(), _image))
+            if (Utils.CompareBitmaps(artist1.GetImage(), _artistImage))
                 parsedFirst = true;
 
-            if (Utils.CompareBitmaps(artist2.GetImage(), _image2))
+            if (Utils.CompareBitmaps(artist2.GetImage(), _artistImage2))
                 parsedSecond = true;
             
             // Assert
