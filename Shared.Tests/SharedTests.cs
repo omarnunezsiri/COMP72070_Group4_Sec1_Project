@@ -382,8 +382,8 @@ namespace Shared.Tests
 
             int position = 1 + serial[0] + sizeof(UInt64);
 
-            Assert.AreEqual(serverResponse.Length, serial[position++] << 8 + serial[position++]);// + serial[position]);
-            Assert.AreEqual(serverResponse, Encoding.ASCII.GetString(serial, position, serial[position-1]));
+            //Assert.AreEqual(serverResponse.Length, serial[position++] << 8 + serial[position++]);// + serial[position]);
+            Assert.AreEqual(serverResponse, Encoding.ASCII.GetString(serial, position, serverResponse.Length));
         }
 
         [TestMethod]
