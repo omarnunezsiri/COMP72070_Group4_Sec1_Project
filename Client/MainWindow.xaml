@@ -42,8 +42,8 @@
         <TextBlock HorizontalAlignment="Left" Height="25" Margin="309,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2" FontFamily="Ink Free" FontSize="18" Text="Don't have an account? "/>
         <Button Content="SIGN UP" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="25" Margin="358,334,0,0" VerticalAlignment="Top" Width="84" BorderBrush="Black" Foreground="Black" Click="Button_Click" FontFamily="Century Gothic" FontWeight="Bold" Background="{x:Null}"/>
         <ContentControl HorizontalAlignment="Center" Margin="0,192,0,0" VerticalAlignment="Top"/>
-        <PasswordBox HorizontalAlignment="Left" Height="27" Margin="292,192,0,0" VerticalAlignment="Top" Width="222" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="Black" Password="Password"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27" Margin="292,150,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="222" Background="{x:Null}" BorderBrush="Black" TextChanged="TextBox_TextChanged" TextBlock.FontFamily="Ink Free" TextBlock.FontSize="18"/>
+        <PasswordBox HorizontalAlignment="Left" Height="27" Margin="292,192,0,0" VerticalAlignment="Top" Width="222" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="Black" Password="Password" GotFocus="PasswordBox_GotFocus" LostFocus="PasswordBox_LostFocus"/>
+        <TextBox x:Name="usernameTB" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27" Margin="292,150,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="222" Background="{x:Null}" BorderBrush="Black" TextChanged="TextBox_TextChanged" TextBlock.FontFamily="Ink Free" TextBlock.FontSize="18" LostFocus="usernameTB_LostFocus" GotFocus="usernameTB_GotFocus"/>
     </Grid>
     </Viewbox>
 </Window>
