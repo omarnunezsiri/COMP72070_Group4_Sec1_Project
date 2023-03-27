@@ -27,7 +27,7 @@
                     <ImageBrush ImageSource="/silly music player-1 (5).png"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="96,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus"/>
+            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="96,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White"/>
             <Button Content="" HorizontalAlignment="Left" Margin="382,369,0,0" VerticalAlignment="Top" Height="38" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2">
                 <Button.Background>
                     <ImageBrush ImageSource="/play-button.png"/>
@@ -43,7 +43,11 @@
                     <ImageBrush ImageSource="/forward-button.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Slider x:Name="Volume" Grid.Column="1" HorizontalAlignment="Left" Margin="260,379,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" OpacityMask="Black" BorderBrush="Black" Height="18" ValueChanged="Volume_ValueChanged" Foreground="Black" Maximum="100" Value="-1" AutoToolTipPlacement="BottomRight" Cursor="Arrow" AutomationProperties.Name="Volume"/>
+            <Slider x:Name="Volume" Grid.Column="1" HorizontalAlignment="Left" Margin="260,379,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" OpacityMask="Black" Height="18" ValueChanged="Volume_ValueChanged" Foreground="Black" Maximum="100" Value="-1" AutoToolTipPlacement="BottomRight" AutomationProperties.Name="Volume">
+                <Slider.BorderBrush>
+                    <SolidColorBrush Color="Black"/>
+                </Slider.BorderBrush>
+            </Slider>
             <ProgressBar HorizontalAlignment="Left" Height="5" Margin="22,414,0,0" VerticalAlignment="Top" Width="758" Grid.ColumnSpan="2" Background="Black" BorderBrush="{x:Null}" Foreground="White"/>
             <Button x:Name="Logout" Content="" HorizontalAlignment="Left" Margin="369,10,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="21" Width="21" Grid.Column="1" AutomationProperties.Name="Logout" Click="Logout_Click">
                 <Button.ToolTip>
@@ -53,6 +57,11 @@
                 </Button.ToolTip>
                 <Button.Background>
                     <ImageBrush ImageSource="/logout.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="216,22,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black">
+                <Button.Background>
+                    <ImageBrush ImageSource="/magnifier.png"/>
                 </Button.Background>
             </Button>
 

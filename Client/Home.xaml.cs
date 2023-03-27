@@ -63,5 +63,10 @@ namespace Client
                 tb.Text = string.Empty;
             }
         }
+
+        private void searchButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

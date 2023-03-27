@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="SignUp" Height="450" Width="800">
+        Title="SignUp" Height="450" Width="800"
+        WindowState="Maximized">
+    <Viewbox Stretch="Fill">
     <Grid RenderTransformOrigin="0.5,0.5" Width="800" Height="434.04">
         <Grid.FocusVisualStyle>
             <Style/>
@@ -20,7 +22,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Ellipse HorizontalAlignment="Left" Height="66" Margin="10,10,0,0" VerticalAlignment="Top" Width="66">
+        <Ellipse HorizontalAlignment="Left" Height="90" Margin="10,10,0,0" VerticalAlignment="Top" Width="90">
             <Ellipse.Fill>
                 <ImageBrush ImageSource="/silly music player-1 (5).png"/>
             </Ellipse.Fill>
@@ -43,5 +45,9 @@
         <TextBox x:Name="usernameTB" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27" Margin="327,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" Background="{x:Null}" BorderBrush="Black" TextChanged="TextBox_TextChanged" TextBlock.FontFamily="Ink Free" TextBlock.FontSize="18" SelectionBrush="White" CaretBrush="White" OpacityMask="White" Text=""/>
         <Label Content="Password" Margin="245,176,78,0" VerticalAlignment="Top" FontFamily="Ink Free" FontSize="16"/>
         <Label Content="Confirm Password" Margin="191,222,78,0" VerticalAlignment="Top" FontFamily="Ink Free" FontSize="16"/>
+        <Button x:Name="submitButton" Grid.Column="1" Content="Submit" HorizontalAlignment="Left" Margin="325,394,0,0" VerticalAlignment="Top" Height="30" Width="65" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontSize="16" Click="submitButton_Click"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" Margin="10,394,0,0" VerticalAlignment="Top" Height="30" Width="65" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontSize="16" Click="cancelButton_Click"/>
+        <Label Content="Create An Account" Margin="306,51,306,0" VerticalAlignment="Top" FontFamily="Ink Free" FontSize="22" Grid.ColumnSpan="2" FontWeight="Bold"/>
     </Grid>
+    </Viewbox>
 </Window>

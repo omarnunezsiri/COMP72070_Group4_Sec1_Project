@@ -5,12 +5,14 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="forward-button.png" />
     <None Remove="hide.png" />
     <None Remove="logout.png" />
+    <None Remove="magnifier.png" />
     <None Remove="play-button.png" />
     <None Remove="rewind-button.png" />
     <None Remove="silly music player-1 %284%29.png" />
@@ -19,9 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="forward-button.png" />
     <Resource Include="hide.png" />
     <Resource Include="logout.png" />
+    <Resource Include="magnifier.png" />
     <Resource Include="play-button.png" />
     <Resource Include="rewind-button.png" />
     <Resource Include="silly music player-1 (4).png" />

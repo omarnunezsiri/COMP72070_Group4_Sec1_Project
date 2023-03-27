@@ -41,5 +41,17 @@ namespace Client
         {
 
         }
+
+        private void submitButton_Click(object sender, RoutedEventArgs e)
+        {
+            //insert check for username and pw
+        }
+
+        private void cancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow newWindow = new MainWindow();
+            newWindow.Show();
+            this.Close();
+        }
     }
 }

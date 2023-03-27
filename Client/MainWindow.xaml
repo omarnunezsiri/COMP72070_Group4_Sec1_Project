@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client" 
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="Login" Height="450" Width="800"
         WindowState="Maximized">
     <Viewbox Stretch="Fill">
         <Grid RenderTransformOrigin="0.5,0.5" Width="800" Height="434.04">
@@ -19,17 +19,18 @@
                 </LinearGradientBrush>
             </Grid.Background>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="41*"/>
+                <ColumnDefinition Width="359*"/>
+                <ColumnDefinition Width="400*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock HorizontalAlignment="Left" Height="25" Margin="316,101,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" Grid.ColumnSpan="2" FontFamily="Ink Free" FontSize="22" Text="Log in to continue."/>
-            <Button x:Name="loginButton" Content="LOGIN" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="25" Margin="358,243,0,0" VerticalAlignment="Top" Width="84" BorderBrush="Black" Foreground="White" Click="loginButton_Click" FontFamily="Century Gothic" FontWeight="Bold" Background="Black"/>
-            <Ellipse HorizontalAlignment="Left" Height="77" Margin="363,16,0,0" Stroke="Black" VerticalAlignment="Top" Width="80" Grid.ColumnSpan="2" StrokeThickness="0">
+            <TextBlock HorizontalAlignment="Left" Height="25" Margin="275,101,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" Grid.ColumnSpan="2" FontFamily="Ink Free" FontSize="22" Text="Log in to continue." Grid.Column="1"/>
+            <Button x:Name="loginButton" Content="LOGIN" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="25" Margin="317,243,0,0" VerticalAlignment="Top" Width="84" BorderBrush="Black" Foreground="White" Click="loginButton_Click" FontFamily="Century Gothic" FontWeight="Bold" Background="Black" Grid.Column="1"/>
+            <Ellipse HorizontalAlignment="Left" Height="77" Margin="322,16,0,0" Stroke="Black" VerticalAlignment="Top" Width="80" Grid.ColumnSpan="2" StrokeThickness="0" Grid.Column="1">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="/silly music player-1 (5).png" Stretch="UniformToFill"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <Rectangle HorizontalAlignment="Left" Height="1" Margin="280,291,0,0" Stroke="Black" VerticalAlignment="Top" Width="240" Fill="Black" OpacityMask="Black" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2">
+            <Rectangle HorizontalAlignment="Left" Height="1" Margin="239,291,0,0" Stroke="Black" VerticalAlignment="Top" Width="240" Fill="Black" OpacityMask="Black" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.Column="1">
                 <Rectangle.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform ScaleY="-1"/>
@@ -39,17 +40,17 @@
                     </TransformGroup>
                 </Rectangle.RenderTransform>
             </Rectangle>
-            <TextBlock HorizontalAlignment="Left" Height="25" Margin="309,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2" FontFamily="Ink Free" FontSize="18" Text="Don't have an account? "/>
-            <Button x:Name="signupButton" Content="SIGN UP" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="25" Margin="358,334,0,0" VerticalAlignment="Top" Width="84" BorderBrush="Black" Foreground="Black" Click="signupButton_Click" FontFamily="Century Gothic" FontWeight="Bold" Background="{x:Null}"/>
-            <ContentControl HorizontalAlignment="Center" Margin="0,192,0,0" VerticalAlignment="Top"/>
-            <StackPanel Orientation="Horizontal" Margin="292,182,167,217" Grid.ColumnSpan="2">
+            <TextBlock HorizontalAlignment="Left" Height="25" Margin="268,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" Grid.ColumnSpan="2" FontFamily="Ink Free" FontSize="18" Text="Don't have an account? " Grid.Column="1"/>
+            <Button x:Name="signupButton" Content="SIGN UP" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="25" Margin="317,334,0,0" VerticalAlignment="Top" Width="84" BorderBrush="Black" Foreground="Black" Click="signupButton_Click" FontFamily="Century Gothic" FontWeight="Bold" Background="{x:Null}" Grid.Column="1"/>
+            <ContentControl HorizontalAlignment="Left" Margin="159,192,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+            <StackPanel Orientation="Horizontal" Margin="251,182,167,217" Grid.ColumnSpan="2" Grid.Column="1">
                 <Grid Width="222" Height="27">
                     <PasswordBox Name="passwordBox" PasswordChar="•" Background="{x:Null}" BorderBrush="Black" Password="Password" FontFamily="Ink Free" FontSize="18" GotFocus="PasswordBox_GotFocus" LostFocus="PasswordBox_LostFocus" SelectionBrush="White" CaretBrush="White"/>
                     <TextBox Name="passwordTextBox" Visibility="Collapsed" FontFamily="Ink Free" FontSize="18" Background="{x:Null}" BorderBrush="Black" SelectionBrush="White" CaretBrush="White" GotFocus="passwordTextBox_GotFocus" LostFocus="passwordTextBox_LostFocus"/>
                 </Grid>
                 <CheckBox Margin="10" Name="showPassword" Unchecked="ShowPassword_Unchecked"  Checked="ShowPassword_Checked" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" Background="{x:Null}" Foreground="Black" Content="Show Password" FontFamily="Ink Free"/>
             </StackPanel>
-            <TextBox x:Name="usernameTB" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27" Margin="292,150,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="222" Background="{x:Null}" BorderBrush="Black" TextChanged="TextBox_TextChanged" TextBlock.FontFamily="Ink Free" TextBlock.FontSize="18" LostFocus="usernameTB_LostFocus" GotFocus="usernameTB_GotFocus" SelectionBrush="White" CaretBrush="White" OpacityMask="White"/>
+            <TextBox x:Name="usernameTB" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27" Margin="251,150,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="222" Background="{x:Null}" BorderBrush="Black" TextBlock.FontFamily="Ink Free" TextBlock.FontSize="18" LostFocus="usernameTB_LostFocus" GotFocus="usernameTB_GotFocus" SelectionBrush="White" CaretBrush="White" OpacityMask="White" Grid.Column="1"/>
         </Grid>
     </Viewbox>
 </Window>

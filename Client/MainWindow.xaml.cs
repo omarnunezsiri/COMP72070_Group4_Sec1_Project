@@ -28,6 +28,8 @@ namespace Client
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
+            //insert check for username and pw
+
             Home newWindow = new Home();
             newWindow.Show();
             this.Hide();
@@ -38,11 +40,6 @@ namespace Client
             SignUp newWindow = new SignUp();
             newWindow.Show();
             this.Hide();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
 
         private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
