@@ -84,7 +84,39 @@ namespace Server
                 this.hash += serialized[pointer++];
             }
 
-            this.data = new byte[0];
+            if (serialized.Length > pointer + 10)
+            {
+                // Deserialize response
+                // Deserialize block index
+                for (int i = 1; i <= sizeof(UInt16); i++)
+                {
+                    this.blockIndex <<= 8;
+                    this.blockIndex += serialized[pointer++];
+                }
+
+                // Deserialize block count
+                for (int i = 1; i <= sizeof(UInt16); i++)
+                {
+                    this.totalBlocks <<= 8;
+                    this.totalBlocks += serialized[pointer++];
+                }
+
+                // Deserialize byte count
+                for (int i = 1; i <= sizeof(UInt32); i++)
+                {
+                    this.dataByteCount <<= 8;
+                    this.dataByteCount += serialized[pointer++];
+                }
+                this.data = new byte[serialized.Length - pointer];
+                Array.Copy(serialized, pointer, this.data, 0, serialized.Length - pointer);
+                Console.WriteLine(Encoding.ASCII.GetString(this.data));
+
+            } else
+            {
+                this.data = new byte[0];
+            }
+
+            
         }
 
         // Serialize data
