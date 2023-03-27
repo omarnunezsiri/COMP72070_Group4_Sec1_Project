@@ -406,16 +406,49 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT009_DeserializeHeader_CorrectMembersAssigned()
         {
+            // Known header 
             PacketHeader pHeader = new PacketHeader(PacketHeader.AccountAction.SignUp);
 
+            // Create from serialize
+            PacketHeader newPHeader = new PacketHeader(pHeader.Serialize());
 
-            Assert.AreEqual(pHeader.Serialize(), pHeader.Serialize());
+
+            Assert.AreEqual(pHeader.GetPacketType(), newPHeader.GetPacketType());
+            Assert.AreEqual(pHeader.GetAccountAction(), newPHeader.GetAccountAction());
+            Assert.AreEqual(pHeader.GetSongAction(), newPHeader.GetSongAction());
         }
 
         [TestMethod]
-        public void PACKETUNIT010_DeserializeDownloadBody_CorrectMembersAssigned()
+        public void PACKETUNIT010_DeserializeDownloadBody_RequestDeserialize()
         {
-            Assert.Fail();
+            UInt64 hash = 0x0102030405060708;
+            DownloadBody dBody = new DownloadBody(DownloadBody.Type.SongFile, hash);
+
+            DownloadBody deserializedDBody = new DownloadBody(dBody.Serialize());
+
+            Assert.AreEqual(dBody.GetType(), deserializedDBody.GetType());
+            Assert.AreEqual(dBody.GetHash(), deserializedDBody.GetHash());
+        }
+
+        [TestMethod]
+        public void PACKETUNIT110_DeserializeDownloadBody_ResponseDeserialize()
+        {
+
+            UInt64 hash = 0x0102030405060708;
+            UInt16 blockIndex = 34;
+            UInt16 totalBlocks = 4737;
+            UInt32 dataByteCount = 3484727;
+            byte[] data = new byte[dataByteCount];
+            DownloadBody dBody = new DownloadBody(DownloadBody.Type.SongFile, hash, blockIndex, totalBlocks, dataByteCount, data);
+
+            DownloadBody deserializedDBody = new DownloadBody(dBody.Serialize());
+
+            Assert.AreEqual(dBody.GetType(), deserializedDBody.GetType());
+            Assert.AreEqual(dBody.GetHash(), deserializedDBody.GetHash());
+            Assert.AreEqual(dBody.GetBlockIndex(), deserializedDBody.GetBlockIndex());
+            Assert.AreEqual(dBody.GetTotalBlocks(), deserializedDBody.GetTotalBlocks());
+            Assert.AreEqual(dBody.GetDataByteCount(), deserializedDBody.GetDataByteCount());
+            Assert.IsTrue(Enumerable.SequenceEqual(dBody.GetData(), deserializedDBody.GetData()));
         }
 
         [TestMethod]

@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static Server.PacketHeader;
 
 namespace Server
 {
@@ -39,6 +41,8 @@ namespace Server
 
             this.type = _type;
             this.hash = _hash;
+
+            this.data = new byte[0];
         }
 
         // Constructor for building a server response from scratch
@@ -60,9 +64,27 @@ namespace Server
         }
 
         // Construct from serialized input
-        public DownloadBody(byte serialized)
+        public DownloadBody(byte[] serialized)
         {
             // TODO : Deserialize
+            int pointer = 0;
+
+            // Deserialize flags
+            byte flags = serialized[pointer++];
+
+            int mask = 0b01000000;
+            this.type = Type.AlbumCover; // short form for 0b10000000 being Type.AlbumCOver
+            this.type = ((flags & mask) != 0) ? Type.SongFile : this.type;
+
+
+            // Deserialize the hash
+            for (int i = 1; i <= sizeof(UInt64); i++)
+            {
+                this.hash <<= 8;
+                this.hash += serialized[pointer++];
+            }
+
+            this.data = new byte[0];
         }
 
         // Serialize data
@@ -79,9 +101,9 @@ namespace Server
             serialized[pointer++] <<= 6; // Shift the remaining 6 bits (align to MSB)
 
             // Serialize the hash
-            for (int i = 0; i < sizeof(UInt64); i++)
+            for (int i = 1; i <= sizeof(UInt64); i++)
             {
-                serialized[pointer++] = (byte)((byte)(this.hash >> (7 - i) * 8) & 0xFF);
+                serialized[pointer++] = (byte)((byte)(this.hash >> (sizeof(UInt64) - i) * 8) & 0xFF);
             }
             
             if (this.role == Role.Server)

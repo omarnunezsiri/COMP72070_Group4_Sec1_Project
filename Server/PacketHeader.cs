@@ -40,6 +40,7 @@ namespace Server
 
         private SongAction _songAction;
 
+        // Constructors
         public PacketHeader(SongAction songAction)
         {
             this._packetType = Type.Song;
@@ -47,6 +48,7 @@ namespace Server
 
             this._songAction = songAction;
         }
+
         public PacketHeader(AccountAction accountAction)
         {
             this._packetType = Type.Account;
@@ -56,7 +58,7 @@ namespace Server
         }
 
 
-
+        // Deserializing constructor
         public PacketHeader(byte serialized)
         {
             int mask = 0b10000000;
