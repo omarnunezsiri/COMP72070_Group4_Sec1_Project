@@ -54,6 +54,19 @@ namespace Client
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
             //insert check for username and pw
+            if (usernameTB.Text.Length <= 3)
+            {
+                MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK);
+            }
+            if (usernameTB.Text == null && passwordBox.Password == null || cnfmpasswordBox.Password == null)
+            {
+                MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+            }
+            if (!passwordBox.Password.Equals(cnfmpasswordBox.Password) || !passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
+            {
+                MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+            }
+
         }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)

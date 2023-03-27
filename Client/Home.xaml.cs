@@ -1,4 +1,5 @@
-﻿using NAudio.Utils;
+﻿using NAudio.Gui;
+using NAudio.Utils;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,6 @@ namespace Client
         Thread playingThread;
         State playing = new();
         WaveOutEvent outputDevice = new();
-        WaveChannel32 volumeStream;
 
         public Home()
         {
@@ -43,11 +43,7 @@ namespace Client
             playing.Position = 0;
             progressBar.Minimum = 0;
             progressBar.Value = 0;
-        }
-
-        private void Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
+            Volume.Value = (double)outputDevice.Volume;
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -187,6 +183,13 @@ namespace Client
                 playing.Position = 0;
             }
             
+        }
+
+        private void Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            float vol = (float)Volume.Value / 100;
+            outputDevice.Volume = vol;
+            //Volume.Value = outputDevice.Volume;
         }
     }
 }

@@ -43,7 +43,7 @@
                     <ImageBrush ImageSource="/forward-button.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Slider x:Name="Volume" Grid.Column="1" HorizontalAlignment="Left" Margin="255,379,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" OpacityMask="Black" Height="18" ValueChanged="Volume_ValueChanged" Foreground="Black" Maximum="100" Value="-1" AutoToolTipPlacement="BottomRight" AutomationProperties.Name="Volume">
+            <Slider x:Name="Volume" Grid.Column="1" HorizontalAlignment="Left" Margin="255,379,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" OpacityMask="Black" Height="18" Foreground="Black" Maximum="100" AutoToolTipPlacement="BottomRight" AutomationProperties.Name="Volume" ValueChanged="Volume_ValueChanged" SmallChange="1" LargeChange="10">
                 <Slider.BorderBrush>
                     <SolidColorBrush Color="Black"/>
                 </Slider.BorderBrush>

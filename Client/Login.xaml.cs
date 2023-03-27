@@ -31,17 +31,23 @@ namespace Client
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
             //insert check for username and pw
-
-            Home newWindow = new Home();
-            newWindow.Show();
-            this.Hide();
+            if (usernameTB.Text == null || passwordBox.Password == null || passwordTextBox.Text == null || usernameTB.Text == "Username" || passwordBox.Password == "Password")
+            {
+                MessageBoxResult result = MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+            }
+            else
+            {
+                Home newWindow = new Home();
+                newWindow.Show();
+                this.Close();
+            }
         }
 
         private void signupButton_Click(object sender, RoutedEventArgs e)
         {
             SignUp newWindow = new SignUp();
             newWindow.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
@@ -123,6 +129,5 @@ namespace Client
             passwordTextBox.Visibility = Visibility.Collapsed;
             passwordBox.Visibility = Visibility.Visible;
         }
-
     }
 }
