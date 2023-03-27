@@ -29,6 +29,7 @@ namespace Server
         // Current media state response
         public enum State
         {
+            NotApplicable,
             Playing,
             Paused,
             Idle
@@ -41,7 +42,8 @@ namespace Server
         {
             this.role = Role.Client;
 
-            this.action = _action;
+            this.SetAction(_action);
+            this.SetState(State.NotApplicable);
         }
 
         // Constructor for building a server response from scratch
@@ -56,13 +58,38 @@ namespace Server
         {
             this.role = Role.Server;
 
-            this.state = _state;
+            this.SetState(_state);
         }
 
         // Construct from serialized input
-        public MediaControlBody(byte serialized)
+        public MediaControlBody(byte[] serialized)
         {
+            this.role = Role.Client;
+            byte actionFlags = serialized[0];
 
+            // Deserialize Action
+            int mask = 0b01000000;
+            this.action = Action.Play; // short form for 0b10000000 being Action.Play
+            this.action = ((actionFlags & mask) != 0) ? Action.Pause : this.action; 
+            mask >>= 1;
+            this.action = ((actionFlags & mask) != 0) ? Action.Previous : this.action; 
+            mask >>= 1;
+            this.action = ((actionFlags & mask) != 0) ? Action.Skip : this.action;
+            mask >>= 1;
+            this.action = ((actionFlags & mask) != 0) ? Action.GetState : this.action;
+            
+            if (serialized.Length > 1)
+            {
+                this.role = Role.Server;
+                byte stateFlags = serialized[1];
+
+                // Deserialize State
+                mask = 0b01000000; // reuse mask variable
+                this.state = State.Playing; // short form for 0b10000000 being State.Playing
+                this.state = ((stateFlags & mask) != 0) ? State.Paused : this.state;
+                mask >>= 1;
+                this.state = ((stateFlags & mask) != 0) ? State.Idle : this.state;
+            }
         }
 
         // Serialize data
@@ -88,12 +115,12 @@ namespace Server
             return serialized;
         }
 
-        public void SetAction(Action _action)
+        private void SetAction(Action _action)
         {
             this.action = _action;
         }
 
-        public void SetState(State _state)
+        private void SetState(State _state)
         {
             this.state = _state;
         }

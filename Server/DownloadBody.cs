@@ -66,6 +66,8 @@ namespace Server
         // Construct from serialized input
         public DownloadBody(byte[] serialized)
         {
+            this.role = Role.Client;
+
             // TODO : Deserialize
             int pointer = 0;
 
@@ -86,6 +88,8 @@ namespace Server
 
             if (serialized.Length > pointer + 10)
             {
+                this.role = Role.Server;
+
                 // Deserialize response
                 // Deserialize block index
                 for (int i = 1; i <= sizeof(UInt16); i++)
@@ -109,14 +113,11 @@ namespace Server
                 }
                 this.data = new byte[serialized.Length - pointer];
                 Array.Copy(serialized, pointer, this.data, 0, serialized.Length - pointer);
-                Console.WriteLine(Encoding.ASCII.GetString(this.data));
 
             } else
             {
                 this.data = new byte[0];
             }
-
-            
         }
 
         // Serialize data
@@ -161,37 +162,7 @@ namespace Server
             return serialized;
         }
 
-        public void SetType(Type _type)
-        {
-            this.type = _type;
-        }
-
-        public void SetHash(UInt64 _hash)
-        {
-            this.hash = _hash;
-        }
-
-        public void SetBlockIndex(UInt16 _blockIndex)
-        {
-            this.blockIndex = _blockIndex;
-        }
-
-        public void SetTotalBlocks(UInt16 _totalBlocks)
-        {
-            this.totalBlocks = _totalBlocks;
-        }
-
-        public void SetDataByteCount(UInt32 _dataByteCount)
-        {
-            this.dataByteCount = _dataByteCount;
-        }
-
-        public void SetData(byte[] _data)
-        {
-            this.data = _data;
-        }
-
-        public Type GetType()
+        public new Type GetType()
         {
             return this.type;
         }

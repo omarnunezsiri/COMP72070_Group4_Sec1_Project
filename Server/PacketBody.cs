@@ -34,19 +34,14 @@ namespace Server
 
         public PacketBody()
         { }
-
-        public PacketBody(PacketHeader header)
-        { }
-
-        public void useHeader(PacketHeader header)
-        {
-            this.header = header;
-        }
+        
 
         public PacketHeader getHeader()
         {
             return this.header;
         }
+
+
 
         public abstract byte[] Serialize();
     }

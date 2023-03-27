@@ -452,9 +452,31 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT011_DeserializeMediaBody_CorrectMembersAssigned()
+        public void PACKETUNIT011_DeserializeMediaBody_Request()
         {
-            Assert.Fail();
+            MediaControlBody.Action action = MediaControlBody.Action.Skip;
+            MediaControlBody.State state = MediaControlBody.State.NotApplicable;
+
+            MediaControlBody mBody = new MediaControlBody(action); // Just give it action
+
+            MediaControlBody dMBody = new MediaControlBody(mBody.Serialize());
+
+            Assert.AreEqual(action, dMBody.GetAction());
+            Assert.AreEqual(state, dMBody.GetState());
+        }
+
+        [TestMethod]
+        public void PACKETUNIT111_DeserializeMediaBody_Response()
+        {
+            MediaControlBody.Action action = MediaControlBody.Action.GetState;
+            MediaControlBody.State state = MediaControlBody.State.Playing;
+
+            MediaControlBody mBody = new MediaControlBody(action);
+
+            MediaControlBody dMBody = new MediaControlBody(mBody.Serialize());
+
+            Assert.AreEqual(action, dMBody.GetAction());
+            Assert.AreEqual(state, dMBody.GetState());
         }
 
         [TestMethod]
