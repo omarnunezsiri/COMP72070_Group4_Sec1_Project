@@ -189,7 +189,6 @@ namespace Client
         {
             float vol = (float)Volume.Value / 100;
             outputDevice.Volume = vol;
-            //Volume.Value = outputDevice.Volume;
         }
     }
 }
