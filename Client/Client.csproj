@@ -29,6 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="blackbox.png" />
     <Resource Include="forward-button.png" />
     <Resource Include="hide.png" />

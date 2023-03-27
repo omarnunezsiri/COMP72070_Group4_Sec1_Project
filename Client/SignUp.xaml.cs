@@ -58,7 +58,7 @@ namespace Client
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow newWindow = new MainWindow();
+            Login newWindow = new Login();
             newWindow.Show();
             this.Close();
         }

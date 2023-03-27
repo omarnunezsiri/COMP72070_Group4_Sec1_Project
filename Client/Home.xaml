@@ -27,7 +27,7 @@
                     <ImageBrush ImageSource="/silly music player-1 (5).png"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="96,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White"/>
+            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="92,31,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White"/>
             <Button x:Name="playButton" Content="" HorizontalAlignment="Left" Margin="382,369,0,0" VerticalAlignment="Top" Height="36" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2" Click="playButton_Click">
                 <Button.Background>
                     <ImageBrush x:Name="playImg" ImageSource="/play-button.png"/>
@@ -59,21 +59,21 @@
                     <ImageBrush ImageSource="/logout.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="216,22,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black">
+            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="212,34,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black">
                 <Button.Background>
                     <ImageBrush ImageSource="/magnifier.png"/>
                 </Button.Background>
             </Button>
-            <Label x:Name="songName" Content="song name" HorizontalAlignment="Left" Margin="344,287,0,0" VerticalAlignment="Top" Width="112" FontFamily="Ink Free" Background="{x:Null}" Grid.ColumnSpan="2" FontSize="22"/>
-            <Label x:Name="artist" Content="artist" HorizontalAlignment="Left" Margin="368,316,0,0" VerticalAlignment="Top" Width="66" FontFamily="Ink Free" Background="{x:Null}" FontSize="22" Grid.ColumnSpan="2"/>
-            <Label x:Name="startTime" Content="00:00:00" HorizontalAlignment="Left" Margin="10,411,0,0" VerticalAlignment="Top" Width="59" FontFamily="Ink Free" Height="22" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}"/>
-            <Label x:Name="endTime" Content="00:00:00" HorizontalAlignment="Left" Margin="340,411,0,0" VerticalAlignment="Top" Width="60" FontFamily="Ink Free" Height="22" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}" Grid.Column="1"/>
+            <Label x:Name="songName" Content="song name" HorizontalAlignment="Left" Margin="351,292,0,0" VerticalAlignment="Top" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Height="36" Grid.ColumnSpan="2"/>
+            <Label x:Name="artist" Content="artist" HorizontalAlignment="Left" Margin="367,319,0,0" VerticalAlignment="Top" Width="66" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Grid.ColumnSpan="2"/>
+            <Label x:Name="startTime" Content="00:00" HorizontalAlignment="Left" Margin="10,410,0,0" VerticalAlignment="Top" Width="54" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}"/>
+            <Label x:Name="endTime" Content="00:00" HorizontalAlignment="Left" Margin="340,410,0,0" VerticalAlignment="Top" Width="50" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}" Grid.Column="1"/>
             <Button Grid.Column="1" Content="" HorizontalAlignment="Left" Margin="54,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16">
                 <Button.Background>
                     <ImageBrush ImageSource="/repeat.png"/>
                 </Button.Background>
             </Button>
-            <Image HorizontalAlignment="Left" Height="247" Margin="276,43,0,0" VerticalAlignment="Top" Width="248" Source="/blackbox.png" Grid.ColumnSpan="2"/>
+            <Image HorizontalAlignment="Left" Height="234" Margin="284,53,0,0" VerticalAlignment="Top" Width="236" Source="/blackbox.png" Grid.ColumnSpan="2"/>
             <Button x:Name="volumeDown" Grid.Column="1" Content="" HorizontalAlignment="Left" Margin="235,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeDown_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/volume-down.png"/>
