@@ -1,23 +1,12 @@
-﻿using NAudio.Gui;
-using NAudio.Utils;
+﻿using NAudio.Utils;
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Client
 {
@@ -32,17 +21,22 @@ namespace Client
     /// </summary>
     public partial class Home : Window
     {
-        Thread playingThread;
-        State playing = new();
+        BackgroundWorker BackgroundWorker { get; set; }
+        State playingState = new();
         WaveOutEvent outputDevice = new();
 
         public Home()
         {
             InitializeComponent();
-            playing.RunState = false;
-            playing.Position = 0;
+            playingState.RunState = false;
+            playingState.Position = 0;
             progressBar.Minimum = 0;
             progressBar.Value = 0;
+            Volume.Value = 20;
+            BackgroundWorker = new BackgroundWorker();
+            BackgroundWorker.WorkerReportsProgress = true;
+            BackgroundWorker.WorkerSupportsCancellation = true;
+            BackgroundWorker.DoWork += testPlay;
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -50,9 +44,7 @@ namespace Client
             MessageBoxResult result = MessageBox.Show("Are you sure you want to sign out of your account?", "Sign Out", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                Login newWindow = new Login();
-                newWindow.Show();
-                this.Close();
+                Close();
             }
             
         }
@@ -100,29 +92,28 @@ namespace Client
             }
         }
 
-        private void playButton_Click(object sender, RoutedEventArgs e)
+        private void playButton_Click(object? sender, RoutedEventArgs e)
         {
-            if (playing.RunState is true) //SONG IS NOT PLAYING
+            if (playingState.RunState is true) //SONG IS NOT PLAYING
             {
                 playImg.ImageSource = new BitmapImage(new Uri("play-button.png", UriKind.Relative));
-                playing.RunState = false;
+                playingState.RunState = false;
             }
             else //SONG IS PLAYING
             {
                 playImg.ImageSource = new BitmapImage(new Uri("pause-button.png", UriKind.Relative));
-                playing.RunState = true;
+                playingState.RunState = true;
 
                 if(outputDevice.PlaybackState == PlaybackState.Stopped)
                 {
-                    playingThread = new Thread(() => testPlay("mymp3.mp3.mp3", playing));
-                    playingThread.Start();
+                    BackgroundWorker.RunWorkerAsync();
                 }
             }
         }
 
-        private void testPlay(string songName, State playingState)
+        private void testPlay(object? sender, DoWorkEventArgs args)
         {
-            using (var audioFile = new AudioFileReader(songName))
+            using (var audioFile = new AudioFileReader("mymp3.mp3.mp3"))
             {
                 TimeSpan tt = audioFile.TotalTime;
 
@@ -143,19 +134,23 @@ namespace Client
                 outputDevice.Play();
                 while (outputDevice.PlaybackState == PlaybackState.Playing)
                 {
-                    Dispatcher.Invoke(() =>
+                    Dispatcher.Invoke((Delegate)(() =>
                     {
-                        progressBar.Value = playingState.Position = outputDevice.GetPosition();
-                        TimeSpan t = outputDevice.GetPositionTimeSpan();
-                        startTime.Content = string.Format("{0:D2}:{1:D2}",
-                                            t.Minutes,
-                                            t.Seconds);
-                        Volume.Value = (double)outputDevice.Volume * 100;
-                    });
+                        if(outputDevice.PlaybackState is PlaybackState.Playing)
+                        {
+                            progressBar.Value = playingState.Position = outputDevice.GetPosition();
+                            TimeSpan t = outputDevice.GetPositionTimeSpan();
+                            startTime.Content = string.Format("{0:D2}:{1:D2}",
+                                                t.Minutes,
+                                                t.Seconds);
+                            Volume.Value = (double)outputDevice.Volume * 100;
+                        }
+                            
+                    }));
 
                     if (playingState.RunState is false)
                     {
-                        if(!(outputDevice.PlaybackState == PlaybackState.Stopped))
+                        if (!(outputDevice.PlaybackState == PlaybackState.Stopped))
                         {
                             outputDevice.Pause();
                             while (playingState.RunState is false)
@@ -170,28 +165,51 @@ namespace Client
                         Thread.Sleep(100);
                     }
                 }
-
+                    
                 Dispatcher.Invoke(() =>
                 {
                     playImg.ImageSource = new BitmapImage(new Uri("play-button.png", UriKind.Relative));
                     progressBar.Value += (audioFile.Position - progressBar.Value);
                 });
 
-
-                outputDevice.Stop();
-                outputDevice.Dispose();
-                playing.RunState = false;
-                playing.Position = 0;
+                Cleanup();
             }
-            
         }
 
+        
         private void Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             float vol = (float)Volume.Value / 100;
             outputDevice.Volume = vol;
 
             Volume.Value = (double)outputDevice.Volume * 100;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Cleanup();
+            PerformLogout();
+        }
+
+        private void Cleanup()
+        {
+            BackgroundWorker.CancelAsync();
+            BackgroundWorker.Dispose();
+
+            if (outputDevice.PlaybackState != PlaybackState.Stopped)
+            {
+                outputDevice.Stop();
+                outputDevice.Dispose();
+            }
+
+            playingState.RunState = false;
+            playingState.Position = 0;
+        }
+
+        private void PerformLogout()
+        {
+            Login newWindow = new Login();
+            newWindow.Show();
         }
     }
 }

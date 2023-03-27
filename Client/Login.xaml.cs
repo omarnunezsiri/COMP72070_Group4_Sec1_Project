@@ -25,7 +25,6 @@ namespace Client
         public Login()
         {
             InitializeComponent();
-            Directory.SetCurrentDirectory("../../../");
         }
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
