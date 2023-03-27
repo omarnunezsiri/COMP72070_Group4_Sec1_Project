@@ -28,6 +28,10 @@ namespace Client
             passwordTextBox.Text = passwordBox.Password;
             passwordBox.Visibility = Visibility.Collapsed;
             passwordTextBox.Visibility = Visibility.Visible;
+
+            cnfmpasswordTextBox.Text = cnfmpasswordBox.Password;
+            cnfmpasswordBox.Visibility = Visibility.Collapsed;
+            cnfmpasswordTextBox.Visibility = Visibility.Visible;
         }
 
         private void ShowPassword_Unchecked(object sender, RoutedEventArgs e)
@@ -35,6 +39,11 @@ namespace Client
             passwordBox.Password = passwordTextBox.Text;
             passwordTextBox.Visibility = Visibility.Collapsed;
             passwordBox.Visibility = Visibility.Visible;
+
+            cnfmpasswordBox.Password = cnfmpasswordTextBox.Text;
+            cnfmpasswordTextBox.Visibility = Visibility.Collapsed;
+            cnfmpasswordBox.Visibility = Visibility.Visible;
+
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
