@@ -27,7 +27,7 @@
                     <ImageBrush ImageSource="/silly music player-1 (5).png"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <TextBox HorizontalAlignment="Left" Margin="96,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold"/>
+            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="96,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus"/>
             <Button Content="" HorizontalAlignment="Left" Margin="382,369,0,0" VerticalAlignment="Top" Height="38" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2">
                 <Button.Background>
                     <ImageBrush ImageSource="/play-button.png"/>

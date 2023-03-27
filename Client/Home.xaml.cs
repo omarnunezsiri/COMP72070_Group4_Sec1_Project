@@ -41,5 +41,27 @@ namespace Client
             }
             
         }
+
+        private void searchtb_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+
+            // user hasn't entered a username;
+            if (tb.Text == string.Empty)
+            {
+                tb.Text = "Search...";
+            }
+        }
+
+        private void searchtb_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+
+            // username is placeholder
+            if (tb.Text == "Search...")
+            {
+                tb.Text = string.Empty;
+            }
+        }
     }
 }
