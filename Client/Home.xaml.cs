@@ -1,4 +1,5 @@
-﻿using NAudio.Utils;
+﻿using Microsoft.VisualBasic;
+using NAudio.Utils;
 using NAudio.Wave;
 using System;
 using System.ComponentModel;
@@ -96,12 +97,12 @@ namespace Client
         {
             if (playingState.RunState is true) //SONG IS NOT PLAYING
             {
-                playImg.ImageSource = new BitmapImage(new Uri("play-button.png", UriKind.Relative));
+                playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
                 playingState.RunState = false;
             }
             else //SONG IS PLAYING
             {
-                playImg.ImageSource = new BitmapImage(new Uri("pause-button.png", UriKind.Relative));
+                playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "pause-button.png", UriKind.Relative));
                 playingState.RunState = true;
 
                 if(outputDevice.PlaybackState == PlaybackState.Stopped)
@@ -113,7 +114,7 @@ namespace Client
 
         private void testPlay(object? sender, DoWorkEventArgs args)
         {
-            using (var audioFile = new AudioFileReader("mymp3.mp3.mp3"))
+            using (var audioFile = new AudioFileReader(ClientConstants.Mp3Directory + "mymp3.mp3.mp3"))
             {
                 TimeSpan tt = audioFile.TotalTime;
 
@@ -168,7 +169,7 @@ namespace Client
                     
                 Dispatcher.Invoke(() =>
                 {
-                    playImg.ImageSource = new BitmapImage(new Uri("play-button.png", UriKind.Relative));
+                    playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
                     progressBar.Value += (audioFile.Position - progressBar.Value);
                 });
 

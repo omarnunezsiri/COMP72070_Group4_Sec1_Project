@@ -33,19 +33,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="blackbox.png" />
-    <Resource Include="forward-button.png" />
-    <Resource Include="hide.png" />
-    <Resource Include="logout.png" />
-    <Resource Include="magnifier.png" />
-    <Resource Include="play-button.png" />
-    <Resource Include="repeat.png" />
-    <Resource Include="rewind-button.png" />
-    <Resource Include="silly music player-1 (4).png" />
-    <Resource Include="silly music player-1 (5).png" />
-    <Resource Include="view.png" />
-    <Resource Include="volume-down.png" />
-    <Resource Include="volume-up.png" />
+    <Resource Include="Assets\Images\blackbox.png" />
+    <Resource Include="Assets\Images\forward-button.png" />
+    <Resource Include="Assets\Images\hide.png" />
+    <Resource Include="Assets\Images\logout.png" />
+    <Resource Include="Assets\Images\magnifier.png" />
+    <Resource Include="Assets\Images\play-button.png" />
+    <Resource Include="Assets\Images\repeat.png" />
+    <Resource Include="Assets\Images\rewind-button.png" />
+    <Resource Include="Assets\Images\silly music player-1 %284%29.png" />
+    <Resource Include="Assets\Images\silly music player-1 %285%29.png" />
+    <Resource Include="Assets\Images\view.png" />
+    <Resource Include="Assets\Images\volume-down.png" />
+    <Resource Include="Assets\Images\volume-up.png" />
   </ItemGroup>
 
 </Project>

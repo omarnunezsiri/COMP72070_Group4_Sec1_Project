@@ -28,7 +28,7 @@
             <Button x:Name="loginButton" Content="LOGIN" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="25" Margin="317,243,0,0" VerticalAlignment="Top" Width="84" BorderBrush="Black" Foreground="White" Click="loginButton_Click" FontFamily="Century Gothic" FontWeight="Bold" Background="Black" Grid.Column="1"/>
             <Ellipse HorizontalAlignment="Left" Height="77" Margin="322,16,0,0" Stroke="Black" VerticalAlignment="Top" Width="80" Grid.ColumnSpan="2" StrokeThickness="0" Grid.Column="1">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="/silly music player-1 (5).png" Stretch="UniformToFill"/>
+                    <ImageBrush ImageSource="/Assets/Images/silly music player-1 (5).png" Stretch="UniformToFill"/>
                 </Ellipse.Fill>
             </Ellipse>
             <Rectangle HorizontalAlignment="Left" Height="1" Margin="239,291,0,0" Stroke="Black" VerticalAlignment="Top" Width="240" Fill="Black" OpacityMask="Black" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.Column="1">
