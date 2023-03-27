@@ -78,16 +78,6 @@ namespace Server
             return serialized;
         }
 
-        public void SetState(State _state)
-        {
-            this.state = _state;
-        }
-
-        public void SetTimecode(UInt64 _timecode)
-        {
-            this.timecode = _timecode;
-        }
-
         public State GetState()
         {
             return this.state;

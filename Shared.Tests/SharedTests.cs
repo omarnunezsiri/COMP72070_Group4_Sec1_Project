@@ -434,7 +434,6 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT110_DeserializeDownloadBody_ResponseDeserialize()
         {
-
             UInt64 hash = 0x0102030405060708;
             UInt16 blockIndex = 34;
             UInt16 totalBlocks = 4737;
@@ -456,7 +455,6 @@ namespace Shared.Tests
         {
             MediaControlBody.Action action = MediaControlBody.Action.Skip;
             MediaControlBody.State state = MediaControlBody.State.NotApplicable;
-
             MediaControlBody mBody = new MediaControlBody(action); // Just give it action
 
             MediaControlBody dMBody = new MediaControlBody(mBody.Serialize());
@@ -470,7 +468,6 @@ namespace Shared.Tests
         {
             MediaControlBody.Action action = MediaControlBody.Action.GetState;
             MediaControlBody.State state = MediaControlBody.State.Playing;
-
             MediaControlBody mBody = new MediaControlBody(action);
 
             MediaControlBody dMBody = new MediaControlBody(mBody.Serialize());
@@ -482,13 +479,27 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT012_DeserializeSyncBody_CorrectMembersAssigned()
         {
-            Assert.Fail();
+            UInt64 timecode = 0x300C20C53E88E838;
+            SyncBody.State state = SyncBody.State.Playing;
+            SyncBody sBody = new SyncBody(timecode, state);
+
+            SyncBody dSBody = new SyncBody(sBody.Serialize());
+
+            Assert.AreEqual(timecode, dSBody.GetTimecode());
+            Assert.AreEqual(state, dSBody.GetState());
         }
 
         [TestMethod]
         public void PACKETUNIT013_DeserializeAccountBody_CorrectMembersAssigned()
         {
-            Assert.Fail();
+            String username = "myUsername";
+            String password = "someWeirdPassword";
+            Account acc = new Account(username, password);
+
+            Account dAcc = new Account(acc.Serialize());
+
+            Assert.AreEqual(username, dAcc.getUsername());
+            Assert.AreEqual(password, dAcc.getPassword());
         }
 
         [TestMethod]
