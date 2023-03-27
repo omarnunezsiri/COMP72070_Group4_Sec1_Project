@@ -25,9 +25,21 @@ namespace Client
             InitializeComponent();
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
 
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to sign out of your account?", "Sign Out", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                MainWindow newWindow = new MainWindow();
+                newWindow.Show();
+                this.Close();
+            }
+            
         }
     }
 }

@@ -9,42 +9,54 @@
         WindowState="Maximized">
     <Viewbox Stretch="Fill">
         <Grid RenderTransformOrigin="0.5,0.5" Width="800" Height="434.04">
-        <Grid.FocusVisualStyle>
-            <Style/>
-        </Grid.FocusVisualStyle>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF5F88B8"/>
-                <GradientStop Color="#FFF0AFEE" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Ellipse HorizontalAlignment="Left" Height="66" Margin="10,10,0,0" VerticalAlignment="Top" Width="66">
-            <Ellipse.Fill>
-                <ImageBrush ImageSource="/silly music player-1 (5).png"/>
-            </Ellipse.Fill>
-        </Ellipse>
-        <TextBox HorizontalAlignment="Left" Margin="240,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" Grid.Column="1"/>
-        <Button Content="" HorizontalAlignment="Left" Margin="382,383,0,0" VerticalAlignment="Top" Height="38" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2">
-            <Button.Background>
-                <ImageBrush ImageSource="/play-button.png"/>
-            </Button.Background>
-        </Button>
-        <Button Content="" HorizontalAlignment="Left" Margin="351,393,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}">
-            <Button.Background>
-                <ImageBrush ImageSource="/rewind-button.png" Stretch="Uniform"/>
-            </Button.Background>
-        </Button>
-        <Button Content="" HorizontalAlignment="Left" Margin="23,393,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}" Grid.Column="1">
-            <Button.Background>
-                <ImageBrush ImageSource="/forward-button.png" Stretch="Uniform"/>
-            </Button.Background>
-        </Button>
+            <Grid.FocusVisualStyle>
+                <Style/>
+            </Grid.FocusVisualStyle>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF5F88B8"/>
+                    <GradientStop Color="#FFF0AFEE" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Ellipse HorizontalAlignment="Left" Height="66" Margin="10,10,0,0" VerticalAlignment="Top" Width="66">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="/silly music player-1 (5).png"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <TextBox HorizontalAlignment="Left" Margin="96,19,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold"/>
+            <Button Content="" HorizontalAlignment="Left" Margin="382,369,0,0" VerticalAlignment="Top" Height="38" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2">
+                <Button.Background>
+                    <ImageBrush ImageSource="/play-button.png"/>
+                </Button.Background>
+            </Button>
+            <Button Content="" HorizontalAlignment="Left" Margin="351,379,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}">
+                <Button.Background>
+                    <ImageBrush ImageSource="/rewind-button.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Button Content="" HorizontalAlignment="Left" Margin="23,379,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}" Grid.Column="1">
+                <Button.Background>
+                    <ImageBrush ImageSource="/forward-button.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Slider x:Name="Volume" Grid.Column="1" HorizontalAlignment="Left" Margin="260,379,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" OpacityMask="Black" BorderBrush="Black" Height="18" ValueChanged="Volume_ValueChanged" Foreground="Black" Maximum="100" Value="-1" AutoToolTipPlacement="BottomRight" Cursor="Arrow" AutomationProperties.Name="Volume"/>
+            <ProgressBar HorizontalAlignment="Left" Height="5" Margin="22,414,0,0" VerticalAlignment="Top" Width="758" Grid.ColumnSpan="2" Background="Black" BorderBrush="{x:Null}" Foreground="White"/>
+            <Button x:Name="Logout" Content="" HorizontalAlignment="Left" Margin="369,10,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="21" Width="21" Grid.Column="1" AutomationProperties.Name="Logout" Click="Logout_Click">
+                <Button.ToolTip>
+                    <ToolTip>
+                        Logout
+                    </ToolTip>
+                </Button.ToolTip>
+                <Button.Background>
+                    <ImageBrush ImageSource="/logout.png"/>
+                </Button.Background>
+            </Button>
 
-    </Grid>
+        </Grid>
     </Viewbox>
 </Window>
     

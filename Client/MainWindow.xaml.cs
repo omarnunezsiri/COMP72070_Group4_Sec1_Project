@@ -26,9 +26,16 @@ namespace Client
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void loginButton_Click(object sender, RoutedEventArgs e)
         {
             Home newWindow = new Home();
+            newWindow.Show();
+            this.Hide();
+        }
+
+        private void signupButton_Click(object sender, RoutedEventArgs e)
+        {
+            SignUp newWindow = new SignUp();
             newWindow.Show();
             this.Hide();
         }
@@ -81,5 +88,42 @@ namespace Client
                 pb.Password = "Password";
             }
         }
+
+        private void passwordTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox pwtb = (TextBox)sender;
+
+            // password is placeholder
+            if (pwtb.Text == "Password")
+            {
+                pwtb.Text = string.Empty;
+            }
+        }
+
+        private void passwordTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox pwtb = (TextBox)sender;
+
+            // user hasn't entered a password
+            if (pwtb.Text == string.Empty)
+            {
+                pwtb.Text = "Password";
+            }
+        }
+
+        private void ShowPassword_Checked(object sender, RoutedEventArgs e)
+        {
+            passwordTextBox.Text = passwordBox.Password;
+            passwordBox.Visibility = Visibility.Collapsed;
+            passwordTextBox.Visibility = Visibility.Visible;
+        }
+
+        private void ShowPassword_Unchecked(object sender, RoutedEventArgs e)
+        {
+            passwordBox.Password = passwordTextBox.Text;
+            passwordTextBox.Visibility = Visibility.Collapsed;
+            passwordBox.Visibility = Visibility.Visible;
+        }
+
     }
 }
