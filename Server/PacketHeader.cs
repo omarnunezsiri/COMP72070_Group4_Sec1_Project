@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,36 +11,75 @@ namespace Server
     {
         // What type of packet?
         // Section 1 - Packet type (Section 2 or 3)
-        private bool account;
-        private bool song;
-
-        // Section 2 - Account Packet Type
-        private bool signUp;
-        private bool logIn;
-
-        // Section 3 - Song Packet Type
-        private bool sync;
-        private bool media;
-        private bool download;
-        private bool list;
-
-        public PacketHeader()
-        { }
-
-        public PacketHeader(bool _account, bool _song, bool _signup, bool _login, bool _sync, bool _media, bool _download, bool _list)
+        public enum Type
         {
-            this.SetAccountBit(_account);
-            this.SetSongBit(_song);
-            this.SetSignUpBit(_signup);
-            this.SetLogInBit(_login);
-            this.SetSyncBit(_sync);
-            this.SetMediaBit(_media);
-            this.SetDownloadBit(_download);
-            this.SetListBit(_list);
+            Account,
+            Song
         }
 
+        private Type _packetType;
+
+        // Section 2 - Account Packet Type
+        public enum  AccountAction {
+            NotApplicable,
+            SignUp,
+            LogIn
+        }
+
+        private AccountAction _accountAction;
+
+        // Section 3 - Song Packet Type
+        public enum SongAction
+        {
+            NotApplicable,
+            Sync,
+            Media,
+            Download,
+            List
+        }
+
+        private SongAction _songAction;
+
+        public PacketHeader(SongAction songAction)
+        {
+            this._packetType = Type.Song;
+            this._accountAction = AccountAction.NotApplicable;
+
+            this._songAction = songAction;
+        }
+        public PacketHeader(AccountAction accountAction)
+        {
+            this._packetType = Type.Account;
+            this._songAction = SongAction.NotApplicable;
+
+            this._accountAction = accountAction;
+        }
+
+
+
         public PacketHeader(byte serialized)
-        { }
+        {
+            int mask = 0b10000000;
+
+            _packetType = ((serialized & mask) != 0) ? Type.Account : Type.Song;
+
+
+            mask >>= 2;
+            _accountAction = AccountAction.NotApplicable;
+            _accountAction = ((serialized & mask) != 0) ? AccountAction.SignUp : _accountAction;
+            mask >>= 1;
+            _accountAction = ((serialized & mask) != 0) ? AccountAction.LogIn : _accountAction;
+           
+            mask >>= 1;
+            _songAction = SongAction.NotApplicable;
+            _songAction = ((serialized & mask) != 0) ? SongAction.Sync : _songAction;
+            mask >>= 1;
+            _songAction = ((serialized & mask) != 0) ? SongAction.Media : _songAction;
+            mask >>= 1;
+            _songAction = ((serialized & mask) != 0) ? SongAction.Download : _songAction;
+            mask >>= 1;
+            _songAction = ((serialized & mask) != 0) ? SongAction.List : _songAction;
+        }
 
         // Serialize
         public byte Serialize()
@@ -49,112 +89,69 @@ namespace Server
             byte one = 1;
             byte zero = 0;
 
-            serialized += this.GetAccountBit() ? one : zero;
+            serialized += (this.GetPacketType() == Type.Account) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetSongBit() ? one : zero;
+            serialized += (this.GetPacketType() == Type.Song) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetSignUpBit() ? one : zero;
+            serialized += (this.GetAccountAction() == AccountAction.SignUp) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetLogInBit() ? one : zero;
+            serialized += (this.GetAccountAction() == AccountAction.LogIn) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetSyncBit() ? one : zero;
+            serialized += (this.GetSongAction() == SongAction.Sync) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetMediaBit() ? one : zero;
+            serialized += (this.GetSongAction() == SongAction.Media) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetDownloadBit() ? one : zero;
+            serialized += (this.GetSongAction() == SongAction.Download) ? one : zero;
             serialized <<= 1;
 
-            serialized += this.GetListBit() ? one : zero;
+            serialized += (this.GetSongAction() == SongAction.List) ? one : zero;
             //serialized <<= 1;
 
             return serialized;
         }
 
         // Setters
-        public void SetAccountBit(bool bit)
+        public PacketHeader SetPacketType(Type packetType)
         {
-            this.account = bit;
+            this._packetType = packetType;
+
+            return this;
+        }
+        
+        public PacketHeader SetAccountAction(AccountAction accountAction)
+        {
+            this._accountAction = accountAction;
+
+            return this;
         }
 
-        public void SetSongBit(bool bit)
+        public PacketHeader SetSongAction(SongAction songAction)
         {
-            this.song = bit;
-        }
+            this._songAction = songAction;
 
-        public void SetSignUpBit(bool bit)
-        {
-            this.signUp = bit;
-        }
-
-        public void SetLogInBit(bool bit)
-        {
-            this.logIn = bit;
-        }
-
-        public void SetSyncBit(bool bit)
-        {
-            this.sync = bit;
-        }
-
-        public void SetMediaBit(bool bit)
-        {
-            this.media = bit;
-        }
-
-        public void SetDownloadBit(bool bit)
-        {
-            this.download = bit;
-        }
-
-        public void SetListBit(bool bit)
-        {
-            this.list = bit;
+            return this;
         }
 
         // Getters
-        public bool GetAccountBit()
+        public Type GetPacketType()
         {
-            return this.account;
+            return this._packetType;
         }
 
-        public bool GetSongBit()
+        public AccountAction GetAccountAction()
         {
-            return this.song;
+            return this._accountAction;
         }
 
-        public bool GetSignUpBit()
+        public SongAction GetSongAction()
         {
-            return this.signUp;
-        }
-        public bool GetLogInBit()
-        {
-            return this.logIn;
-        }
-
-        public bool GetSyncBit()
-        {
-            return this.sync;
-        }
-
-        public bool GetMediaBit()
-        {
-            return this.media;
-        }
-
-        public bool GetDownloadBit()
-        {
-            return this.download;
-        }
-
-        public bool GetListBit()
-        {
-            return this.list;
+            return this._songAction;
         }
     }
 }

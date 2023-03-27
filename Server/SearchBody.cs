@@ -83,7 +83,9 @@ namespace Server
                     serialized[pointer++] = (byte)((byte)((UInt16)this.response.Length >> (sizeof(UInt16) - i) * 8) & 0xFF);
                 }
 
-                
+                // Serialize the response
+                this.response.CopyTo(serialized, pointer);
+                pointer += this.response.Length;
             }
 
             return serialized;

@@ -103,9 +103,9 @@ namespace Shared.Tests
         public void PACKETUNIT001_SerializeHeader_CorrectBytesAllocated()
         {
             // [ACCOUNT] [SONG] | [SIGNUP] [LOGIN] | [SYNC] [MEDIA] [DOWNLOAD] [LIST]
-            byte expected = 0b10100110;
+            byte expected = 0b10100000;
 
-            PacketHeader pHeader = new PacketHeader(true, false, true, false, false, true, true, false);
+            PacketHeader pHeader = new PacketHeader(PacketHeader.AccountAction.SignUp);
 
             Assert.AreEqual(expected, pHeader.Serialize());
         }
@@ -114,9 +114,9 @@ namespace Shared.Tests
         public void PACKETUNIT101_SerializeHeader_CorrectBytesAllocated()
         {
             // [ACCOUNT] [SONG] | [SIGNUP] [LOGIN] | [SYNC] [MEDIA] [DOWNLOAD] [LIST]
-            byte expected = 0b01011001;
+            byte expected = 0b01000010;
 
-            PacketHeader pHeader = new PacketHeader(false, true, false, true, true, false, false, true);
+            PacketHeader pHeader = new PacketHeader(PacketHeader.SongAction.Download);
 
             Assert.AreEqual(expected, pHeader.Serialize());
         }
@@ -382,14 +382,19 @@ namespace Shared.Tests
 
             int position = 1 + serial[0] + sizeof(UInt64);
 
-            //Assert.AreEqual(serverResponse.Length, serial[position++] << 8 + serial[position++]);// + serial[position]);
-            Assert.AreEqual(serverResponse, Encoding.ASCII.GetString(serial, position, serverResponse.Length));
+            // Deserialized variables
+            int length = (serial[position++] << 8) + serial[position++];
+
+            Assert.AreEqual(serverResponse.Length, length);// + serial[position]);
+            Assert.AreEqual(serverResponse, Encoding.ASCII.GetString(serial, position, length));
         }
 
         [TestMethod]
         public void PACKETUNIT007_SerializeSongData_CorrectBytesAllocated()
         {
             Assert.Fail();
+
+
         }
 
         [TestMethod]
@@ -401,7 +406,10 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT009_DeserializeHeader_CorrectMembersAssigned()
         {
-            Assert.Fail();
+            PacketHeader pHeader = new PacketHeader(PacketHeader.AccountAction.SignUp);
+
+
+            Assert.AreEqual(pHeader.Serialize(), pHeader.Serialize());
         }
 
         [TestMethod]
