@@ -43,7 +43,6 @@ namespace Client
             playing.Position = 0;
             progressBar.Minimum = 0;
             progressBar.Value = 0;
-            Volume.Value = (double)outputDevice.Volume;
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -134,9 +133,10 @@ namespace Client
                     endTime.Content = string.Format("{0:D2}:{1:D2}",
                         tt.Minutes,
                         tt.Seconds);
+
+                    outputDevice.Volume = (float)Volume.Value / 100;
                 });
 
-                outputDevice.Volume = 0.2f;
                 audioFile.Position = playingState.Position;
 
                 outputDevice.Init(audioFile);
@@ -150,6 +150,7 @@ namespace Client
                         startTime.Content = string.Format("{0:D2}:{1:D2}",
                                             t.Minutes,
                                             t.Seconds);
+                        Volume.Value = (double)outputDevice.Volume * 100;
                     });
 
                     if (playingState.RunState is false)
@@ -189,6 +190,8 @@ namespace Client
         {
             float vol = (float)Volume.Value / 100;
             outputDevice.Volume = vol;
+
+            Volume.Value = (double)outputDevice.Volume * 100;
         }
     }
 }
