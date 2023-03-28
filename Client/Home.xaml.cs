@@ -45,7 +45,8 @@ namespace Client
             MessageBoxResult result = MessageBox.Show("Are you sure you want to sign out of your account?", "Sign Out", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
             {
-                Close();
+                Cleanup();
+                PerformLogout();
             }
             
         }
@@ -186,12 +187,6 @@ namespace Client
             Volume.Value = (double)outputDevice.Volume * 100;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            Cleanup();
-            PerformLogout();
-        }
-
         private void Cleanup()
         {
             BackgroundWorker.CancelAsync();
@@ -211,6 +206,7 @@ namespace Client
         {
             Login newWindow = new Login();
             newWindow.Show();
+            Close();
         }
     }
 }

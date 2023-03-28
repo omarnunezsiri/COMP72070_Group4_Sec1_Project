@@ -62,7 +62,7 @@ namespace Client
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
             }
-            if (!passwordBox.Password.Equals(cnfmpasswordBox.Password) || !passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
+            if (!passwordBox.Password.Equals(cnfmpasswordBox.Password) && !passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
             {
                 MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
             }
