@@ -19,6 +19,8 @@ namespace Client
     /// </summary>
     public partial class SignUp : Window
     {
+        bool check = false;
+
         public SignUp()
         {
             InitializeComponent();
@@ -57,19 +59,55 @@ namespace Client
             if (usernameTB.Text.Length <= 3)
             {
                 MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK);
+                check = false;
             }
+            //add check from server ???
             if (usernameTB.Text == null && passwordBox.Password == null || cnfmpasswordBox.Password == null)
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+                check = false;
             }
-            if (!passwordBox.Password.Equals(cnfmpasswordBox.Password) && !passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
+            else if (showPassword.IsChecked == true)
             {
-                MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                if (!passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
+                {
+                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                    check = false;
+                }
+                else
+                {
+                    check = true;
+                }
+            }
+            else if (showPassword.IsChecked == false)
+            {
+                if (!passwordBox.Password.Equals(cnfmpasswordBox.Password))
+                {
+                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                    check = false;
+                }
+                else
+                {
+                    check = true;
+                }
+            }
+            if (check == true)
+            {
+                success.Visibility = Visibility.Visible;
+                submitButton.Visibility = Visibility.Hidden;
+                nextButton.Visibility = Visibility.Visible;
             }
 
         }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Login newWindow = new Login();
+            newWindow.Show();
+            this.Close();
+        }
+
+        private void nextButton_Click(object sender, RoutedEventArgs e)
         {
             Login newWindow = new Login();
             newWindow.Show();
