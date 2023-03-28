@@ -9,8 +9,8 @@ namespace Server
 {
     public class Packet
     {
-        private PacketHeader header;
-        private PacketBody body;
+        public PacketHeader header;
+        public PacketBody body;
 
         public Packet(PacketHeader header, PacketBody body)
         {
