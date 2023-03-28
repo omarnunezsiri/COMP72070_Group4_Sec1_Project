@@ -68,9 +68,8 @@ namespace Server
                 this.context += serialized[pointer++];
             }
 
-            if (pointer >= (len + 1 + sizeof(UInt64)))
+            if (serialized.Length > pointer)
             {
-                Console.WriteLine("here");
                 // Deserialize data length
                 int dataLen = (serialized[pointer++] << 8) + serialized[pointer++];
 

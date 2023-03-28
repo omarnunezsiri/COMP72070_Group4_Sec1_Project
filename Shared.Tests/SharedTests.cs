@@ -468,7 +468,7 @@ namespace Shared.Tests
         {
             MediaControlBody.Action action = MediaControlBody.Action.GetState;
             MediaControlBody.State state = MediaControlBody.State.Playing;
-            MediaControlBody mBody = new MediaControlBody(action);
+            MediaControlBody mBody = new MediaControlBody(action, state);
 
             MediaControlBody dMBody = new MediaControlBody(mBody.Serialize());
 

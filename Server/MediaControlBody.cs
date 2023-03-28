@@ -77,11 +77,16 @@ namespace Server
             this.action = ((actionFlags & mask) != 0) ? Action.Skip : this.action;
             mask >>= 1;
             this.action = ((actionFlags & mask) != 0) ? Action.GetState : this.action;
+
+            this.state = State.NotApplicable;
+            Console.WriteLine("aaaaa " + state + " " + serialized.Length);
             
             if (serialized.Length > 1)
             {
+                Console.WriteLine("responding");
                 this.role = Role.Server;
                 byte stateFlags = serialized[1];
+                
 
                 // Deserialize State
                 mask = 0b01000000; // reuse mask variable
@@ -95,24 +100,32 @@ namespace Server
         // Serialize data
         override public byte[] Serialize()
         {
-            byte[] serialized = new byte[2]; // maximum of two bytes
+            byte request = 0; // maximum of two bytes
 
-            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Play);
-            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Pause);
-            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Previous);
-            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.Skip);
-            serialized[0] = base.SerializeBit(serialized[0], this.action == Action.GetState);
-            serialized[0] <<= 3; // Shift the remaining 3 bits (align to MSB)
+            request = base.SerializeBit(request, this.action == Action.Play);
+            request = base.SerializeBit(request, this.action == Action.Pause);
+            request = base.SerializeBit(request, this.action == Action.Previous);
+            request = base.SerializeBit(request, this.action == Action.Skip);
+            request = base.SerializeBit(request, this.action == Action.GetState);
+            request <<= 3; // Shift the remaining 3 bits (align to MSB)
 
             if (base.role == Role.Server)
             {
-                serialized[1] = base.SerializeBit(serialized[1], this.state == State.Playing);
-                serialized[1] = base.SerializeBit(serialized[1], this.state == State.Paused);
-                serialized[1] = base.SerializeBit(serialized[1], this.state == State.Idle);
-                serialized[1] <<= 5; // Shift the remaining 5 bits (align to MSB)
+                byte response = 0;
+                response = base.SerializeBit(response, this.state == State.Playing);
+                response = base.SerializeBit(response, this.state == State.Paused);
+                response = base.SerializeBit(response, this.state == State.Idle);
+                response <<= 5; // Shift the remaining 5 bits (align to MSB)
+
+                byte[] full = new byte[2];
+                full[0] = request;
+                full[1] = response;
+                return full;
             }
 
-            return serialized;
+            byte[] fullReq = new byte[1];
+            fullReq[0] = request;
+            return fullReq;
         }
 
         private void SetAction(Action _action)
