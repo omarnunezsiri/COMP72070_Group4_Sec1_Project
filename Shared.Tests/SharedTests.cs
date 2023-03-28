@@ -503,9 +503,33 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT014_DeserializeSearchBody_CorrectMembersAssigned()
+        public void PACKETUNIT014_DeserializeSearchBody_Request()
         {
-            Assert.Fail();
+            // [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
+            String filter = "cool song please";
+            UInt64 context = 0x123456789ABCDEF0;
+            SearchBody sBody = new SearchBody(context, filter);
+
+            SearchBody dSBody = new SearchBody(sBody.Serialize());
+
+            Assert.AreEqual(filter, dSBody.GetFilter());
+            Assert.AreEqual(context, dSBody.GetContext());
+        }
+
+        [TestMethod]
+        public void PACKETUNIT114_DeserializeSearchBody_Response()
+        {
+            // [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
+            String filter = "cool song please";
+            byte[] serverResponse = Encoding.ASCII.GetBytes("Cool_song.mp3, potato_joe.mp3, dragon_song.mp3");
+            UInt64 context = 0x123456789ABCDEF0;
+            SearchBody sBody = new SearchBody(context, filter, serverResponse);
+
+            SearchBody dSBody = new SearchBody(sBody.Serialize());
+
+            Assert.AreEqual(filter, dSBody.GetFilter());
+            Assert.AreEqual(context, dSBody.GetContext());
+            Assert.IsTrue(Enumerable.SequenceEqual(serverResponse, dSBody.GetResponse()));
         }
 
         [TestMethod]

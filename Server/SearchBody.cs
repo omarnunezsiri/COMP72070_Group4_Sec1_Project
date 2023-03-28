@@ -52,6 +52,32 @@ namespace Server
         public SearchBody(byte[] serialized)
         {
             // TODO Set State and timecode from serialized data
+            int pointer = 0;
+
+            // Deserialize filter length
+            int len = serialized[pointer++];
+
+            // Deserialize filter
+            this.filter = Encoding.ASCII.GetString(serialized, pointer, len);
+            pointer += len;
+
+            // Deserialize the hash
+            for (int i = 1; i <= sizeof(UInt64); i++)
+            {
+                this.context <<= 8;
+                this.context += serialized[pointer++];
+            }
+
+            if (pointer >= (len + 1 + sizeof(UInt64)))
+            {
+                Console.WriteLine("here");
+                // Deserialize data length
+                int dataLen = (serialized[pointer++] << 8) + serialized[pointer++];
+
+                // Deserialize data
+                this.response = new byte[dataLen];
+                Array.Copy(serialized, pointer, this.response, 0, dataLen);
+            }
         }
 
         // Serialize data
@@ -89,6 +115,21 @@ namespace Server
             }
 
             return serialized;
+        }
+
+        public UInt64 GetContext()
+        {
+            return this.context;
+        }
+
+        public String GetFilter()
+        {
+            return this.filter;
+        }
+
+        public byte[] GetResponse()
+        {
+            return this.response;
         }
     }
 }

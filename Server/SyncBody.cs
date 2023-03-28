@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static Server.PacketHeader;
 
 namespace Server
 {
@@ -50,6 +52,21 @@ namespace Server
         public SyncBody(byte[] serialized)
         {
             // TODO Set State and timecode from serialized data
+            int pointer = 0;
+
+            // Deserialize timecode
+            for (int i = 1; i <= sizeof(UInt64); i++)
+            {
+                this.timecode <<= 8;
+                this.timecode += serialized[pointer++];
+            }
+
+            // Deserialize state
+            int mask = 0b01000000;
+            this.state = State.Playing;
+            this.state = ((serialized[pointer] & mask) != 0) ? State.Paused : this.state;
+            mask >>= 1;
+            this.state = ((serialized[pointer] & mask) != 0) ? State.Playing : this.state;
         }
 
         // Serialize data
