@@ -128,5 +128,11 @@ namespace Client
             passwordTextBox.Visibility = Visibility.Collapsed;
             passwordBox.Visibility = Visibility.Visible;
         }
+
+        private void forgotPass_Click(object sender, RoutedEventArgs e)
+        {
+            ResetPassword newWindow = new ResetPassword();
+            newWindow.Show();
+        }
     }
 }

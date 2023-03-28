@@ -48,4 +48,10 @@
     <Resource Include="Assets\Images\volume-up.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ResetPassword.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

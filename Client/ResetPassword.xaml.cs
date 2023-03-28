@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,19 +13,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Client
 {
     /// <summary>
-    /// Interaction logic for SignUp.xaml
+    /// Interaction logic for ResetPassword.xaml
     /// </summary>
-    public partial class SignUp : Window
+    public partial class ResetPassword : Window
     {
         bool check = false;
+        //bool valid;
+        ArrayList usernames = new ArrayList();
 
-        public SignUp()
+        public ResetPassword()
         {
             InitializeComponent();
+            AddToList();
         }
         private void ShowPassword_Checked(object sender, RoutedEventArgs e)
         {
@@ -50,20 +56,55 @@ namespace Client
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            //TextBox tb = (TextBox)sender;
+            bool valid = false;
 
+            for (int i = 0; i < usernames.Count; i++)
+            {
+                if (usernames[i].ToString() == usernameTB.Text)
+                {
+                    valid = true;
+                }
+            }
+
+            if (valid == true)
+            {
+                unameValid.Content = "username found :)";
+                unameValid.Visibility = Visibility.Visible;
+                unameValid.Foreground = Brushes.DarkMagenta;
+            }
+            else
+            {
+                unameValid.Content = "username not found :(";
+                unameValid.Visibility = Visibility.Visible;
+                unameValid.Foreground = Brushes.DarkRed;
+            }
+        }
+
+        private void usernameTB_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+
+            if (tb.Text == string.Empty)
+            {
+                unameValid.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+
+            if (tb.Text == string.Empty)
+            {
+                unameValid.Visibility = Visibility.Hidden;
+            }
         }
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
-            check = false;
-            //insert check for username and pw
-            if (usernameTB.Text.Length <= 3)
-            {
-                MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK);
-                check = false;
-            }
             //add check from server ???
-            else if (usernameTB.Text == null && passwordBox.Password == null && cnfmpasswordBox.Password == null)
+            if (usernameTB.Text == null && passwordBox.Password == null || cnfmpasswordBox.Password == null)
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
                 check = false;
@@ -92,6 +133,11 @@ namespace Client
                     check = true;
                 }
             }
+            if (unameValid.Content == "username not found :(")
+            {
+                MessageBox.Show("Username does not exist!", "Warning", MessageBoxButton.OK);
+                check = false;
+            }
             if (check == true)
             {
                 success.Visibility = Visibility.Visible;
@@ -103,16 +149,23 @@ namespace Client
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
-            Login newWindow = new Login();
-            newWindow.Show();
             this.Close();
         }
 
         private void nextButton_Click(object sender, RoutedEventArgs e)
         {
-            Login newWindow = new Login();
-            newWindow.Show();
+            //Login newWindow = new Login();
+            //newWindow.Show();
             this.Close();
+        }
+
+        private void AddToList()
+        {
+            usernames.Add("spaceman");
+            usernames.Add("dxbby");
+            usernames.Add("ajdj");
+            usernames.Add("itsdee");
+            usernames.Add("sharkfin");
         }
     }
 }

@@ -52,6 +52,7 @@
                 <CheckBox Margin="10" Name="showPassword" Unchecked="ShowPassword_Unchecked"  Checked="ShowPassword_Checked" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" Background="{x:Null}" Foreground="Black" Content="Show Password" FontFamily="Ink Free"/>
             </StackPanel>
             <TextBox x:Name="usernameTB" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="27" Margin="251,150,0,0" TextWrapping="Wrap" Text="Username" VerticalAlignment="Top" Width="222" Background="{x:Null}" BorderBrush="Black" TextBlock.FontFamily="Ink Free" TextBlock.FontSize="18" LostFocus="usernameTB_LostFocus" GotFocus="usernameTB_GotFocus" SelectionBrush="White" CaretBrush="White" OpacityMask="White" Grid.Column="1"/>
+            <Button x:Name="forgotPass" Grid.Column="2" Content="Forgot Password?" HorizontalAlignment="Left" Margin="48,217,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" FontFamily="Ink Free" FontSize="11" Click="forgotPass_Click"/>
         </Grid>
     </Viewbox>
 </Window>
