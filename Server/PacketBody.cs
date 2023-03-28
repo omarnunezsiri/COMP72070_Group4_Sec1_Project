@@ -17,8 +17,6 @@ namespace Server
 
         internal Role role;
 
-        private PacketHeader header;
-
         protected byte SerializeBit(byte _serialized, bool bit)
         {
             byte serialized = _serialized;
@@ -34,13 +32,6 @@ namespace Server
 
         public PacketBody()
         { }
-        
-
-        public PacketHeader getHeader()
-        {
-            return this.header;
-        }
-
 
 
         public abstract byte[] Serialize();
