@@ -321,6 +321,22 @@ namespace Shared.Tests
         }
 
         [TestMethod]
+        public void PACKETUNIT405_SerializeAccountBody_CorrectFlags()
+        {
+            // BYTE[USERNAME LENGTH] LENGTH[USERNAME] | BYTE[PASSWORD LENGTH] LENGTH[PASSWORD]
+            String username = "myUsername";
+            String password = "someWeirdPassword";
+            Account.Status status = Account.Status.Failure;
+            byte expectedFlags = 0b01000000;
+
+            Account acc = new Account(username, password, status);
+
+            byte[] bytes = acc.Serialize();
+
+            Assert.AreEqual(expectedFlags, bytes[bytes.Length - 1]);
+        }
+
+        [TestMethod]
         public void PACKETUNIT006_SerializeSearchBody_FilterMatch()
         {
             // [FILTER_LEN byte] [FILTER byte[]] [CONTEXT_HASH 8bytes] | [DATA_LEN 2byte] [DATA byte[]]
