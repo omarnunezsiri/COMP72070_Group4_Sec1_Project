@@ -11,6 +11,7 @@ namespace Server
         public const int SongIndividualBytes = 3;
         public const int AccountIndividualBytes = 2;
         public const int AlbumIndividualBytes = 2;
+        public const int PortNumber = 27500;
         public const string DefaultImageFile = "default.png";
         public const string AccountsFile = "accounts.txt";
         public const string SongsFile = "songs.txt";
