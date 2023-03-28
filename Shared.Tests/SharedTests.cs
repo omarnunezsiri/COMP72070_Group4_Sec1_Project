@@ -506,7 +506,7 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT013_DeserializeAccountBody_CorrectMembersAssigned()
+        public void PACKETUNIT013_DeserializeAccountBody_Request()
         {
             String username = "myUsername";
             String password = "someWeirdPassword";
@@ -516,6 +516,21 @@ namespace Shared.Tests
 
             Assert.AreEqual(username, dAcc.getUsername());
             Assert.AreEqual(password, dAcc.getPassword());
+        }
+
+        [TestMethod]
+        public void PACKETUNIT113_DeserializeAccountBody_Response()
+        {
+            String username = "myUsername";
+            String password = "someWeirdPassword";
+            Account.Status status = Account.Status.Success;
+            Account acc = new Account(username, password, status);
+
+            Account dAcc = new Account(acc.Serialize());
+
+            Assert.AreEqual(username, dAcc.getUsername());
+            Assert.AreEqual(password, dAcc.getPassword());
+            Assert.AreEqual(status, dAcc.getStatus());
         }
 
         [TestMethod]

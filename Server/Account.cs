@@ -78,7 +78,10 @@ namespace Server
         public void setUsername(string username) { _username = username; }
 
         public Status getStatus() { return _status; }
-        public void setStatus(Status status) { _status = status; }
+        public void setStatus(Status status) {
+            this.role = Role.Server;
+            _status = status;
+        }
 
         override public byte[] Serialize()
         {
