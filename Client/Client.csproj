@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="blackbox.png" />
+    <None Remove="forward-button.png" />
+    <None Remove="hide.png" />
+    <None Remove="logout.png" />
+    <None Remove="magnifier.png" />
+    <None Remove="play-button.png" />
+    <None Remove="repeat.png" />
+    <None Remove="rewind-button.png" />
+    <None Remove="silly music player-1 %284%29.png" />
+    <None Remove="silly music player-1 %285%29.png" />
+    <None Remove="view.png" />
+    <None Remove="volume-down.png" />
+    <None Remove="volume-up.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Images\blackbox.png" />
+    <Resource Include="Assets\Images\forward-button.png" />
+    <Resource Include="Assets\Images\hide.png" />
+    <Resource Include="Assets\Images\logout.png" />
+    <Resource Include="Assets\Images\magnifier.png" />
+    <Resource Include="Assets\Images\play-button.png" />
+    <Resource Include="Assets\Images\repeat.png" />
+    <Resource Include="Assets\Images\rewind-button.png" />
+    <Resource Include="Assets\Images\silly music player-1 %284%29.png" />
+    <Resource Include="Assets\Images\silly music player-1 %285%29.png" />
+    <Resource Include="Assets\Images\view.png" />
+    <Resource Include="Assets\Images\volume-down.png" />
+    <Resource Include="Assets\Images\volume-up.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ResetPassword.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>
