@@ -72,12 +72,20 @@ namespace Client
                 unameValid.Content = "username found :)";
                 unameValid.Visibility = Visibility.Visible;
                 unameValid.Foreground = Brushes.DarkMagenta;
+                newpw.Visibility = Visibility.Visible;
+                cnfmnewpw.Visibility = Visibility.Visible;
+                stackPanel1.Visibility = Visibility.Visible;
+                stackPanel2.Visibility = Visibility.Visible;
             }
             else
             {
                 unameValid.Content = "username not found :(";
                 unameValid.Visibility = Visibility.Visible;
                 unameValid.Foreground = Brushes.DarkRed;
+                newpw.Visibility = Visibility.Hidden;
+                cnfmnewpw.Visibility = Visibility.Hidden;
+                stackPanel1.Visibility = Visibility.Hidden;
+                stackPanel2.Visibility = Visibility.Hidden;
             }
         }
 
@@ -103,8 +111,9 @@ namespace Client
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
+            check = false;
             //add check from server ???
-            if (usernameTB.Text == null && passwordBox.Password == null || cnfmpasswordBox.Password == null)
+            if (usernameTB.Text == string.Empty || passwordBox.Password == string.Empty || cnfmpasswordBox.Password == string.Empty)
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
                 check = false;
@@ -138,12 +147,14 @@ namespace Client
                 MessageBox.Show("Username does not exist!", "Warning", MessageBoxButton.OK);
                 check = false;
             }
-            if (check == true)
+            if (check == true && unameValid.Content == "username found :)")
             {
                 success.Visibility = Visibility.Visible;
                 submitButton.Visibility = Visibility.Hidden;
                 nextButton.Visibility = Visibility.Visible;
             }
+
+            //prints passwords dont match and username doesnt exist
 
         }
 
@@ -167,5 +178,45 @@ namespace Client
             usernames.Add("itsdee");
             usernames.Add("sharkfin");
         }
+
+        private void cnfmpasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (showPassword.IsChecked == true)
+            {
+                cnfmpasswordTextBox.Text = cnfmpasswordBox.Password;
+            }
+        }
+
+        private void passwordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (showPassword.IsChecked == true)
+            {
+                passwordTextBox.Text = passwordBox.Password;
+            }
+        }
+
+        private void passwordTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (showPassword.IsChecked == false)
+            {
+                passwordBox.Password = passwordTextBox.Text;
+            }
+        }
+
+        private void cnfmpasswordTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (showPassword.IsChecked == false)
+            {
+                cnfmpasswordBox.Password = cnfmpasswordTextBox.Text;
+            }   
+        }
+
+        //private void submitButton_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.Return)
+        //    {
+        //        submitButton.Click = true;
+        //    }
+        //}
     }
 }

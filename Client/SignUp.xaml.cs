@@ -50,22 +50,23 @@ namespace Client
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            //validation code similar to the one in reset password to check if the username is taken
         }
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
             check = false;
             //insert check for username and pw
-            if (usernameTB.Text.Length <= 3)
-            {
-                MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK);
-                check = false;
-            }
+           
             //add check from server ???
-            else if (usernameTB.Text == null && passwordBox.Password == null && cnfmpasswordBox.Password == null)
+            if (usernameTB.Text == string.Empty || passwordBox.Password == string.Empty || cnfmpasswordBox.Password == string.Empty)
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+                check = false;
+            }
+            else if (usernameTB.Text.Length < 3)
+            {
+                MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK);
                 check = false;
             }
             else if (showPassword.IsChecked == true)
