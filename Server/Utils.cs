@@ -109,6 +109,7 @@ namespace Server
             PacketBody body = new SearchBody(0, "null", buffer.ToArray());
 
             Packet pk = new Packet(head, body);
+            return pk;
         }
 
         public static void unpackServerSearchResponse(Packet pk)

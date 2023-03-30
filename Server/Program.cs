@@ -1,7 +1,8 @@
+//#define UseSockets
+
 using System.Net.Sockets;
 using System.Net;
 using Server;
-
 
 Directory.SetCurrentDirectory("../../../");
 
@@ -75,41 +76,42 @@ switch(rx.header.GetPacketType())
 }
 
 
-
 Song testSong = songController.FindSong("testSong");
 
 Console.WriteLine(testSong.GetArtist());
 
-PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
-PacketBody packetBody = new Account("user", "password");
-Packet packet = new(packetHeader, packetBody);
+//PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
+//PacketBody packetBody = new Account("user", "password");
+//Packet packet = new(packetHeader, packetBody);
 
-byte[] bytes = packet.Serialize();
+//byte[] bytes = packet.Serialize();
 
-Console.WriteLine("\npacket info when received from client: \n");
-Packet anotherPacket = new(bytes);
-Console.WriteLine(anotherPacket.header.GetPacketType());
-Console.WriteLine(anotherPacket.header.GetAccountAction());
+//Console.WriteLine("\npacket info when received from client: \n");
+//Packet anotherPacket = new(bytes);
+//Console.WriteLine(anotherPacket.header.GetPacketType());
+//Console.WriteLine(anotherPacket.header.GetAccountAction());
 
-Account account = (Account)anotherPacket.body;
-Console.WriteLine(account.getUsername());
-Console.WriteLine(account.getPassword());
-Console.WriteLine(account.getStatus());
+//Account account = (Account)anotherPacket.body;
+//Console.WriteLine(account.getUsername());
+//Console.WriteLine(account.getPassword());
+//Console.WriteLine(account.getStatus());
 
-account.setStatus(Account.Status.Success);
+//account.setStatus(Account.Status.Success);
 
-byte[] anotherBytes = anotherPacket.Serialize();
-Packet clientPacket = new(anotherBytes);
+//byte[] anotherBytes = anotherPacket.Serialize();
+//Packet clientPacket = new(anotherBytes);
 
-Console.WriteLine("\npacket info when client receives it:\n");
-Console.WriteLine(clientPacket.header.GetPacketType());
-Console.WriteLine(clientPacket.header.GetAccountAction());
+//Console.WriteLine("\npacket info when client receives it:\n");
+//Console.WriteLine(clientPacket.header.GetPacketType());
+//Console.WriteLine(clientPacket.header.GetAccountAction());
 
-Account account2 = (Account)clientPacket.body;
-Console.WriteLine(account2.getUsername());
-Console.WriteLine(account2.getPassword());
-Console.WriteLine(account2.getStatus());
+//Account account2 = (Account)clientPacket.body;
+//Console.WriteLine(account2.getUsername());
+//Console.WriteLine(account2.getPassword());
+//Console.WriteLine(account2.getStatus());
 
+
+#if (UseSockets)
 IPEndPoint ipEndPoint = new(IPAddress.Any, Constants.PortNumber);
 TcpListener listener = new(ipEndPoint);
 
@@ -127,6 +129,7 @@ try
 
         await using NetworkStream stream = handler.GetStream();
 
+        Packet rxPacket;
         byte[] buffer = new byte[1024];
         int receivedBytes;
         int offset;
@@ -134,32 +137,45 @@ try
         // Connection will run until Client disconnects, then goes back to listening
         while ((receivedBytes = stream.Read(buffer, 0, buffer.Length)) > 0)
         {
-            
-            //offset = 0;
-            //PacketHeader packetHeader = new(buffer[offset++]); // header located in the first byte of the packet
+            rxPacket = new Packet(buffer);
+            switch (rxPacket.header.GetPacketType())
+            {
+                case PacketHeader.Type.Account:
 
-            //PacketHeader.Type packetType = packetHeader.GetPacketType();
+                    throw new NotImplementedException();
 
-            //if(packetType == PacketHeader.Type.Account)
-            //{
-            //    PacketHeader.AccountAction accountAction = packetHeader.GetAccountAction();
+                    break;
 
-            //    if (accountAction is not 0)
-            //    {
-            //        switch (accountAction)
-            //        {
-            //            case PacketHeader.AccountAction.SignUp:
+                case PacketHeader.Type.Song:
+                    switch (rxPacket.header.GetSongAction())
+                    {
+                        case PacketHeader.SongAction.NotApplicable:
 
-            //                break;
-            //            case PacketHeader.AccountAction.LogIn:
-            //                break;
-            //        }
-            //    }
-            //}
-            //else if(packetType == PacketHeader.Type.Song)
-            //{
+                            throw new NotImplementedException();
 
-            //}
+                            break;
+                        case PacketHeader.SongAction.Sync:
+
+                            throw new NotImplementedException();
+
+                            break;
+                        case PacketHeader.SongAction.Media:
+
+                            throw new NotImplementedException();
+
+                            break;
+                        case PacketHeader.SongAction.Download:
+
+                            throw new NotImplementedException();
+
+                            break;
+                        case PacketHeader.SongAction.List:
+
+                            throw new NotImplementedException();
+                            break;
+                    }
+                    break;
+            }
 
         }
 
@@ -171,3 +187,4 @@ finally
 {
     listener.Stop();
 }
+#endif
