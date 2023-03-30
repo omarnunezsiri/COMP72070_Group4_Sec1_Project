@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,11 +27,25 @@ namespace Client
         //bool valid;
         ArrayList usernames = new ArrayList();
 
+        /* Data communications */
+        byte[] TxBuffer;
+        byte[] RxBuffer;
+
+        PacketHeader packetHeader;
+        Account account;
+
         public ResetPassword()
         {
             InitializeComponent();
             AddToList();
+
+            /* Sets the Header to be of type LogIn (Resetting Password) */
+            packetHeader = new(PacketHeader.AccountAction.LogIn);
+
+            /* Creates an account with no username/password to be replaced to avoid reallocations */
+            account = new Account(ClientConstants.Unused, ClientConstants.Unused);
         }
+
         private void ShowPassword_Checked(object sender, RoutedEventArgs e)
         {
             passwordTextBox.Text = passwordBox.Password;
@@ -56,7 +71,19 @@ namespace Client
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //TextBox tb = (TextBox)sender;
+            /* Builds the packet including the username to be searched */ 
+            account.setUsername(usernameTB.Text);
+            Packet packet = new(packetHeader, account);
+
+            /* Serializes the packet */
+            TxBuffer = packet.Serialize();
+            
+            // Send TxBuffer
+
+            /* Simulates server appending response */
+            Packet serverPacket = new(TxBuffer);
+            Account responseAccount = (Account)serverPacket.body;
+
             bool valid = false;
 
             for (int i = 0; i < usernames.Count; i++)
@@ -68,6 +95,24 @@ namespace Client
             }
 
             if (valid == true)
+            {
+                responseAccount.setStatus(Account.Status.Success);
+            }
+            else
+            {
+                responseAccount.setStatus(Account.Status.Failure);
+            }
+
+            /* Client receives response back */
+            RxBuffer = serverPacket.Serialize();
+            
+            /* Deserializes Response packet */
+            packet = new(RxBuffer);
+
+            /* Takes the Account body to check for Success/Failure */
+            account = (Account)packet.body;
+
+            if(account.getStatus() == Account.Status.Success)
             {
                 unameValid.Content = "username found :)";
                 unameValid.Visibility = Visibility.Visible;
