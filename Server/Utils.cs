@@ -72,6 +72,11 @@ namespace Server
             return results;
         }
 
+        //public static Bitmap getSongImage(Song song)            //this needs to get done. Can I do it without passing in the artist controller?
+        //{
+
+        //}
+
         /// <summary>
         /// Takes a given search term and outputs a completed search packet to be sent by the client.
         /// Just a higher level of abstraction for packet creation.
@@ -102,6 +107,8 @@ namespace Server
 
 
             PacketBody body = new SearchBody(0, "null", buffer.ToArray());
+
+            Packet pk = new Packet(head, body);
         }
 
         public static void unpackServerSearchResponse(Packet pk)
