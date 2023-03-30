@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,6 +48,65 @@ namespace Server
 
                 return new Bitmap(stream);
             }
+        }
+
+        /// <summary>
+        /// Searches and gathers all search results of songs matching a given search term
+        /// </summary>
+        /// <param name="sc">SongController containing all songs</param>
+        /// <param name="searchTerm">Term to search for</param>
+        /// <returns>List of songs that match search criteria</returns>
+        public static List<Song> searchSong(SongController sc, String searchTerm)
+        {
+            List<Song> results = new List<Song>();
+            Dictionary<String, Song> songs = sc.ViewSongs();
+
+            foreach (var song in songs) 
+            {
+                if(song.Key.Contains(searchTerm))
+                {
+                    results.Add(song.Value);
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Takes a given search term and outputs a completed search packet to be sent by the client.
+        /// Just a higher level of abstraction for packet creation.
+        /// </summary>
+        /// <param name="searchTerm">The string to search for</param>
+        /// <returns>Completed packet</returns>
+        public static Packet generateClientSearchPacket(String searchTerm)
+        {
+            SearchBody body = new SearchBody(0, searchTerm);
+            PacketHeader head = new PacketHeader(PacketHeader.SongAction.List);
+
+            Packet pk = new Packet(head, body);
+
+            return pk;
+        }
+
+        /// <summary>
+        /// Abstraction of server response to a search request from client.
+        /// Will handle gathering all the needed data for the search results and packaging it up.
+        /// </summary>
+        /// <param name="searchResults">List of songs found in the search</param>
+        /// <returns></returns>
+        public static Packet generateServerSearchResponse(List<Song> searchResults)
+        {
+            PacketHeader head = new PacketHeader(PacketHeader.SongAction.List);
+            List<Byte> buffer = new List<Byte>();
+
+
+
+            PacketBody body = new SearchBody(0, "null", buffer.ToArray());
+        }
+
+        public static void unpackServerSearchResponse(Packet pk)
+        {
+            SearchBody body = (SearchBody)pk.body;
         }
     }
 }
