@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -22,6 +23,10 @@ namespace Client
     /// </summary>
     public partial class Login : Window
     {
+        /* Data communications */
+        byte[] TxBuffer;
+        byte[] RxBuffer;
+
         public Login()
         {
             InitializeComponent();
@@ -36,9 +41,40 @@ namespace Client
             }
             else
             {
-                Home newWindow = new Home();
-                newWindow.Show();
-                this.Close();
+                /* Sets the header information to be an Account LogIn */
+                PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.LogIn);
+
+                /* Builds the body with the given login information */
+                string password = passwordBox.Password ?? passwordTextBox.Text;
+                Account account = new(usernameTB.Text, password);
+
+                /* Builds the packet with all necessary information and serializes it */
+                Packet packet = new Packet(packetHeader, account);
+                TxBuffer = packet.Serialize();
+
+                // Send TxBuffer
+
+                /* This simulates the Server appending a Success response */
+                Packet serverPacket = new Packet(TxBuffer);
+                Account clientAccount = (Account)serverPacket.body;
+                clientAccount.setStatus(Account.Status.Success);
+
+                // Receive response Packet
+                byte[] RxBuffer = serverPacket.Serialize();
+                packet = new Packet(RxBuffer);
+                account = (Account)packet.body;
+
+                if(account.getStatus() == Account.Status.Success) 
+                {
+                    Home newWindow = new Home();
+                    newWindow.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Username not found! Try a different one.", "Warning", MessageBoxButton.OK);
+                }
+
             }
         }
 
