@@ -33,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Server\Server.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\Images\blackbox.png" />
     <Resource Include="Assets\Images\forward-button.png" />
     <Resource Include="Assets\Images\hide.png" />

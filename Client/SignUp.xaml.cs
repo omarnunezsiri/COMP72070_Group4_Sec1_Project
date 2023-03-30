@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Server;
 using System.Windows.Shapes;
 
 namespace Client
@@ -56,6 +57,7 @@ namespace Client
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
             check = false;
+            string actualPw = "";
             //insert check for username and pw
            
             //add check from server ???
@@ -78,6 +80,7 @@ namespace Client
                 }
                 else
                 {
+                    actualPw = passwordTextBox.Text;
                     check = true;
                 }
             }
@@ -90,14 +93,47 @@ namespace Client
                 }
                 else
                 {
+                    actualPw = passwordBox.Password;
                     check = true;
                 }
             }
+
             if (check == true)
             {
-                success.Visibility = Visibility.Visible;
-                submitButton.Visibility = Visibility.Hidden;
-                nextButton.Visibility = Visibility.Visible;
+                /* Sets the PacketHeader to be a type of Account Sign Up */
+                PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.SignUp);
+
+                /* Builds the Account body with the contents given by user */
+                Account account = new Account(usernameTB.Text, actualPw);
+
+                /* Creates the Packet to serialize */
+                Packet packet = new Packet(packetHeader, account);
+
+                /* Serialize and send packet bytes to Server */
+                byte[] TxBuffer = packet.Serialize();
+
+                // Send TxBuffer
+
+                /* This simulates the Server appending a Success response */
+                Packet serverPacket = new Packet(TxBuffer);
+                Account clientAccount = (Account)serverPacket.body;
+                clientAccount.setStatus(Account.Status.Success);
+
+                // Receive response Packet
+                byte[] RxBuffer = serverPacket.Serialize();
+                Packet responsePacket = new Packet(RxBuffer);
+                Account responseBody = (Account)responsePacket.body;
+
+                if (responseBody.getStatus() == Account.Status.Success)
+                {
+                    success.Visibility = Visibility.Visible;
+                    submitButton.Visibility = Visibility.Hidden;
+                    nextButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MessageBox.Show("Username is taken! Try using a different one", "Warning", MessageBoxButton.OK);
+                }
             }
 
         }
