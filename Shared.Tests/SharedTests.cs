@@ -1262,8 +1262,8 @@ namespace Shared.Tests
             // Arrange
             Song song = new Song(_SongName, _SongAlbum, _SongArtist, _SongDuration);
 
-            // [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
-            byte[] expected = new byte[] { 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
+            // [TOTALLENGTH] [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
+            byte[] expected = new byte[] { 24, 0, 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
 
             // Act
             byte[] serialized = song.Serialize();
