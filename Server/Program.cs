@@ -32,7 +32,7 @@ byte[] tx = pk.Serialize();
 
 //accountController.AddAccount("user", "password");
 //PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
-//PacketBody packetBody = new Account("user", "password");
+//PacketBody packetBody = new Account("user", "");
 //Packet packet = new(packetHeader, packetBody);
 
 //byte[] bytes = packet.Serialize();
@@ -58,8 +58,20 @@ switch(rx.header.GetPacketType())
                 accountReceived.setStatus(Account.Status.Success);
                 break;
             case PacketHeader.AccountAction.SignUp:
-                /* If we can add the account to the Dictionary, response is success. Failure otherwise. */
-                if (accountController.AddAccount(accountReceived.getUsername(), accountReceived.getPassword()))
+                /* If we receive an empty password, the user is attempting to create a username that doesn't exist */
+                if(accountReceived.getPassword() == string.Empty)
+                {
+                    try
+                    {
+                        Account account = accountController.FindAccount(accountReceived.getUsername());
+                        accountReceived.setStatus(Account.Status.Failure);
+                    }
+                    catch (Exception)
+                    {
+                        accountReceived.setStatus(Account.Status.Success);
+                    }
+                } /* If we can add the account to the Dictionary, response is success. Failure otherwise. */
+                else if (accountController.AddAccount(accountReceived.getUsername(), accountReceived.getPassword())) 
                     accountReceived.setStatus(Account.Status.Success);
                 else
                     accountReceived.setStatus(Account.Status.Failure);
