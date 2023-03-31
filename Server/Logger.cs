@@ -101,6 +101,7 @@ namespace Server
             }
 
             logMessage += Environment.NewLine;
+            Console.WriteLine(logMessage);
             File.AppendAllText( _fileName, logMessage);
         }
     }

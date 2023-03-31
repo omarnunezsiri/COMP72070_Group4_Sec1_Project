@@ -6,6 +6,9 @@ using Server;
 
 Directory.SetCurrentDirectory("../../../");
 
+Logger logger = Logger.Instance;
+Logger.SetFileName(Constants.TextDirectory + Constants.ServerLogsFile);
+
 //init databases
 AccountController accountController = new AccountController();
 SongController songController = new SongController();
@@ -27,18 +30,67 @@ FileHandler.ReadAccounts(accountController, Constants.TextDirectory + Constants.
 Packet pk = Utils.GenerateClientSearchPacket("test");
 byte[] tx = pk.Serialize();
 
+//accountController.AddAccount("user", "password");
+//PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
+//PacketBody packetBody = new Account("user", "password");
+//Packet packet = new(packetHeader, packetBody);
+
+//byte[] bytes = packet.Serialize();
+
 //server stuff
 
 //Unpack incoming packet
 Packet rx = new Packet(tx);
+logger.Log(rx, false);
 
 //check for packet type and handle accordingly
 switch(rx.header.GetPacketType())
 {
     case PacketHeader.Type.Account:
-        
-        throw new NotImplementedException();
 
+        Account accountReceived = (Account)rx.body;
+        
+        switch (rx.header.GetAccountAction())
+        {
+            case PacketHeader.AccountAction.NotApplicable:
+                /* Work around to reset password after user was found */
+                accountController.FindAccount(accountReceived.getUsername()).setPassword(accountReceived.getPassword());
+                accountReceived.setStatus(Account.Status.Success);
+                break;
+            case PacketHeader.AccountAction.SignUp:
+                /* If we can add the account to the Dictionary, response is success. Failure otherwise. */
+                if (accountController.AddAccount(accountReceived.getUsername(), accountReceived.getPassword()))
+                    accountReceived.setStatus(Account.Status.Success);
+                else
+                    accountReceived.setStatus(Account.Status.Failure);
+                break;
+            case PacketHeader.AccountAction.LogIn:
+                bool success = false;
+                try
+                {
+                    Account foundAccount = accountController.FindAccount(accountReceived.getUsername());
+
+                    /* If password is empty, user is trying to reset their password */
+                    if ((accountReceived.getPassword() == string.Empty))
+                        success = true;
+                    else
+                    {
+                        /* If password is not empty, user is trying to log in */
+                        if (accountReceived.getPassword() == foundAccount.getPassword())
+                            success = true;
+                    }
+                }
+                catch (KeyNotFoundException)
+                {
+                    
+                }
+
+                if (success)
+                    accountReceived.setStatus(Account.Status.Success);
+                else
+                    accountReceived.setStatus(Account.Status.Failure);
+                break;
+        }
         break;
         
     case PacketHeader.Type.Song:
@@ -71,15 +123,13 @@ switch(rx.header.GetPacketType())
 
                 //create the packet after here
                 sb.appendServerResponse(Utils.GenerateServerSearchResponse(results, albumController));
-
-                byte[] TxBuffer = rx.Serialize();
-                
-                // sends TxBuffer to client
                 break;
         }
         break;
 }
 
+
+logger.Log(rx, true);
 
 Song testSong = songController.FindSong("testSong");
 
