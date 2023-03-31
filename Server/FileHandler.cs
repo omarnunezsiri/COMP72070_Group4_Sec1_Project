@@ -124,7 +124,7 @@ namespace Server
             }
         }
 
-        public static void ReadArtists(ArtistController artistController, string fileName)
+        public static void ReadArtists(ArtistController artistController, string fileName, string imageDir)
         {
             if (!File.Exists(fileName)) { throw new FileNotFoundException(); }
 
@@ -139,7 +139,7 @@ namespace Server
                     {
                         /* Parsed line: username,password */
                         string[] strs = line.Split(",");
-                        artistController.AddArtist(strs[1], (Bitmap)Image.FromFile($"{strs[1]}.{strs[0].ToLower()}"));
+                        artistController.AddArtist(strs[1], (Bitmap)Image.FromFile($"{imageDir}{strs[1]}.{strs[0].ToLower()}"));
                     }
                 }
             }
@@ -158,7 +158,7 @@ namespace Server
             }
         }
 
-        public static void ReadAlbums(AlbumController albumController, string fileName)
+        public static void ReadAlbums(AlbumController albumController, string fileName, string imageDir)
         {
             if (!File.Exists(fileName)) { throw new FileNotFoundException(); }
 
@@ -173,7 +173,7 @@ namespace Server
                     {
                         /* Parsed line: username,password */
                         string[] strs = line.Split(",");
-                        albumController.AddAlbum(strs[1], strs[2], (Bitmap)Image.FromFile($"{strs[1]}.{strs[0].ToLower()}"));
+                        albumController.AddAlbum(strs[1], strs[2], (Bitmap)Image.FromFile($"{imageDir}{strs[1]}.{strs[0].ToLower()}"));
                     }
                 }
             }

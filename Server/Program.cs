@@ -7,14 +7,16 @@ using Server;
 Directory.SetCurrentDirectory("../../../");
 
 //init databases
+AccountController accountController = new AccountController();
 SongController songController = new SongController();
 AlbumController albumController = new AlbumController();
 ArtistController artistController = new ArtistController();
 
 //get some safe file handling up in here
-FileHandler.ReadSongs(songController, "songs.txt");
-//FileHandler.ReadArtists(artistController, "artists.txt");
-//FileHandler.ReadAlbums(albumController, "albums.txt");
+FileHandler.ReadSongs(songController, Constants.TextDirectory + Constants.SongsFile);
+FileHandler.ReadAlbums(albumController, Constants.TextDirectory + Constants.AlbumsFile, Constants.ImagesDirectory);
+FileHandler.ReadArtists(artistController, Constants.TextDirectory + Constants.ArtistsFile, Constants.ImagesDirectory);
+FileHandler.ReadAccounts(accountController, Constants.TextDirectory + Constants.AccountsFile);
 
 
 //client simulation for search
@@ -22,7 +24,7 @@ FileHandler.ReadSongs(songController, "songs.txt");
 //PacketHeader head = new PacketHeader(PacketHeader.SongAction.List);
 
 //Packet pk = new Packet(head, body);
-Packet pk = Utils.generateClientSearchPacket("test");
+Packet pk = Utils.GenerateClientSearchPacket("test");
 byte[] tx = pk.Serialize();
 
 //server stuff
@@ -65,11 +67,14 @@ switch(rx.header.GetPacketType())
             case PacketHeader.SongAction.List:
 
                 SearchBody sb = (SearchBody)rx.body;
-                String filter = "test"; //sb.GetFilter();
-                List<Song> results = Utils.searchSong(songController, filter);
+                List<Song> results = Utils.SearchSong(songController, sb.GetFilter());
 
                 //create the packet after here
-                Packet responsePk = Utils.generateServerSearchResponse(results);
+                sb.appendServerResponse(Utils.GenerateServerSearchResponse(results, albumController));
+
+                byte[] TxBuffer = rx.Serialize();
+                
+                // sends TxBuffer to client
                 break;
         }
         break;

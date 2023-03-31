@@ -949,7 +949,7 @@ namespace Server.Tests
 
             // Act
             AlbumController albumController = new();
-            FileHandler.ReadAlbums(albumController, Constants.AlbumsFile);
+            FileHandler.ReadAlbums(albumController, Constants.AlbumsFile, "");
 
             Album album1 = albumController.FindAlbum(_AlbumName);
             Album album2 = albumController.FindAlbum(_AlbumName2);
@@ -976,7 +976,7 @@ namespace Server.Tests
 
             // Act
             ArtistController artistController = new();
-            FileHandler.ReadArtists(artistController, Constants.ArtistsFile);
+            FileHandler.ReadArtists(artistController, Constants.ArtistsFile, "");
 
             Artist artist1 = artistController.FindArtist(_ArtistName);
             Artist artist2 = artistController.FindArtist(_ArtistName2);
@@ -1024,7 +1024,7 @@ namespace Server.Tests
             ArtistController controller = new();
 
             // Act and Assert
-            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadArtists(controller, Constants.ArtistsFile));
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadArtists(controller, Constants.ArtistsFile, ""));
         }
 
 
@@ -1037,7 +1037,7 @@ namespace Server.Tests
             AlbumController controller = new();
 
             // Act and Assert
-            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAlbums(controller, Constants.AlbumsFile));
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAlbums(controller, Constants.AlbumsFile, ""));
         }
     }
 
@@ -1453,6 +1453,112 @@ namespace Server.Tests
             // Assert
 
             Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [TestClass]
+    public class PacketTests
+    {
+        [TestMethod]
+        public void SERVERPACKET001_SerializeSongData_DownloadBodyContainsData()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
+
+        [TestMethod]
+        public void SERVERPACKET002_SearchForMusic_ListMatchingReturned()
+        {
+            // Arrange
+            const int ExpectedSize = 2;
+            bool foundTwo = false;
+            bool parsedFirst = false;
+            bool parsedSecond = false;
+
+            SongController songController = new();
+
+            songController.AddSong("testSong", "album1", "artist1", 3.123F);
+            songController.AddSong("Song2", "album1", "artist1", 3.123F);
+            songController.AddSong("testSong2", "album1", "artist1", 3.123F);
+            songController.AddSong("Hello", "album1", "artist1", 3.123F);
+            songController.AddSong("Welcome", "album1", "artist1", 3.123F);
+
+            Packet searchPacket = Utils.GenerateClientSearchPacket("test");
+            SearchBody sb = (SearchBody)searchPacket.body;
+
+            // Act
+            List<Song> matchingSongs = Utils.SearchSong(songController, sb.GetFilter());
+
+            if (matchingSongs.Count == ExpectedSize)
+                foundTwo = true;
+
+            if (matchingSongs[0].GetName() == "testSong")
+                parsedFirst = true;
+
+            if (matchingSongs[1].GetName() == "testSong2")
+                parsedSecond = true;
+
+            // Assert
+            Assert.IsTrue(foundTwo & parsedFirst & parsedSecond); // bitwise AND flags
+        }
+
+        [TestMethod]
+        public void SERVERPACKET003_SerializeSearchResults_SearchResponseAttached()
+        {
+            // Arrange
+            SongController songController = new();
+            AlbumController albumController = new();
+
+            FileHandler.ReadSongs(songController, "SearchTextFiles/" + Constants.SongsFile);
+            FileHandler.ReadAlbums(albumController, "SearchTextFiles/" + Constants.AlbumsFile, "");
+
+            Packet searchPacket = Utils.GenerateClientSearchPacket("test");
+            SearchBody sb = (SearchBody)searchPacket.body;
+
+            /* Assumes that search song works properly */
+            List<Song> matchingSongs = Utils.SearchSong(songController, sb.GetFilter());
+
+            /* Prep for expected byte array */
+            Song song1 = songController.FindSong("testSong");
+            Song song2 = songController.FindSong("testSong2");
+            Album album1 = albumController.FindAlbum(song1.GetAlbum());
+            Album album2 = albumController.FindAlbum(song2.GetAlbum());
+
+            byte[] song1Bytes = song1.Serialize();
+            byte[] song2Bytes = song2.Serialize();
+            byte[] album1CoverBytes = Utils.GetBitmapBytes(album1.GetImage());
+            byte[] cover1LengthBytes = BitConverter.GetBytes(album1CoverBytes.Length);
+            byte[] album2CoverBytes = Utils.GetBitmapBytes(album2.GetImage());
+            byte[] cover2LengthBytes = BitConverter.GetBytes(album2CoverBytes.Length);
+
+            int offset = 0;
+            byte[] expected = new byte[song1Bytes.Length + song2Bytes.Length + album1CoverBytes.Length + cover1LengthBytes.Length + album2CoverBytes.Length + cover2LengthBytes.Length];
+            song1Bytes.CopyTo(expected, offset);
+
+            offset += song1Bytes.Length;
+
+            cover1LengthBytes.CopyTo(expected, offset);
+            offset += sizeof(int);
+
+            album1CoverBytes.CopyTo(expected, offset);
+            offset += album1CoverBytes.Length;
+
+            song2Bytes.CopyTo(expected, offset);
+            offset += song2Bytes.Length;
+
+            cover2LengthBytes.CopyTo(expected, offset);
+            offset += sizeof(int);
+
+            album2CoverBytes.CopyTo(expected, offset);
+
+            // Act
+            byte[] actual = Utils.GenerateServerSearchResponse(matchingSongs, albumController);
+
+            // Assert
+            Assert.IsTrue(expected.SequenceEqual(actual));
         }
     }
 }

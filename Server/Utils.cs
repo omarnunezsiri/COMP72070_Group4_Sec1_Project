@@ -56,7 +56,7 @@ namespace Server
         /// <param name="sc">SongController containing all songs</param>
         /// <param name="searchTerm">Term to search for</param>
         /// <returns>List of songs that match search criteria</returns>
-        public static List<Song> searchSong(SongController sc, String searchTerm)
+        public static List<Song> SearchSong(SongController sc, String searchTerm)
         {
             List<Song> results = new List<Song>();
             Dictionary<String, Song> songs = sc.ViewSongs();
@@ -72,6 +72,35 @@ namespace Server
             return results;
         }
 
+        /// <summary>
+        /// Packs a song object with its cover in a collection of bytes.
+        /// </summary>
+        /// <param name="song">Song to serialize</param>
+        /// <param name="album">Album to get cover from</param>
+        /// <returns>A collection of bytes with the packed song and cover</returns>
+        private static List<Byte> GetPackedSong(Song song, Album album)
+        {
+            int offset = 0;
+
+            Bitmap albumCover = album.GetImage();
+
+            byte[] songBytes = song.Serialize();
+            byte[] albumCoverBytes = GetBitmapBytes(albumCover);
+            byte[] coverLengthBytes = BitConverter.GetBytes(albumCoverBytes.Length);
+
+            byte[] joined = new byte[albumCoverBytes.Length + songBytes.Length + coverLengthBytes.Length];
+            songBytes.CopyTo(joined, offset);
+
+            offset += songBytes.Length;
+
+            coverLengthBytes.CopyTo(joined, offset);
+            offset += sizeof(int);
+
+            albumCoverBytes.CopyTo(joined, offset);
+
+            return joined.ToList();
+        }
+        
         //public static Bitmap getSongImage(Song song)            //this needs to get done. Can I do it without passing in the artist controller?
         //{
 
@@ -83,7 +112,7 @@ namespace Server
         /// </summary>
         /// <param name="searchTerm">The string to search for</param>
         /// <returns>Completed packet</returns>
-        public static Packet generateClientSearchPacket(String searchTerm)
+        public static Packet GenerateClientSearchPacket(String searchTerm)
         {
             SearchBody body = new SearchBody(0, searchTerm);
             PacketHeader head = new PacketHeader(PacketHeader.SongAction.List);
@@ -98,18 +127,21 @@ namespace Server
         /// Will handle gathering all the needed data for the search results and packaging it up.
         /// </summary>
         /// <param name="searchResults">List of songs found in the search</param>
+        /// <param name="albumController">Album controller to get covers from</param>
         /// <returns></returns>
-        public static Packet generateServerSearchResponse(List<Song> searchResults)
+        public static byte[] GenerateServerSearchResponse(List<Song> searchResults, AlbumController albumController)
         {
-            PacketHeader head = new PacketHeader(PacketHeader.SongAction.List);
             List<Byte> buffer = new List<Byte>();
 
+            foreach (Song song in searchResults)
+            {
+                Album album = albumController.FindAlbum(song.GetAlbum());
 
+                List<byte> packedSong = GetPackedSong(song, album);
+                buffer.AddRange(packedSong);
+            }
 
-            PacketBody body = new SearchBody(0, "null", buffer.ToArray());
-
-            Packet pk = new Packet(head, body);
-            return pk;
+            return buffer.ToArray();
         }
 
         public static void unpackServerSearchResponse(Packet pk)
