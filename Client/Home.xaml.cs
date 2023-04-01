@@ -28,12 +28,11 @@ namespace Client
     public partial class Home : Window
     {
         //list of song names to pretend to select from as if it was a database of songs                 DELETE THIS
-        public List<song> fakeResults { get; set; } = new List<song>
+        public List<Song> fakeResults { get; set; } = new List<Song>
         {
-            new song{ Name="One More Light", Artist = "Linkin Park"},
-            new song{Name="Anti-Hero", Artist="Taylor Swift"},
-            new song{Name="Hello", Artist="Adele"},
-            new song{Name="Golden Hour",  Artist="JVKE"}
+            new Song("Anti-Hero", "No idea", "Taylor Swift", 100),
+            new Song("Hello", "No glue", "Adele", 200),
+            new Song("Golden Hour", "Shrug", "JVKE", 300),
         };
 
         BackgroundWorker BackgroundWorker { get; set; }
@@ -42,7 +41,7 @@ namespace Client
 
         //search stuff
         //this list "searchResults" should be populated with the search results from the server
-        public List<song> searchResults { get; set; } = new List<song> { };
+        public List<Song> searchResults { get; set; } = new List<Song> { };
 
         List<Grid> buttonList = new List<Grid>();   //list for storing search result buttons
 
@@ -265,12 +264,14 @@ namespace Client
         /// stubbed search function, will pick 5 randoms names from 'fakeResults' NEED TO REPLACE WITH MAKING SEARCH REQUEST
         /// </summary>
         /// <param name="resultList"></param>
-        public void search(List<song> resultList)
+        public void search(List<Song> resultList)
         {
+
+            //EVERYTHING IN HERE NEEDS TO BE REPLACED WITH DATA COMMS CRAP
             Random r = new Random();
             for (int i = 0; i < 5; i++)
             {
-                int index = r.Next(4);
+                int index = r.Next(3);
                 resultList.Add(fakeResults[index]);
             }
         }
@@ -325,12 +326,12 @@ namespace Client
                 //create the song name text
                 TextBlock songName = new TextBlock();
                 songName.Style = (Style)FindResource("SongName");
-                songName.Text = searchResults[i].Name;
+                songName.Text = searchResults[i].GetName();
 
                 //Create artist text block
                 TextBlock artistName = new TextBlock();
                 artistName.Style = (Style)FindResource("ArtistName");
-                artistName.Text = searchResults[i].Artist;
+                artistName.Text = searchResults[i].GetArtist();
 
                 //add all elements to grid
                 //newGrid.Children.Add(albumCover);             //TEMP COMMENTING OUT, NEED TO FIGURE OUT WHERE THESE IMAGES ARE GETTING PUT
@@ -387,18 +388,6 @@ namespace Client
                     searchActive = true;
                 }
             }
-        }
-    }
-
-    public class song
-    {
-        public string Name { get; set; }
-        public string Artist { get; set; }
-
-
-        public override string ToString()
-        {
-            return Name + " by " + Artist;
         }
     }
 }
