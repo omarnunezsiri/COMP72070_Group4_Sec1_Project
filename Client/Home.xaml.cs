@@ -53,7 +53,7 @@ namespace Client
 
         //button dimensions
         const int WIDTH = 400;
-        const int HEIGHT = 60;
+        const int HEIGHT = 40;
 
         //is the search view currently showing
         bool searchActive = false;
@@ -254,7 +254,7 @@ namespace Client
                     MainCanvas.Children.Remove(button);
                 }
                 searchActive = false;
-                currentY = 64;
+                currentY = 0;
 
                 searchResults.Clear();
             }
@@ -293,7 +293,7 @@ namespace Client
 
                 //oh god here we go. Create all the rows and columns
                 ColumnDefinition col1 = new ColumnDefinition();
-                col1.Width = new GridLength(60);
+                col1.Width = new GridLength(40);
                 ColumnDefinition col2 = new ColumnDefinition();
                 RowDefinition row1 = new RowDefinition();
                 RowDefinition row2 = new RowDefinition();
@@ -350,7 +350,7 @@ namespace Client
         }
 
         /// <summary>
-        /// Selects song to play                NEED TO 
+        /// Selects song to play
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -375,6 +375,11 @@ namespace Client
         {
             if (e.Key == Key.Enter)
             {
+                if(searchActive)
+                {
+                    clearSearch();
+                    searchActive = false;
+                }
                 if (!searchActive)
                 {
                     MakeButton();
