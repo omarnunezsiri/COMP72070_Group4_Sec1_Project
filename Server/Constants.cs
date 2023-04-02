@@ -16,5 +16,6 @@ namespace Server
         public const string SongsFile = "songs.txt";
         public const string ArtistsFile = "artists.txt";
         public const string AlbumsFile = "albums.txt";
+        public const string ClientLogsFile = "ClientLogs.txt";
     }
 }

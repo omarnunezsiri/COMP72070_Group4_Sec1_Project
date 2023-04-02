@@ -52,6 +52,7 @@ namespace Server
         public SearchBody(byte[] serialized)
         {
             // TODO Set State and timecode from serialized data
+            this.role = Role.Client;
             int pointer = 0;
 
             // Deserialize filter length
@@ -76,13 +77,15 @@ namespace Server
                 // Deserialize data
                 this.response = new byte[dataLen];
                 Array.Copy(serialized, pointer, this.response, 0, dataLen);
+                this.role = Role.Server;
             }
         }
 
         // Serialize data
         override public byte[] Serialize()
         {
-            byte[] serialized = new byte[this.filter.Length + this.response.Length + 1 + sizeof(UInt64) + sizeof(UInt16)]; // maximum of 2 bytes
+            int dataLen = role == Role.Client ? 0 : response.Length + sizeof(UInt16);
+            byte[] serialized = new byte[this.filter.Length + dataLen + 1 + sizeof(UInt64)]; // maximum of 2 bytes
 
             int pointer = 0;
 
