@@ -10,9 +10,7 @@ namespace Server
     {
         private static string _fileName;
         private Logger() { _fileName = ""; }
-        public static Logger Instance { get;} = new Logger();
-
-        
+        public static Logger Instance { get; } = new Logger();
         public static void SetFileName(string fileName)
         {
             _fileName = fileName;
@@ -29,8 +27,7 @@ namespace Server
 
             PacketBody.Role role = body.role;
             PacketBody.Role oppositeRole = role == PacketBody.Role.Server ? PacketBody.Role.Client : PacketBody.Role.Server;
-            
-            string sentReceived = toSend == true ? "Sent": "Received";
+            string sentReceived = toSend == true ? "Sent" : "Received";
             string toFrom = toSend == true ? $"to {oppositeRole}" : $"from {role}";
 
             logMessage += $" {sentReceived} ";
@@ -47,7 +44,8 @@ namespace Server
                         break;
                     case PacketHeader.AccountAction.LogIn:
 
-                        if(getAccount.getPassword().Length > 0)
+
+                        if (getAccount.getPassword().Length > 0)
                         {
                             logMessage += $"Log In {reqRes} {toFrom} for ";
                         }
@@ -77,7 +75,8 @@ namespace Server
                         SyncBody syncBody = (SyncBody)body;
                         logMessage += $"Sync {reqRes} {toFrom}: Current play time ({syncBody.GetTimecode()}), Stream state ({syncBody.GetState()})";
                         break;
-                    case PacketHeader.SongAction.Media: 
+
+                    case PacketHeader.SongAction.Media:
                         MediaControlBody mediaControlBody = (MediaControlBody)body;
 
                         logMessage += $"Media {reqRes} {toFrom}: Action ({mediaControlBody.GetAction()})";
@@ -105,7 +104,7 @@ namespace Server
 
             logMessage += Environment.NewLine;
             Console.WriteLine(logMessage);
-            File.AppendAllText( _fileName, logMessage);
+            File.AppendAllText(_fileName, logMessage);
         }
     }
 }

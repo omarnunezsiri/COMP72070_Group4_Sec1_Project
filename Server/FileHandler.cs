@@ -18,7 +18,7 @@ namespace Server
         {
             if (mp3data is null || mp3data.Length == 0) return false;
 
-            using(FileStream fs = File.Open(fileName, FileMode.Create, FileAccess.Write, FileShare.Write))
+            using (FileStream fs = File.Open(fileName, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
                 fs.Write(mp3data, 0, mp3data.Length);
 
@@ -26,11 +26,11 @@ namespace Server
             }
         }
 
-        public static byte[] readMp3Bytes(string fileName) 
-        { 
+        public static byte[] readMp3Bytes(string fileName)
+        {
             if (!File.Exists(fileName)) { throw new FileNotFoundException(); }
 
-            using(FileStream fs = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream fs = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 MemoryStream ms = new();
 
@@ -42,7 +42,7 @@ namespace Server
             }
         }
 
-        public static bool writeImageBytes(string fileName, Bitmap bitmap) 
+        public static bool writeImageBytes(string fileName, Bitmap bitmap)
         {
             bitmap.Save(fileName);
 
@@ -51,7 +51,7 @@ namespace Server
 
         public static Bitmap readImageBytes(string fileName)
         {
-            if(!File.Exists(fileName)) { throw new FileNotFoundException(); }
+            if (!File.Exists(fileName)) { throw new FileNotFoundException(); }
 
             return (Bitmap)Image.FromFile(fileName);
         }
@@ -60,14 +60,14 @@ namespace Server
         {
             if (!File.Exists(fileName)) { throw new FileNotFoundException(); }
 
-            using(StreamReader sr = new StreamReader(fileName))
+            using (StreamReader sr = new StreamReader(fileName))
             {
                 string? line;
-                while(!sr.EndOfStream)
+                while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine();
 
-                    if(!String.IsNullOrEmpty(line))
+                    if (!String.IsNullOrEmpty(line))
                     {
                         /* Parsed line: username,password */
                         string[] strs = line.Split(",");
@@ -81,9 +81,9 @@ namespace Server
         {
             Dictionary<String, Account> collection = accountController.ViewAccounts();
 
-            using(StreamWriter sw = new(fileName))
+            using (StreamWriter sw = new(fileName))
             {
-                foreach(KeyValuePair<String, Account> kvp in collection)
+                foreach (KeyValuePair<String, Account> kvp in collection)
                 {
                     sw.WriteLine($"{kvp.Value.getUsername()},{kvp.Value.getPassword()}");
                 }
@@ -149,7 +149,7 @@ namespace Server
         {
             Dictionary<String, Artist> collection = artistController.ViewArtists();
 
-            using(StreamWriter sw = new(fileName))
+            using (StreamWriter sw = new(fileName))
             {
                 foreach (KeyValuePair<String, Artist> kvp in collection)
                 {
@@ -183,9 +183,9 @@ namespace Server
         {
             Dictionary<String, Album> collection = albumController.ViewAlbums();
 
-            using(StreamWriter sw = new(fileName))
+            using (StreamWriter sw = new(fileName))
             {
-                foreach(KeyValuePair<String, Album> kvp in collection)
+                foreach (KeyValuePair<String, Album> kvp in collection)
                 {
                     sw.WriteLine($"{kvp.Value.GetImage().RawFormat},{kvp.Value.GetName()},{kvp.Value.GetArtist()}");
                 }

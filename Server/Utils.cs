@@ -50,6 +50,7 @@ namespace Server
             }
         }
 
+
         /// <summary>
         /// Searches and gathers all search results of songs matching a given search term
         /// </summary>
@@ -147,6 +148,40 @@ namespace Server
         public static void unpackServerSearchResponse(Packet pk)
         {
             SearchBody body = (SearchBody)pk.body;
+
+        public static void PopulateSearchResults(byte[] rawData, List<Song> tempSongs, string imageDir)
+        {
+            int length = rawData.Length;
+            int offset = 0;
+
+            while(offset < length)
+            {
+                short songLength = BitConverter.ToInt16(rawData, offset);
+                offset += sizeof(short);
+
+                songLength -= 2; // doesn't take into account the Int16 from the length
+
+                byte[] songBytes = new byte[songLength];
+                Array.Copy(rawData, offset, songBytes, 0, songLength);
+                Song tempSong = new Song(songBytes);
+
+                offset += songLength;
+
+                int bitmapLength = BitConverter.ToInt32(rawData, offset); 
+                offset += sizeof(int);
+
+                byte[] bitmapBytes = new byte[bitmapLength];
+                Array.Copy(rawData, offset, bitmapBytes, 0, bitmapLength);
+                offset += bitmapLength;
+
+                Bitmap tempBmp = GetBitmapFromBytes(bitmapBytes);
+                Bitmap bmp2 = new(tempBmp);
+
+                tempSongs.Add(tempSong);
+                FileHandler.writeImageBytes($"{imageDir}{tempSong.GetName()}.jpg", bmp2);
+                tempBmp.Dispose();
+            }
+
         }
     }
 }
