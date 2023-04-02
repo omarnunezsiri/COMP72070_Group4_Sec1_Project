@@ -127,13 +127,13 @@ namespace Shared.Tests
             // [ISALBUMCOVER] [ISSONGFILE] [-] [-] [-] [-] [-] [-] | [ITEM HASH 8Bytes] [Block index 2bytes] [Total Block count 2bytes] [Data Bytecount 4bytes] [Data nbytes]
 
             byte[] data = new byte[] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-            byte[] expected = new byte[17] { 0b10000000, 1, 2, 3, 4, 5, 6, 7, 8, 0x11, 0x12, 0x21, 0x22, 0x31, 0x32, 0x33, 0x34 };
+            byte[] expected = new byte[] { 0b10000000, 13, (byte)'c', (byte)'o', (byte)'o', (byte)'l', (byte)' ', (byte)'s', (byte)'o', (byte)'n', (byte)'g', (byte)'.', (byte)'m', (byte)'p', (byte)'3', 0x11, 0x12, 0x21, 0x22, 0x31, 0x32, 0x33, 0x34 };
 
             byte[] fullExpected = new byte[data.Length + expected.Length];
             expected.CopyTo(fullExpected, 0);
             data.CopyTo(fullExpected, expected.Length);
 
-            UInt64 hash = 0x0102030405060708;
+            string hash = "cool song.mp3";
             DownloadBody mBody = new DownloadBody(DownloadBody.Type.AlbumCover, hash, 0x1112, 0x2122, 0x31323334, data );
 
             byte[] serialized = mBody.Serialize();
@@ -146,9 +146,9 @@ namespace Shared.Tests
         {
             // [ISALBUMCOVER] [ISSONGFILE] [-] [-] [-] [-] [-] [-] | [ITEM HASH 8Bytes] [Block index 2bytes] [Total Block count 2bytes] [Data Bytecount 4bytes] [Data nbytes]
 
-            byte[] expected = new byte[17] { 0b10000000, 1, 2, 3, 4, 5, 6, 7, 8,   0, 0, 0, 0, 0, 0, 0, 0 };
+            byte[] expected = new byte[] { 0b10000000, 12, (byte)'c', (byte)'o', (byte)'o', (byte)'l', (byte)'s', (byte)'o', (byte)'n', (byte)'g', (byte)'.', (byte)'m', (byte)'p', (byte)'3' };
 
-            UInt64 hash = 0x0102030405060708;
+            string hash = "coolsong.mp3";
             DownloadBody mBody = new DownloadBody(DownloadBody.Type.AlbumCover, hash);
 
             byte[] serialized = mBody.Serialize();
@@ -406,20 +406,6 @@ namespace Shared.Tests
         }
 
         [TestMethod]
-        public void PACKETUNIT007_SerializeSongData_CorrectBytesAllocated()
-        {
-            Assert.Fail();
-
-
-        }
-
-        [TestMethod]
-        public void PACKETUNIT008_SerializeImageData_CorrectBytesAllocated()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
         public void PACKETUNIT009_DeserializeHeader_CorrectMembersAssigned()
         {
             // Known header 
@@ -437,7 +423,7 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT010_DeserializeDownloadBody_RequestDeserialize()
         {
-            UInt64 hash = 0x0102030405060708;
+            string hash = "a neat song.mp3";
             DownloadBody.Type type = DownloadBody.Type.SongFile;
             DownloadBody dBody = new DownloadBody(type, hash);
 
@@ -450,7 +436,7 @@ namespace Shared.Tests
         [TestMethod]
         public void PACKETUNIT110_DeserializeDownloadBody_ResponseDeserialize()
         {
-            UInt64 hash = 0x0102030405060708;
+            string hash = "coolsong.mp3";
             UInt16 blockIndex = 34;
             UInt16 totalBlocks = 4737;
             UInt32 dataByteCount = 3484727;
@@ -561,18 +547,6 @@ namespace Shared.Tests
             Assert.AreEqual(filter, dSBody.GetFilter());
             Assert.AreEqual(context, dSBody.GetContext());
             Assert.IsTrue(Enumerable.SequenceEqual(serverResponse, dSBody.GetResponse()));
-        }
-
-        [TestMethod]
-        public void PACKETUNIT015_DeserializeSongData_CorrectMembersAssigned()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod]
-        public void PACKETUNIT016_DeserializeImageData_CorrectMembersAssigned()
-        {
-            Assert.Fail();
         }
     }
 
@@ -1263,7 +1237,8 @@ namespace Shared.Tests
             Song song = new Song(_SongName, _SongAlbum, _SongArtist, _SongDuration);
 
             // [TOTALLENGTH] [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
-            byte[] expected = new byte[] {24, 0, 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
+
+            byte[] expected = new byte[] { 24, 0, 4, 110, 97, 109, 101, 6, 97, 114, 116, 105, 115, 116, 20, 174, 71, 64, 5, 97, 108, 98, 117, 109 };
 
             // Act
             byte[] serialized = song.Serialize();

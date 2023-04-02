@@ -11,8 +11,6 @@ namespace Server
         private static string _fileName;
         private Logger() { _fileName = ""; }
         public static Logger Instance { get; } = new Logger();
-
-
         public static void SetFileName(string fileName)
         {
             _fileName = fileName;
@@ -29,7 +27,6 @@ namespace Server
 
             PacketBody.Role role = body.role;
             PacketBody.Role oppositeRole = role == PacketBody.Role.Server ? PacketBody.Role.Client : PacketBody.Role.Server;
-
             string sentReceived = toSend == true ? "Sent" : "Received";
             string toFrom = toSend == true ? $"to {oppositeRole}" : $"from {role}";
 
@@ -47,6 +44,7 @@ namespace Server
                         break;
                     case PacketHeader.AccountAction.LogIn:
 
+
                         if (getAccount.getPassword().Length > 0)
                         {
                             logMessage += $"Log In {reqRes} {toFrom} for ";
@@ -62,17 +60,22 @@ namespace Server
                 }
 
                 logMessage += $"username ({getAccount.getUsername()}), password ({getAccount.getPassword()})";
-                if (role == PacketBody.Role.Server)
+                if(role == PacketBody.Role.Server)
                     logMessage += $" (Status: {getAccount.getStatus()})";
             }
-            else if (type == PacketHeader.Type.Song)
+            else if(type == PacketHeader.Type.Song)
             {
+                //toFrom = toSend == true ? $"to {role}" : $"from {oppositeRole}";
+                //role = oppositeRole;
+                //reqRes = role == PacketBody.Role.Client ? "Request" : "Response";
+
                 switch (header.GetSongAction())
                 {
                     case PacketHeader.SongAction.Sync:
                         SyncBody syncBody = (SyncBody)body;
                         logMessage += $"Sync {reqRes} {toFrom}: Current play time ({syncBody.GetTimecode()}), Stream state ({syncBody.GetState()})";
                         break;
+
                     case PacketHeader.SongAction.Media:
                         MediaControlBody mediaControlBody = (MediaControlBody)body;
 

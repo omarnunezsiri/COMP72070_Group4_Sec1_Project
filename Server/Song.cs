@@ -66,7 +66,7 @@ namespace Server
 
             // [TOTALBYTES] [NAMELENGTH 1byte] [NAME nBytes] | [ARTISTLENGTH 1byte] [ARTIST nBytes] | [DURATION 4bytes] | [ALBUMLENGTH 1byte] [ALBUM nBytes]
             byte[] songBytes = new byte[sizeof(Int16) + Constants.SongIndividualBytes * sizeof(byte) + _name.Length + _artist.Length + _album.Length + sizeof(float)];
-            
+
             Int16 totalBytes = Convert.ToInt16(songBytes.Length);
 
             byte[] bytesFromTotal = BitConverter.GetBytes(totalBytes);

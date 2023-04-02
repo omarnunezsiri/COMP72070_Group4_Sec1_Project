@@ -3,6 +3,7 @@
   will be made for the Windows platform only. */
 #pragma warning disable CA1416 
 
+using System.Diagnostics;
 using System.Drawing;
 
 namespace Server.Tests
@@ -1037,6 +1038,582 @@ namespace Server.Tests
 
             // Act and Assert
             Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAlbums(controller, Constants.AlbumsFile, ""));
+        }
+    }
+
+    [TestClass]
+    public class LoggerTests
+    {
+        /* Singleton logger instance */
+        Logger logger = Logger.Instance;
+
+        /* Account members */
+        private const string _Username = "username";
+        private const string _Password = "password";
+
+        [TestMethod]
+        public void SLOGUNIT001_Log_SentLogIn_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Log In Response to Client for username (username), password (password) (Status: Failure)\r\n";
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.LogIn);
+
+            /* Simulates Server appending LogIn response */
+            Account accountBody = new Account(_Username, _Password);
+            accountBody.setStatus(Account.Status.Failure);
+
+            PacketBody packetBody = accountBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true); // logs the current Packet being sent to *Client*
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+            // Arrange
+            
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT002_Log_SentSignUp_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Sign Up Response to Client for username (username), password (password) (Status: Success)\r\n";
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
+
+            /* Simulates Server appending Sign Up response */
+            Account accountBody = new Account(_Username, _Password);
+            accountBody.setStatus(Account.Status.Success);
+
+            PacketBody packetBody = accountBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true); // logs the current Packet being sent to *Client*
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+            // Arrange
+
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod]
+        public void SLOGUNIT003_Log_SentSearch_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent List/Search/Filter Response to Client: Filter (filter), Context (953128) Data Byte Count (1230)\r\n";
+            PacketHeader packetHeader = new (PacketHeader.SongAction.List);
+
+            // Simulates Appending server response
+            SearchBody searchBody = new(953128, "filter", new byte[1230]);
+            PacketBody packetBody = searchBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true); // logs the current Packet being sent to *Client*
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+            Assert.AreEqual(expected , actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT004_Log_SentDownload_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Download Response to Client: Type (AlbumCover), Hash (953128) Block Index (12), Total Blocks (16), Data Byte Count (15)\r\n";
+            PacketHeader packetHeader = new PacketHeader(PacketHeader.SongAction.Download);
+
+            // Simulates appending server response
+            DownloadBody downloadBody = new DownloadBody(DownloadBody.Type.AlbumCover, "953128", 12, 16, 15, new byte[15]);
+            PacketBody packetBody = downloadBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true);
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT005_LogSentSync_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Sync Response to Client: Current play time (1234555), Stream state (Playing)\r\n";
+            PacketHeader packetHeader = new PacketHeader(PacketHeader.SongAction.Sync);
+
+            // Simulates appending server response
+            SyncBody syncBody = new SyncBody(1234555, SyncBody.State.Playing);
+            PacketBody packetBody = syncBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true);
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [TestMethod]
+        public void SLOGUNIT006_LogSentMediaControl_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Media Response to Client: Action (Previous) Current Media State (Playing)\r\n";
+            PacketHeader packetHeader = new(PacketHeader.SongAction.Media);
+
+            // Simulates adding server response
+            MediaControlBody mediaControlBody = new(MediaControlBody.Action.Previous, MediaControlBody.State.Playing);
+
+            PacketBody packetBody = mediaControlBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true);
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT007_LogReceivedLogIn_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Log In Request from Client for username (username), password (password)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.LogIn);
+            Account accountBody = new Account(_Username, _Password);
+            PacketBody packetBody = accountBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT008_LogReceivedSignUp_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Sign Up Request from Client for username (username), password (password)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
+            Account accountBody = new Account(_Username, _Password);
+            PacketBody packetBody = accountBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+
+        }
+
+        [TestMethod]
+        public void SLOGUNIT009_LogReceivedSearch_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received List/Search/Filter Request from Client: Filter (filter), Context (12345)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.SongAction.List);
+            SearchBody searchBody = new(12345, "filter");
+            PacketBody packetBody = searchBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+
+        }
+
+        [TestMethod]
+        public void SLOGUNIT010_LogReceivedDownload_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Download Request from Client: Type (AlbumCover), Hash (55555)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
+            DownloadBody downloadBody = new DownloadBody(DownloadBody.Type.AlbumCover, "55555");
+            PacketBody packetBody = downloadBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+
+        }
+
+        [TestMethod]
+        public void SLOGUNIT012_LogReceivedMediaControl_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Media Request from Client: Action (Play)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.SongAction.Media);
+            MediaControlBody mediaControlBody = new(MediaControlBody.Action.Play);
+            PacketBody packetBody = mediaControlBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+
+        }
+
+        [TestMethod]
+        public void SLOGUNIT013_LogTimeSent_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string dtString = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
+            PacketHeader packetHeader = new(PacketHeader.SongAction.Media);
+
+            // Simulates adding server response
+            MediaControlBody mediaControlBody = new(MediaControlBody.Action.Previous, MediaControlBody.State.Playing);
+
+            PacketBody packetBody = mediaControlBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true);
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+            Assert.IsTrue(actual.Contains(dtString));
+        }
+
+        [TestMethod]
+        public void SLOGUNIT014_LogTimeReceived_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string dtString = DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
+
+            PacketHeader packetHeader = new(PacketHeader.SongAction.Media);
+            MediaControlBody mediaControlBody = new(MediaControlBody.Action.Play);
+            PacketBody packetBody = mediaControlBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+            Assert.IsTrue(actual.Contains(dtString));
+        }
+
+        [TestMethod]
+        public void SLOGUNIT015_LogSentForgotPassword_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Forgot Password Response to Client for username (username), password () (Status: Failure)\r\n";
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.LogIn);
+
+            /* Simulates Server appending ForgotPassword response */
+            Account accountBody = new Account();
+            accountBody.setUsername(_Username);
+            accountBody.setStatus(Account.Status.Failure);
+
+            PacketBody packetBody = accountBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true); // logs the current Packet being sent to *Client*
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Arrange
+
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        [TestMethod]
+        public void SLOGUNIT016_LogsReceivedForgotPassword_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Forgot Password Request from Client for username (username), password ()\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.LogIn);
+            Account accountBody = new Account(_Username, "");
+            PacketBody packetBody = accountBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT017_LogsSentResetPassword_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Reset Password Response to Client for username (username), password (password) (Status: Failure)\r\n";
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.NotApplicable);
+
+            /* Simulates Server appending Reset Password response */
+            Account accountBody = new Account(_Username, _Password);
+            accountBody.setStatus(Account.Status.Failure);
+
+            PacketBody packetBody = accountBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true); // logs the current Packet being sent to *Client*
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Arrange
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT018_LogsReceivedResetPassword_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Reset Password Request from Client for username (username), password (password)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.NotApplicable);
+            Account accountBody = new Account(_Username, _Password);
+            PacketBody packetBody = accountBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [TestClass]
+    public class PacketTests
+    {
+        [TestMethod]
+        public void SERVERPACKET001_SerializeSongData_DownloadBodyContainsData()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+        }
+
+        [TestMethod]
+        public void SERVERPACKET002_SearchForMusic_ListMatchingReturned()
+        {
+            // Arrange
+            const int ExpectedSize = 2;
+            bool foundTwo = false;
+            bool parsedFirst = false;
+            bool parsedSecond = false;
+
+            SongController songController = new();
+
+            songController.AddSong("testSong", "album1", "artist1", 3.123F);
+            songController.AddSong("Song2", "album1", "artist1", 3.123F);
+            songController.AddSong("testSong2", "album1", "artist1", 3.123F);
+            songController.AddSong("Hello", "album1", "artist1", 3.123F);
+            songController.AddSong("Welcome", "album1", "artist1", 3.123F);
+
+            Packet searchPacket = Utils.GenerateClientSearchPacket("test");
+            SearchBody sb = (SearchBody)searchPacket.body;
+
+            // Act
+            List<Song> matchingSongs = Utils.SearchSong(songController, sb.GetFilter());
+
+            if (matchingSongs.Count == ExpectedSize)
+                foundTwo = true;
+
+            if (matchingSongs[0].GetName() == "testSong")
+                parsedFirst = true;
+
+            if (matchingSongs[1].GetName() == "testSong2")
+                parsedSecond = true;
+
+            // Assert
+            Assert.IsTrue(foundTwo & parsedFirst & parsedSecond); // bitwise AND flags
+        }
+
+        [TestMethod]
+        public void SERVERPACKET003_SerializeSearchResults_SearchResponseAttached()
+        {
+            // Arrange
+            SongController songController = new();
+            AlbumController albumController = new();
+
+            FileHandler.ReadSongs(songController, "SearchTextFiles/" + Constants.SongsFile);
+            FileHandler.ReadAlbums(albumController, "SearchTextFiles/" + Constants.AlbumsFile, "");
+
+            Packet searchPacket = Utils.GenerateClientSearchPacket("test");
+            SearchBody sb = (SearchBody)searchPacket.body;
+
+            /* Assumes that search song works properly */
+            List<Song> matchingSongs = Utils.SearchSong(songController, sb.GetFilter());
+
+            /* Prep for expected byte array */
+            Song song1 = songController.FindSong("testSong");
+            Song song2 = songController.FindSong("testSong2");
+            Album album1 = albumController.FindAlbum(song1.GetAlbum());
+            Album album2 = albumController.FindAlbum(song2.GetAlbum());
+
+            byte[] song1Bytes = song1.Serialize();
+            byte[] song2Bytes = song2.Serialize();
+            byte[] album1CoverBytes = Utils.GetBitmapBytes(album1.GetImage());
+            byte[] cover1LengthBytes = BitConverter.GetBytes(album1CoverBytes.Length);
+            byte[] album2CoverBytes = Utils.GetBitmapBytes(album2.GetImage());
+            byte[] cover2LengthBytes = BitConverter.GetBytes(album2CoverBytes.Length);
+
+            int offset = 0;
+            byte[] expected = new byte[song1Bytes.Length + song2Bytes.Length + album1CoverBytes.Length + cover1LengthBytes.Length + album2CoverBytes.Length + cover2LengthBytes.Length];
+            song1Bytes.CopyTo(expected, offset);
+
+            offset += song1Bytes.Length;
+
+            cover1LengthBytes.CopyTo(expected, offset);
+            offset += sizeof(int);
+
+            album1CoverBytes.CopyTo(expected, offset);
+            offset += album1CoverBytes.Length;
+
+            song2Bytes.CopyTo(expected, offset);
+            offset += song2Bytes.Length;
+
+            cover2LengthBytes.CopyTo(expected, offset);
+            offset += sizeof(int);
+
+            album2CoverBytes.CopyTo(expected, offset);
+
+            // Act
+            byte[] actual = Utils.GenerateServerSearchResponse(matchingSongs, albumController);
+
+            // Assert
+            Assert.IsTrue(expected.SequenceEqual(actual));
         }
     }
 }
