@@ -1,0 +1,174 @@
+﻿using Server;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace Client
+{
+    /// <summary>
+    /// Interaction logic for Login.xaml
+    /// </summary>
+    public partial class Login : Window
+    {
+        /* Data communications */
+        byte[] TxBuffer;
+        byte[] RxBuffer;
+
+        public Login()
+        {
+            InitializeComponent();
+        }
+
+        private void loginButton_Click(object sender, RoutedEventArgs e)
+        {
+            //insert check for username and pw
+            if (usernameTB.Text == null || passwordBox.Password == null || passwordTextBox.Text == null || usernameTB.Text == "Username" || passwordBox.Password == "Password")
+            {
+                MessageBoxResult result = MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+            }
+            else
+            {
+                /* Sets the header information to be an Account LogIn */
+                PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.LogIn);
+
+                /* Builds the body with the given login information */
+                string password = passwordBox.Password ?? passwordTextBox.Text;
+                Account account = new(usernameTB.Text, password);
+
+                /* Builds the packet with all necessary information and serializes it */
+                Packet packet = new Packet(packetHeader, account);
+                TxBuffer = packet.Serialize();
+
+                // Send TxBuffer
+
+                /* This simulates the Server appending a Success response */
+                Packet serverPacket = new Packet(TxBuffer);
+                Account clientAccount = (Account)serverPacket.body;
+                clientAccount.setStatus(Account.Status.Success);
+
+                // Receive response Packet
+                byte[] RxBuffer = serverPacket.Serialize();
+                packet = new Packet(RxBuffer);
+                account = (Account)packet.body;
+
+                if(account.getStatus() == Account.Status.Success) 
+                {
+                    Home newWindow = new Home();
+                    newWindow.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Username not found! Try a different one.", "Warning", MessageBoxButton.OK);
+                }
+
+            }
+        }
+
+        private void signupButton_Click(object sender, RoutedEventArgs e)
+        {
+            SignUp newWindow = new SignUp();
+            newWindow.Show();
+            this.Close();
+        }
+
+        private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+
+            // user hasn't entered a username;
+            if (tb.Text == string.Empty)
+            {
+                usernameTB.Text = "Username";
+            }
+        }
+
+        private void usernameTB_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+
+            // username is placeholder
+            if(tb.Text == "Username")
+            {
+                tb.Text = string.Empty;
+            }
+        }
+
+        private void PasswordBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordBox pb = (PasswordBox)sender;
+
+            // password is placeholder
+            if(pb.Password == "Password")
+            {
+                pb.Password = string.Empty;
+            }
+        }
+
+        private void PasswordBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordBox pb = (PasswordBox)sender;
+
+            // user hasn't entered a password
+            if(pb.Password == string.Empty) 
+            {
+                pb.Password = "Password";
+            }
+        }
+
+        private void passwordTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox pwtb = (TextBox)sender;
+
+            // password is placeholder
+            if (pwtb.Text == "Password")
+            {
+                pwtb.Text = string.Empty;
+            }
+        }
+
+        private void passwordTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox pwtb = (TextBox)sender;
+
+            // user hasn't entered a password
+            if (pwtb.Text == string.Empty)
+            {
+                pwtb.Text = "Password";
+            }
+        }
+
+        private void ShowPassword_Checked(object sender, RoutedEventArgs e)
+        {
+            passwordTextBox.Text = passwordBox.Password;
+            passwordBox.Visibility = Visibility.Collapsed;
+            passwordTextBox.Visibility = Visibility.Visible;
+        }
+
+        private void ShowPassword_Unchecked(object sender, RoutedEventArgs e)
+        {
+            passwordBox.Password = passwordTextBox.Text;
+            passwordTextBox.Visibility = Visibility.Collapsed;
+            passwordBox.Visibility = Visibility.Visible;
+        }
+
+        private void forgotPass_Click(object sender, RoutedEventArgs e)
+        {
+            ResetPassword newWindow = new ResetPassword();
+            newWindow.Show();
+        }
+    }
+}
