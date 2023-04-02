@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,6 +31,7 @@ namespace Client
         /* Data communications */
         byte[] TxBuffer;
         byte[] RxBuffer;
+        NetworkStream stream;
 
         PacketHeader packetHeader;
         Account account;
@@ -44,6 +46,9 @@ namespace Client
 
             /* Creates an account with no username/password to be replaced to avoid reallocations */
             account = new Account(ClientConstants.Unused, ClientConstants.Unused);
+
+            stream = App.client.GetStream();
+            RxBuffer = new byte[1024];
         }
 
         private void ShowPassword_Checked(object sender, RoutedEventArgs e)
@@ -75,39 +80,19 @@ namespace Client
             account.setUsername(usernameTB.Text);
             Packet packet = new(packetHeader, account);
 
+            Logger instance = Logger.Instance;
+            instance.Log(packet, true);
+
             /* Serializes the packet */
             TxBuffer = packet.Serialize();
-            
-            // Send TxBuffer
 
-            /* Simulates server appending response */
-            Packet serverPacket = new(TxBuffer);
-            Account responseAccount = (Account)serverPacket.body;
+            stream.Write(TxBuffer);
 
-            bool valid = false;
-
-            for (int i = 0; i < usernames.Count; i++)
-            {
-                if (usernames[i].ToString() == usernameTB.Text)
-                {
-                    valid = true;
-                }
-            }
-
-            if (valid == true)
-            {
-                responseAccount.setStatus(Account.Status.Success);
-            }
-            else
-            {
-                responseAccount.setStatus(Account.Status.Failure);
-            }
-
-            /* Client receives response back */
-            RxBuffer = serverPacket.Serialize();
+            stream.Read(RxBuffer);
             
             /* Deserializes Response packet */
             packet = new(RxBuffer);
+            instance.Log(packet, false);
 
             /* Takes the Account body to check for Success/Failure */
             account = (Account)packet.body;
@@ -199,9 +184,32 @@ namespace Client
             }
             if (check == true && unameValid.Content == "username found :)")
             {
-                success.Visibility = Visibility.Visible;
-                submitButton.Visibility = Visibility.Hidden;
-                nextButton.Visibility = Visibility.Visible;
+                PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.NotApplicable);
+                string actualPw = passwordBox.Password ?? passwordTextBox.Text;
+                Account account = new Account(usernameTB.Text, actualPw);
+
+                Packet packet = new(packetHeader, account);
+                Logger instance = Logger.Instance;
+
+                instance.Log(packet, true);
+
+                TxBuffer = packet.Serialize();
+
+                stream.Write(TxBuffer);
+
+                stream.Read(RxBuffer);
+
+                packet = new(RxBuffer);
+                instance.Log(packet, false);
+
+                account = (Account)packet.body;
+
+                if (account.getStatus() == Account.Status.Success)
+                {
+                    success.Visibility = Visibility.Visible;
+                    submitButton.Visibility = Visibility.Hidden;
+                    nextButton.Visibility = Visibility.Visible;
+                }
             }
 
             //prints passwords dont match and username doesnt exist

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,10 +27,13 @@ namespace Client
         /* Data communications */
         byte[] TxBuffer;
         byte[] RxBuffer;
+        NetworkStream stream;
 
         public Login()
         {
             InitializeComponent();
+            stream = App.client.GetStream();
+            RxBuffer = new byte[1024];
         }
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
@@ -56,16 +60,17 @@ namespace Client
                 Packet packet = new Packet(packetHeader, account);
                 TxBuffer = packet.Serialize();
 
-                // Send TxBuffer
+                Logger instance = Logger.Instance;
+                instance.Log(packet, true);
 
-                /* This simulates the Server appending a Success response */
-                Packet serverPacket = new Packet(TxBuffer);
-                Account clientAccount = (Account)serverPacket.body;
-                clientAccount.setStatus(Account.Status.Success);
+                stream.Write(TxBuffer);
+
+                stream.Read(RxBuffer);
 
                 // Receive response Packet
-                byte[] RxBuffer = serverPacket.Serialize();
                 packet = new Packet(RxBuffer);
+                instance.Log(packet, false);
+
                 account = (Account)packet.body;
 
                 if (account.getStatus() == Account.Status.Success)

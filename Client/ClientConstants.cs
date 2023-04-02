@@ -11,5 +11,6 @@ namespace Client
         public static string ImagesDirectory = "Assets/Images/";
         public static string Mp3Directory = "Assets/Mp3/";
         public static string Unused = "";
+        public static int PortNumber = 27500;
     }
 }
