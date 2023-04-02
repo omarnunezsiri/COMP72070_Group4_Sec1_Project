@@ -56,6 +56,9 @@ namespace Server
                             logMessage += $"Forgot Password {reqRes} {toFrom} for ";
                         }
                         break;
+                    case PacketHeader.AccountAction.NotApplicable:
+                        logMessage += $"Reset Password {reqRes} {toFrom} for ";
+                        break;
                 }
 
                 logMessage += $"username ({getAccount.getUsername()}), password ({getAccount.getPassword()})";

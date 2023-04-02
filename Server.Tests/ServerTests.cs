@@ -1454,6 +1454,61 @@ namespace Server.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void SLOGUNIT017_LogsSentResetPassword_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Reset Password Response to Client for username (username), password (password) (Status: Failure)\r\n";
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.NotApplicable);
+
+            /* Simulates Server appending Reset Password response */
+            Account accountBody = new Account(_Username, _Password);
+            accountBody.setStatus(Account.Status.Failure);
+
+            PacketBody packetBody = accountBody;
+
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Act
+            logger.Log(packet, true); // logs the current Packet being sent to *Client*
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Arrange
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SLOGUNIT018_LogsReceivedResetPassword_LoggedPacket()
+        {
+            // Arrange
+            File.Delete(Constants.ServerLogsFile);
+            Logger.SetFileName(Constants.ServerLogsFile);
+
+            string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Reset Password Request from Client for username (username), password (password)\r\n";
+
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.NotApplicable);
+            Account accountBody = new Account(_Username, _Password);
+            PacketBody packetBody = accountBody;
+            Packet packet = new Packet(packetHeader, packetBody);
+
+            // Simulates server receiving packet
+            Packet serverPacket = new Packet(packet.Serialize());
+
+            // Act
+            logger.Log(serverPacket, false); // logs the current Packet being received from Client
+
+            string actual = File.ReadAllText(Constants.ServerLogsFile);
+
+            // Assert
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 
     [TestClass]
