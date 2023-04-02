@@ -148,6 +148,7 @@ namespace Server
         public static void unpackServerSearchResponse(Packet pk)
         {
             SearchBody body = (SearchBody)pk.body;
+        }
 
         public static void PopulateSearchResults(byte[] rawData, List<Song> tempSongs, string imageDir)
         {

@@ -228,7 +228,7 @@ namespace Client.Tests
             File.Delete(Constants.ClientLogsFile);
             Logger.SetFileName(Constants.ClientLogsFile);
             PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
-            DownloadBody db = new(DownloadBody.Type.SongFile, 0x1234);
+            DownloadBody db = new(DownloadBody.Type.SongFile, "4660");
 
             Packet packet = new(packetHeader, db);
             string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Sent Download Request to Server: Type (SongFile), Hash (4660)\r\n";
@@ -339,7 +339,7 @@ namespace Client.Tests
             File.Delete(Constants.ClientLogsFile);
             Logger.SetFileName(Constants.ClientLogsFile);
             PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
-            DownloadBody db = new(DownloadBody.Type.SongFile, 0x1234);
+            DownloadBody db = new(DownloadBody.Type.SongFile, "4660");
             db.appendServerResponse(12, 24, 1234, new byte[1234]);
 
             Packet serverPacket = new(packetHeader, db);
