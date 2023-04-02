@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using Server;
 using System.Windows.Shapes;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace Client
 {
@@ -58,6 +59,33 @@ namespace Client
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             //validation code similar to the one in reset password to check if the username is taken
+
+            PacketHeader packetHeader = new(PacketHeader.AccountAction.SignUp);
+            Account account = new Account(usernameTB.Text, ClientConstants.Unused);
+
+            Packet packet = new(packetHeader, account);
+            Logger instance = Logger.Instance;
+            instance.Log(packet, true);
+
+            byte[] TxBuffer = packet.Serialize();
+
+            stream.Write(TxBuffer);
+
+            stream.Read(RxBuffer);
+
+            packet = new(RxBuffer);
+            instance.Log(packet, false);
+
+            account = (Account)packet.body;
+
+            if(account.getStatus() == Account.Status.Success)
+            {
+                Debug.WriteLine("Good username!");
+            }
+            else
+            {
+                Debug.WriteLine("Taken!");
+            }
         }
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
