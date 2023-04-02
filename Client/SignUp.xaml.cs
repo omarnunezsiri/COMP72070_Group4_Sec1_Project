@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Server;
 using System.Windows.Shapes;
+using System.Net.Sockets;
 
 namespace Client
 {
@@ -21,11 +22,16 @@ namespace Client
     public partial class SignUp : Window
     {
         bool check = false;
+        NetworkStream stream;
+        byte[] RxBuffer;
 
         public SignUp()
         {
             InitializeComponent();
+            stream = App.client.GetStream();
+            RxBuffer = new byte[1024];
         }
+
         private void ShowPassword_Checked(object sender, RoutedEventArgs e)
         {
             passwordTextBox.Text = passwordBox.Password;
@@ -111,17 +117,15 @@ namespace Client
 
                 /* Serialize and send packet bytes to Server */
                 byte[] TxBuffer = packet.Serialize();
+                Logger instance = Logger.Instance;
+                instance.Log(packet, true);
 
-                // Send TxBuffer
+                stream.Write(TxBuffer);
 
-                /* This simulates the Server appending a Success response */
-                Packet serverPacket = new Packet(TxBuffer);
-                Account clientAccount = (Account)serverPacket.body;
-                clientAccount.setStatus(Account.Status.Success);
+                stream.Read(RxBuffer);
 
-                // Receive response Packet
-                byte[] RxBuffer = serverPacket.Serialize();
                 Packet responsePacket = new Packet(RxBuffer);
+                instance.Log(packet, false);
                 Account responseBody = (Account)responsePacket.body;
 
                 if (responseBody.getStatus() == Account.Status.Success)
