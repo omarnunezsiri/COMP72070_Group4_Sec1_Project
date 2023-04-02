@@ -117,27 +117,32 @@ namespace Client
                 stackPanel1.Visibility = Visibility.Hidden;
                 stackPanel2.Visibility = Visibility.Hidden;
             }
-        }
 
-        private void usernameTB_GotFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox tb = (TextBox)sender;
-
-            if (tb.Text == string.Empty)
+            if (usernameTB.Text == string.Empty)
             {
                 unameValid.Visibility = Visibility.Hidden;
             }
         }
 
-        private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox tb = (TextBox)sender;
+        //private void usernameTB_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    TextBox tb = usernameTB;
 
-            if (tb.Text == string.Empty)
-            {
-                unameValid.Visibility = Visibility.Hidden;
-            }
-        }
+        //    if (tb.Text == string.Empty)
+        //    {
+        //        unameValid.Visibility = Visibility.Hidden;
+        //    }
+        //}
+
+        //private void usernameTB_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    TextBox tb = usernameTB;
+
+        //    if (tb.Text == string.Empty)
+        //    {
+        //        unameValid.Visibility = Visibility.Hidden;
+        //    }
+        //}
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {

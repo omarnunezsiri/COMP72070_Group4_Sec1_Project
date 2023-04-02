@@ -80,11 +80,34 @@ namespace Client
 
             if(account.getStatus() == Account.Status.Success)
             {
-                Debug.WriteLine("Good username!");
+                unameValid.Content = "username not taken :)";
+                unameValid.Visibility = Visibility.Visible;
+                unameValid.Foreground = Brushes.DarkMagenta;
+                pw.Visibility = Visibility.Visible;
+                cnfmpw.Visibility = Visibility.Visible;
+                stackPanel1.Visibility = Visibility.Visible;
+                stackPanel2.Visibility = Visibility.Visible;
+                //Debug.WriteLine("Good username!");
             }
             else
             {
-                Debug.WriteLine("Taken!");
+                unameValid.Content = "username taken :(";
+                unameValid.Visibility = Visibility.Visible;
+                unameValid.Foreground = Brushes.DarkRed;
+                pw.Visibility = Visibility.Hidden;
+                cnfmpw.Visibility = Visibility.Hidden;
+                stackPanel1.Visibility = Visibility.Hidden;
+                stackPanel2.Visibility = Visibility.Hidden;
+                //Debug.WriteLine("Taken!");
+            }
+
+            if (usernameTB.Text == string.Empty)
+            {
+                unameValid.Visibility = Visibility.Hidden;
+                pw.Visibility = Visibility.Hidden;
+                cnfmpw.Visibility = Visibility.Hidden;
+                stackPanel1.Visibility = Visibility.Hidden;
+                stackPanel2.Visibility = Visibility.Hidden;
             }
         }
 
