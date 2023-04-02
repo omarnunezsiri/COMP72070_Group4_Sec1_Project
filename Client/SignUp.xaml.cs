@@ -56,10 +56,15 @@ namespace Client
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
+            PerformCreate();
+        }
+
+        private void PerformCreate()
+        {
             check = false;
             string actualPw = "";
             //insert check for username and pw
-           
+
             //add check from server ???
             if (usernameTB.Text == string.Empty || passwordBox.Password == string.Empty || cnfmpasswordBox.Password == string.Empty)
             {
@@ -135,7 +140,6 @@ namespace Client
                     MessageBox.Show("Username is taken! Try using a different one", "Warning", MessageBoxButton.OK);
                 }
             }
-
         }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
@@ -150,6 +154,24 @@ namespace Client
             Login newWindow = new Login();
             newWindow.Show();
             this.Close();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformCreate();
+            }
+        }
+
+        private void window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBox textBox = Keyboard.FocusedElement as TextBox;
+            if (textBox != null)
+            {
+                TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
+                textBox.MoveFocus(tRequest);
+            }
         }
     }
 }

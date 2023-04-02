@@ -5,19 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="Home" Height="450" Width="800"
+        Title="Home" Height="450" Width="800" MouseDown="window_MouseDown"
         WindowState="Maximized">
 
     <Window.Resources>
         <Style TargetType="Grid" x:Key="ResultGrid">
-            <Setter Property="Width" Value="175"/>
+            <Setter Property="Width" Value="140"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="Transparent"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Trigger.Setters>
-                        <Setter Property="Background" Value="#FFBBBBBB"/>
+                        <Setter Property="Background" Value="#FFE6EE"/>
+                        <Setter Property="Width" Value="140"/>
+                        <Setter Property="Height" Value="40"/>
                     </Trigger.Setters>
                 </Trigger>
             </Style.Triggers>
@@ -38,7 +40,8 @@
             <Setter Property="Grid.Column" Value="2"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
-            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontFamily" Value="Ink Free"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>
@@ -48,7 +51,8 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Grid.Row" Value="1"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
-            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontFamily" Value="Ink Free"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
     </Window.Resources>
@@ -76,10 +80,10 @@
             </Ellipse>
 
             <!-- Searching stuff -->
-            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="92,31,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White" KeyDown="TextBox_KeyDown"/>
+            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="92,31,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White" KeyDown="TextBox_KeyDown" TextChanged="searchtb_TextChanged"/>
 
             <!--<StackPanel x:Name="SearchResultsPanel" Background="red" Height="500" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top"></StackPanel>-->
-            <Canvas Margin="76,71,151,71" Background="Red" Grid.ColumnSpan="2" x:Name="MainCanvas">
+            <Canvas Margin="92,60,0,82" x:Name="MainCanvas">
 
                 <!--<Grid x:Name="SearchResultGridTest" MouseDown="SearchResultGridTest_MouseDown">
                     <Grid.ColumnDefinitions>
@@ -136,7 +140,7 @@
             </Button>
             <Label x:Name="songName" Content="song name" HorizontalAlignment="Left" Margin="114,292,0,0" VerticalAlignment="Top" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Height="36" Grid.ColumnSpan="2" Grid.Column="1"/>
             <Label x:Name="artist" Content="artist" HorizontalAlignment="Left" Margin="130,319,0,0" VerticalAlignment="Top" Width="66" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Grid.ColumnSpan="2" Grid.Column="1"/>
-            <Label x:Name="startTime" Content="00:00" HorizontalAlignment="Left" Margin="10,410,0,0" VerticalAlignment="Top" Width="54" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}"/>
+            <Label x:Name="startTime" Content="00:00" HorizontalAlignment="Left" Margin="22,410,0,0" VerticalAlignment="Top" Width="54" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}"/>
             <Label x:Name="endTime" Content="00:00" HorizontalAlignment="Left" Margin="340,410,0,0" VerticalAlignment="Top" Width="50" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}" Grid.Column="2"/>
             <Button Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="54,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16">
                 <Button.Background>

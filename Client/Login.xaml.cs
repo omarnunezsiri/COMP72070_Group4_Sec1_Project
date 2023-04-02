@@ -34,7 +34,11 @@ namespace Client
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            //insert check for username and pw
+            PerformLogin();
+        }
+
+        private void PerformLogin()
+        {
             if (usernameTB.Text == null || passwordBox.Password == null || passwordTextBox.Text == null || usernameTB.Text == "Username" || passwordBox.Password == "Password")
             {
                 MessageBoxResult result = MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
@@ -64,7 +68,7 @@ namespace Client
                 packet = new Packet(RxBuffer);
                 account = (Account)packet.body;
 
-                if(account.getStatus() == Account.Status.Success) 
+                if (account.getStatus() == Account.Status.Success)
                 {
                     Home newWindow = new Home();
                     newWindow.Show();
@@ -169,6 +173,24 @@ namespace Client
         {
             ResetPassword newWindow = new ResetPassword();
             newWindow.Show();
+        }
+
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformLogin();
+            }
+        }
+
+        private void window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBox textBox = Keyboard.FocusedElement as TextBox;
+            if (textBox != null)
+            {
+                TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
+                textBox.MoveFocus(tRequest);
+            }
         }
     }
 }

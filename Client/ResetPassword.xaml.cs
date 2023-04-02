@@ -156,6 +156,11 @@ namespace Client
 
         private void submitButton_Click(object sender, RoutedEventArgs e)
         {
+            PerformReset();
+        }
+
+        private void PerformReset()
+        {
             check = false;
             //add check from server ???
             if (usernameTB.Text == string.Empty || passwordBox.Password == string.Empty || cnfmpasswordBox.Password == string.Empty)
@@ -200,7 +205,6 @@ namespace Client
             }
 
             //prints passwords dont match and username doesnt exist
-
         }
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
@@ -256,12 +260,22 @@ namespace Client
             }   
         }
 
-        //private void submitButton_KeyDown(object sender, KeyEventArgs e)
-        //{
-        //    if (e.Key == Key.Return)
-        //    {
-        //        submitButton.Click = true;
-        //    }
-        //}
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformReset();
+            }
+        }
+
+        private void window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBox textBox = Keyboard.FocusedElement as TextBox;
+            if (textBox != null)
+            {
+                TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
+                textBox.MoveFocus(tRequest);
+            }
+        }
     }
 }

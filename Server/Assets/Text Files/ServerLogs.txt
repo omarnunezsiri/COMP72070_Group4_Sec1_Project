@@ -10,3 +10,5 @@ Friday, 31 March 2023 12:13 AM - Received Sign Up Request from Client for userna
 Friday, 31 March 2023 12:13 AM - Sent Sign Up Response to Client for username (deborah), password () (Status: Success)
 Friday, 31 March 2023 12:13 AM - Received Sign Up Request from Client for username (user), password ()
 Friday, 31 March 2023 12:13 AM - Sent Sign Up Response to Client for username (user), password () (Status: Failure)
+Sunday, 02 April 2023 01:58 PM - Received List/Search/Filter Request from Client: Filter (test), Context (0)
+Sunday, 02 April 2023 01:58 PM - Sent List/Search/Filter Response to Client: Filter (test), Context (0) Data Byte Count (1514902)

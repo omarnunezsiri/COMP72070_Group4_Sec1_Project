@@ -87,10 +87,10 @@ namespace Client
         {
             TextBox tb = (TextBox)sender;
 
-            // user hasn't entered a username;
             if (tb.Text == string.Empty)
             {
                 tb.Text = "Search...";
+                clearSearch();
             }
         }
 
@@ -98,16 +98,24 @@ namespace Client
         {
             TextBox tb = (TextBox)sender;
 
-            // username is placeholder
             if (tb.Text == "Search...")
             {
                 tb.Text = string.Empty;
+            }
+            if (tb.Text == string.Empty)
+            {
+                clearSearch();
             }
         }
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
+            PerformSearch();
 
+            if (searchtb.Text == string.Empty)
+            {
+                clearSearch();
+            }
         }
 
         private void volumeUp_Click(object sender, RoutedEventArgs e)
@@ -384,23 +392,52 @@ namespace Client
         {
             if (e.Key == Key.Enter)
             {
-                if(searchActive)
+                PerformSearch();
+            }
+        }
+
+        private void PerformSearch()
+        {
+            if (searchActive)
+            {
+                clearSearch();
+                searchActive = false;
+            }
+            if (!searchActive)
+            {
+                MakeButton();
+                foreach (Grid button in buttonList)
                 {
-                    clearSearch();
-                    searchActive = false;
+                    Canvas.SetTop(button, currentY);
+                    Canvas.SetLeft(button, Xloc);
+                    currentY += HEIGHT;
+                    MainCanvas.Children.Add(button);    //adds the button to the canvas
                 }
-                if (!searchActive)
-                {
-                    MakeButton();
-                    foreach (Grid button in buttonList)
-                    {
-                        Canvas.SetTop(button, currentY);
-                        Canvas.SetLeft(button, Xloc);
-                        currentY += HEIGHT;
-                        MainCanvas.Children.Add(button);    //adds the button to the canvas
-                    }
-                    searchActive = true;
-                }
+                searchActive = true;
+            }
+            if (searchtb.Text == string.Empty)
+            {
+                clearSearch();
+            }
+
+        }
+
+        private void searchtb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (searchtb.Text == string.Empty)
+            {
+                clearSearch();
+            }
+        }
+
+        private void window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBox textBox = Keyboard.FocusedElement as TextBox;
+            if (textBox != null)
+            {
+                TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
+                textBox.MoveFocus(tRequest);
+                clearSearch();
             }
         }
     }
