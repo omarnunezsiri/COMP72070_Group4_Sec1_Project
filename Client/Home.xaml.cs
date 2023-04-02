@@ -110,9 +110,12 @@ namespace Client
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
-            PerformSearch();
+            if (searchtb.Text != string.Empty && searchtb.Text != "Search...")
+            {
+                PerformSearch();
+            }
 
-            if (searchtb.Text == string.Empty)
+            else if (searchtb.Text == string.Empty)
             {
                 clearSearch();
             }
@@ -432,7 +435,7 @@ namespace Client
 
         private void window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TextBox textBox = Keyboard.FocusedElement as TextBox;
+            TextBox textBox = searchtb;
             if (textBox != null)
             {
                 TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);

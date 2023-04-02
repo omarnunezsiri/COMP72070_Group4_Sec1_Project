@@ -275,15 +275,5 @@ namespace Client
                 PerformReset();
             }
         }
-
-        private void window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            TextBox textBox = Keyboard.FocusedElement as TextBox;
-            if (textBox != null)
-            {
-                TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
-                textBox.MoveFocus(tRequest);
-            }
-        }
     }
 }

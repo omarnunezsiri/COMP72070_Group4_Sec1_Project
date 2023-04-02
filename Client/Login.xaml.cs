@@ -190,11 +190,27 @@ namespace Client
 
         private void window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TextBox textBox = Keyboard.FocusedElement as TextBox;
-            if (textBox != null)
+            if (Keyboard.FocusedElement.GetType() == typeof(TextBox))
             {
-                TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
-                textBox.MoveFocus(tRequest);
+                TextBox textBox = (TextBox)Keyboard.FocusedElement;
+
+                if (textBox != null)
+                {
+                    TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
+                    textBox.MoveFocus(tRequest);
+                }
+            }
+
+            if (Keyboard.FocusedElement.GetType() == typeof(PasswordBox))
+            {
+                PasswordBox pBox = (PasswordBox)Keyboard.FocusedElement;
+                
+                if (pBox != null)
+                {
+                    TraversalRequest tRequest = new TraversalRequest(FocusNavigationDirection.Next);
+                    pBox.MoveFocus(tRequest);
+                }
+
             }
         }
     }

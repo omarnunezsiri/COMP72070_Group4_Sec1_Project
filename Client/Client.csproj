@@ -61,6 +61,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\Text Files\" />
+    <Folder Include="Assets\Text Files\" />
   </ItemGroup>
 
 </Project>
