@@ -10,8 +10,8 @@
 
     <Window.Resources>
         <Style TargetType="Grid" x:Key="ResultGrid">
-            <Setter Property="Width" Value="400"/>
-            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="175"/>
+            <Setter Property="Height" Value="40"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="Transparent"/>
             <Style.Triggers>
@@ -29,8 +29,8 @@
         <Style TargetType="Image" x:Key="AlbumImage">
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="Grid.RowSpan" Value="2"/>
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
@@ -38,7 +38,7 @@
             <Setter Property="Grid.Column" Value="2"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
-            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontSize" Value="17"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>
@@ -48,7 +48,7 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Grid.Row" Value="1"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
     </Window.Resources>
@@ -79,8 +79,25 @@
             <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="92,31,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White" KeyDown="TextBox_KeyDown"/>
 
             <!--<StackPanel x:Name="SearchResultsPanel" Background="red" Height="500" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top"></StackPanel>-->
-            <Canvas Margin="76,71,151,71" Background="Red" Grid.ColumnSpan="2" x:Name="MainCanvas"/>
+            <Canvas Margin="76,71,151,71" Background="Red" Grid.ColumnSpan="2" x:Name="MainCanvas">
 
+                <!--<Grid x:Name="SearchResultGridTest" MouseDown="SearchResultGridTest_MouseDown">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="45"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image x:Name="AlbumCover" Style="{StaticResource AlbumImage}" Source="/Tmp/One More Light.png"/>
+                    <TextBlock x:Name="SongName" Style="{StaticResource SongName}" Text="One More Light"/>
+                    <TextBlock x:Name="ArtistName" Style="{StaticResource ArtistName}" Text="Linkin Park"/>
+                </Grid>-->
+            </Canvas>
+
+            
+            <!--back to our regularly scheduled program-->
             <Button x:Name="playButton" Content="" HorizontalAlignment="Left" Margin="145,369,0,0" VerticalAlignment="Top" Height="36" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2" Click="playButton_Click" Grid.Column="1">
                 <Button.Background>
                     <ImageBrush x:Name="playImg" ImageSource="/Assets/Images/play-button.png"/>
