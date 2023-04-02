@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Net;
 using Server;
 
+/* Defaults to the Server project directory instead of the Debug (which is ignored by our .gitignore file). */
 Directory.SetCurrentDirectory("../../../");
 
 Logger logger = Logger.Instance;
@@ -123,9 +124,16 @@ switch(rx.header.GetPacketType())
                 throw new NotImplementedException();
 
                 break;
-            case PacketHeader.SongAction.Download: 
-                
-                throw new NotImplementedException();
+            case PacketHeader.SongAction.Download:
+
+                DownloadBody db = (DownloadBody)rx.body;
+                switch (db.GetType())
+                {
+                    case DownloadBody.Type.AlbumCover:
+                        break;
+                    case DownloadBody.Type.SongFile:
+                        break;
+                }
 
                 break;
             case PacketHeader.SongAction.List:
