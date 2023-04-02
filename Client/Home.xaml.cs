@@ -266,6 +266,15 @@ namespace Client
         /// <param name="resultList"></param>
         public void search(List<Song> resultList)
         {
+            PacketHeader searchHeader = new(PacketHeader.SongAction.List);
+            SearchBody searchBody = new(0x00000000, searchtb.Text);
+
+            Packet searchPacket = new(searchHeader, searchBody);
+
+            byte[] TxBuffer = searchPacket.Serialize();
+
+            // Send TxBuffer
+
 
             //EVERYTHING IN HERE NEEDS TO BE REPLACED WITH DATA COMMS CRAP
             Random r = new Random();

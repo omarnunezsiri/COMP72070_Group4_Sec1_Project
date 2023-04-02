@@ -6,8 +6,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Tests", "Shared.Tests\Shared.Tests.csproj", "{BD1755CD-4B52-4B81-BBBC-1A40E680CE17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.Tests", "Server.Tests\Server.Tests.csproj", "{7B2C82F1-EBBE-4190-818F-BDC569E529C1}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{C0F27B3B-3E53-4669-B1FD-5838159009B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Tests", "Server.Tests\Server.Tests.csproj", "{7B2C82F1-EBBE-4190-818F-BDC569E529C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{C0F27B3B-3E53-4669-B1FD-5838159009B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Tests", "Client.Tests\Client.Tests.csproj", "{5B2AB4E0-5167-4813-AAE3-E571029BFCFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +34,10 @@ Global
 		{C0F27B3B-3E53-4669-B1FD-5838159009B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0F27B3B-3E53-4669-B1FD-5838159009B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0F27B3B-3E53-4669-B1FD-5838159009B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B2AB4E0-5167-4813-AAE3-E571029BFCFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B2AB4E0-5167-4813-AAE3-E571029BFCFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B2AB4E0-5167-4813-AAE3-E571029BFCFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B2AB4E0-5167-4813-AAE3-E571029BFCFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

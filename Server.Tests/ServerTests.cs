@@ -948,7 +948,7 @@ namespace Server.Tests
 
             // Act
             AlbumController albumController = new();
-            FileHandler.ReadAlbums(albumController, Constants.AlbumsFile);
+            FileHandler.ReadAlbums(albumController, Constants.AlbumsFile, "");
 
             Album album1 = albumController.FindAlbum(_AlbumName);
             Album album2 = albumController.FindAlbum(_AlbumName2);
@@ -975,7 +975,7 @@ namespace Server.Tests
 
             // Act
             ArtistController artistController = new();
-            FileHandler.ReadArtists(artistController, Constants.ArtistsFile);
+            FileHandler.ReadArtists(artistController, Constants.ArtistsFile, "");
 
             Artist artist1 = artistController.FindArtist(_ArtistName);
             Artist artist2 = artistController.FindArtist(_ArtistName2);
@@ -1023,7 +1023,7 @@ namespace Server.Tests
             ArtistController controller = new();
 
             // Act and Assert
-            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadArtists(controller, Constants.ArtistsFile));
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadArtists(controller, Constants.ArtistsFile, ""));
         }
 
 
@@ -1036,7 +1036,7 @@ namespace Server.Tests
             AlbumController controller = new();
 
             // Act and Assert
-            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAlbums(controller, Constants.AlbumsFile));
+            Assert.ThrowsException<FileNotFoundException>(() => FileHandler.ReadAlbums(controller, Constants.AlbumsFile, ""));
         }
     }
 }
