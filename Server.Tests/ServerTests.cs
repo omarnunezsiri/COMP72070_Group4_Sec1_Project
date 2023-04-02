@@ -1142,7 +1142,7 @@ namespace Server.Tests
             PacketHeader packetHeader = new PacketHeader(PacketHeader.SongAction.Download);
 
             // Simulates appending server response
-            DownloadBody downloadBody = new DownloadBody(DownloadBody.Type.AlbumCover, 953128, 12, 16, 15, new byte[15]);
+            DownloadBody downloadBody = new DownloadBody(DownloadBody.Type.AlbumCover, "953128", 12, 16, 15, new byte[15]);
             PacketBody packetBody = downloadBody;
 
             Packet packet = new Packet(packetHeader, packetBody);
@@ -1300,7 +1300,7 @@ namespace Server.Tests
             string expected = $"{DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt")} - Received Download Request from Client: Type (AlbumCover), Hash (55555)\r\n";
 
             PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
-            DownloadBody downloadBody = new DownloadBody(DownloadBody.Type.AlbumCover, 55555);
+            DownloadBody downloadBody = new DownloadBody(DownloadBody.Type.AlbumCover, "55555");
             PacketBody packetBody = downloadBody;
             Packet packet = new Packet(packetHeader, packetBody);
 
