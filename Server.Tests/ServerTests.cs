@@ -1579,38 +1579,20 @@ namespace Server.Tests
             /* Prep for expected byte array */
             Song song1 = songController.FindSong("testSong");
             Song song2 = songController.FindSong("testSong2");
-            Album album1 = albumController.FindAlbum(song1.GetAlbum());
-            Album album2 = albumController.FindAlbum(song2.GetAlbum());
 
             byte[] song1Bytes = song1.Serialize();
             byte[] song2Bytes = song2.Serialize();
-            byte[] album1CoverBytes = Utils.GetBitmapBytes(album1.GetImage());
-            byte[] cover1LengthBytes = BitConverter.GetBytes(album1CoverBytes.Length);
-            byte[] album2CoverBytes = Utils.GetBitmapBytes(album2.GetImage());
-            byte[] cover2LengthBytes = BitConverter.GetBytes(album2CoverBytes.Length);
 
             int offset = 0;
-            byte[] expected = new byte[song1Bytes.Length + song2Bytes.Length + album1CoverBytes.Length + cover1LengthBytes.Length + album2CoverBytes.Length + cover2LengthBytes.Length];
+            byte[] expected = new byte[song1Bytes.Length + song2Bytes.Length];
             song1Bytes.CopyTo(expected, offset);
 
             offset += song1Bytes.Length;
 
-            cover1LengthBytes.CopyTo(expected, offset);
-            offset += sizeof(int);
-
-            album1CoverBytes.CopyTo(expected, offset);
-            offset += album1CoverBytes.Length;
-
             song2Bytes.CopyTo(expected, offset);
-            offset += song2Bytes.Length;
-
-            cover2LengthBytes.CopyTo(expected, offset);
-            offset += sizeof(int);
-
-            album2CoverBytes.CopyTo(expected, offset);
 
             // Act
-            byte[] actual = Utils.GenerateServerSearchResponse(matchingSongs, albumController);
+            byte[] actual = Utils.GenerateServerSearchResponse(matchingSongs);
 
             // Assert
             Assert.IsTrue(expected.SequenceEqual(actual));

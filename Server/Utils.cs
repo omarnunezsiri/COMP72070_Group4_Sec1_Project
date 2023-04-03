@@ -74,32 +74,13 @@ namespace Server
         }
 
         /// <summary>
-        /// Packs a song object with its cover in a collection of bytes.
+        /// Packs a song object into a list of bytes
         /// </summary>
         /// <param name="song">Song to serialize</param>
-        /// <param name="album">Album to get cover from</param>
-        /// <returns>A collection of bytes with the packed song and cover</returns>
-        private static List<Byte> GetPackedSong(Song song, Album album)
+        /// <returns>A list of bytes with the packed song</returns>
+        private static List<Byte> GetPackedSong(Song song)
         {
-            int offset = 0;
-
-            Bitmap albumCover = album.GetImage();
-
-            byte[] songBytes = song.Serialize();
-            byte[] albumCoverBytes = GetBitmapBytes(albumCover);
-            byte[] coverLengthBytes = BitConverter.GetBytes(albumCoverBytes.Length);
-
-            byte[] joined = new byte[albumCoverBytes.Length + songBytes.Length + coverLengthBytes.Length];
-            songBytes.CopyTo(joined, offset);
-
-            offset += songBytes.Length;
-
-            coverLengthBytes.CopyTo(joined, offset);
-            offset += sizeof(int);
-
-            albumCoverBytes.CopyTo(joined, offset);
-
-            return joined.ToList();
+            return (song.Serialize()).ToList();
         }
         
         //public static Bitmap getSongImage(Song song)            //this needs to get done. Can I do it without passing in the artist controller?
@@ -128,17 +109,14 @@ namespace Server
         /// Will handle gathering all the needed data for the search results and packaging it up.
         /// </summary>
         /// <param name="searchResults">List of songs found in the search</param>
-        /// <param name="albumController">Album controller to get covers from</param>
         /// <returns></returns>
-        public static byte[] GenerateServerSearchResponse(List<Song> searchResults, AlbumController albumController)
+        public static byte[] GenerateServerSearchResponse(List<Song> searchResults)
         {
             List<Byte> buffer = new List<Byte>();
 
             foreach (Song song in searchResults)
             {
-                Album album = albumController.FindAlbum(song.GetAlbum());
-
-                List<byte> packedSong = GetPackedSong(song, album);
+                List<byte> packedSong = GetPackedSong(song);
                 buffer.AddRange(packedSong);
             }
 
@@ -150,7 +128,7 @@ namespace Server
             SearchBody body = (SearchBody)pk.body;
         }
 
-        public static void PopulateSearchResults(byte[] rawData, List<Song> tempSongs, string imageDir)
+        public static void PopulateSearchResults(byte[] rawData, List<Song> tempSongs)
         {
             int length = rawData.Length;
             int offset = 0;
@@ -160,7 +138,7 @@ namespace Server
                 short songLength = BitConverter.ToInt16(rawData, offset);
                 offset += sizeof(short);
 
-                songLength -= 2; // doesn't take into account the Int16 from the length
+                songLength -= sizeof(Int16); // doesn't take into account the Int16 from the length
 
                 byte[] songBytes = new byte[songLength];
                 Array.Copy(rawData, offset, songBytes, 0, songLength);
@@ -168,19 +146,7 @@ namespace Server
 
                 offset += songLength;
 
-                int bitmapLength = BitConverter.ToInt32(rawData, offset); 
-                offset += sizeof(int);
-
-                byte[] bitmapBytes = new byte[bitmapLength];
-                Array.Copy(rawData, offset, bitmapBytes, 0, bitmapLength);
-                offset += bitmapLength;
-
-                Bitmap tempBmp = GetBitmapFromBytes(bitmapBytes);
-                Bitmap bmp2 = new(tempBmp);
-
                 tempSongs.Add(tempSong);
-                FileHandler.writeImageBytes($"{imageDir}{tempSong.GetName()}.jpg", bmp2);
-                tempBmp.Dispose();
             }
 
         }

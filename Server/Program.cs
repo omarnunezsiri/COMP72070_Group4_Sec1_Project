@@ -153,7 +153,7 @@ try
                                 List<Song> results = Utils.SearchSong(songController, sb.GetFilter());
 
                                 //create the packet after here
-                                sb.appendServerResponse(Utils.GenerateServerSearchResponse(results, albumController));
+                                sb.appendServerResponse(Utils.GenerateServerSearchResponse(results));
                                 break;
                         }
                         break;
