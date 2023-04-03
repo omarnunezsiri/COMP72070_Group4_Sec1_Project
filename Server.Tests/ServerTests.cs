@@ -1565,10 +1565,8 @@ namespace Server.Tests
         {
             // Arrange
             SongController songController = new();
-            AlbumController albumController = new();
 
             FileHandler.ReadSongs(songController, "SearchTextFiles/" + Constants.SongsFile);
-            FileHandler.ReadAlbums(albumController, "SearchTextFiles/" + Constants.AlbumsFile, "");
 
             Packet searchPacket = Utils.GenerateClientSearchPacket("test");
             SearchBody sb = (SearchBody)searchPacket.body;
