@@ -12,7 +12,12 @@ namespace Server
         public const int AccountIndividualBytes = 2;
         public const int AlbumIndividualBytes = 2;
         public const int PortNumber = 27500;
-        public const int BufferMax = 1024;
+        /* Allows for optimizations in write/read depending on buffer sizes */
+        public const int SmallBufferMax = 1024;
+        public const int CoverBufferMax = 15000;
+        public const int SearchBufferMax = 65535;
+        public const int Mp3BufferMax = 64000;
+        /*******************************************************************/
         public const string DefaultImageFile = "default.png";
         public const string Mp3sDirectory = "Assets/Mp3/";
         public const string TextDirectory = "Assets/Text Files/";

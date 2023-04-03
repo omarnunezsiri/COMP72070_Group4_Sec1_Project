@@ -23,6 +23,7 @@ FileHandler.ReadAlbums(albumController, Constants.TextDirectory + Constants.Albu
 FileHandler.ReadArtists(artistController, Constants.TextDirectory + Constants.ArtistsFile, Constants.ImagesDirectory);
 FileHandler.ReadAccounts(accountController, Constants.TextDirectory + Constants.AccountsFile);
 
+MediaControlBody.State state = MediaControlBody.State.Idle;
 
 #if (UseSockets)
 IPEndPoint ipEndPoint = new(IPAddress.Any, Constants.PortNumber);
@@ -136,8 +137,22 @@ try
                                 break;
                             case PacketHeader.SongAction.Media:
 
-                                throw new NotImplementedException();
-
+                                MediaControlBody mcb = (MediaControlBody)rx.body;
+                                switch(mcb.GetAction())
+                                {
+                                    case MediaControlBody.Action.Play:
+                                        state = MediaControlBody.State.Playing;
+                                        break;
+                                    case MediaControlBody.Action.Pause:
+                                        state = MediaControlBody.State.Paused;
+                                        break;
+                                    case MediaControlBody.Action.Previous:
+                                        break;
+                                    case MediaControlBody.Action.Skip:
+                                        break;
+                                    case MediaControlBody.Action.GetState:
+                                        break;
+                                }
                                 break;
                             case PacketHeader.SongAction.Download:
 
@@ -214,18 +229,30 @@ static async Task TransmitDownloadData(Packet rx, NetworkStream stream, byte[] b
     Logger instance = Logger.Instance;
 
     ushort blockIndex;
-    ushort totalBlocks = (ushort)(bytes.Length / Constants.BufferMax);
+    ushort totalBlocks;
+    uint optimized;
+
+    DownloadBody db = (DownloadBody)rx.body;
+    if(db.GetType() == DownloadBody.Type.AlbumCover)
+    {
+        optimized = Constants.CoverBufferMax;
+    }
+    else
+    {
+        optimized = Constants.Mp3BufferMax;
+    }
+
+    totalBlocks = (ushort)Math.Ceiling((decimal)bytes.Length / optimized);
+
     uint toTake = 0;
     int offset = 0;
 
-    DownloadBody db = (DownloadBody)rx.body;
-
     for (blockIndex = 0; blockIndex < totalBlocks; blockIndex++)
     {
-        if (offset < (bytes.Length - Constants.BufferMax))
-            toTake = Constants.BufferMax;
+        if (optimized < ((bytes.Length - offset)))
+            toTake = optimized;
         else
-            toTake = (uint)(bytes.Length - Constants.BufferMax);
+            toTake = (uint)(bytes.Length - offset);
 
         byte[] dataBytes = new byte[toTake];
         Array.Copy(bytes, offset, dataBytes, 0, toTake);
@@ -237,5 +264,7 @@ static async Task TransmitDownloadData(Packet rx, NetworkStream stream, byte[] b
         await stream.WriteAsync(serialized);
 
         instance.Log(rx, true);
+
+        Thread.Sleep(1); // client can't catch up if thread doesn't sleep for at least a millisecond
     }
 }

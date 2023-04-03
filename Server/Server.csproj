@@ -14,8 +14,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Assets\Mp3\" />
-  </ItemGroup>
-
 </Project>

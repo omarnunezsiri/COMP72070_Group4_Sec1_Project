@@ -1,15 +1,18 @@
-﻿using Microsoft.VisualBasic;
-using NAudio.Utils;
+﻿using NAudio.Utils;
 using NAudio.Wave;
 using Server;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
@@ -38,6 +41,11 @@ namespace Client
         BackgroundWorker BackgroundWorker { get; set; }
         State playingState = new();
         WaveOutEvent outputDevice = new();
+
+        /* Data Commucations */
+        byte[] TxBuffer;
+        byte[] RxBuffer;
+        NetworkStream stream;
 
         //search stuff
         //this list "searchResults" should be populated with the search results from the server
@@ -70,6 +78,9 @@ namespace Client
             BackgroundWorker.WorkerReportsProgress = true;
             BackgroundWorker.WorkerSupportsCancellation = true;
             BackgroundWorker.DoWork += testPlay;
+
+            stream = App.client.GetStream();
+            RxBuffer = new byte[Constants.Mp3BufferMax + Constants.CoverBufferMax];
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -282,17 +293,66 @@ namespace Client
 
             Packet searchPacket = new(searchHeader, searchBody);
 
-            byte[] TxBuffer = searchPacket.Serialize();
+            TxBuffer = searchPacket.Serialize();
 
-            // Send TxBuffer
+            Logger instance = Logger.Instance;
+            instance.Log(searchPacket, true);
 
+            stream.Write(TxBuffer);
 
-            //EVERYTHING IN HERE NEEDS TO BE REPLACED WITH DATA COMMS CRAP
-            Random r = new Random();
-            for (int i = 0; i < 5; i++)
+            int read = stream.Read(RxBuffer);
+
+            byte[] receivedBuffer = new byte[read];
+            Array.Copy(RxBuffer, receivedBuffer, read);
+
+            searchPacket = new(receivedBuffer);
+            SearchBody sb = (SearchBody)searchPacket.body;
+            instance.Log(searchPacket, false);
+
+            Utils.PopulateSearchResults(sb.GetResponse(), resultList);
+            GetSongCovers(resultList);
+        }
+
+        private void GetSongCovers(List<Song> results)
+        {
+            Logger instance = Logger.Instance;
+
+            foreach (Song song in results)
             {
-                int index = r.Next(3);
-                resultList.Add(fakeResults[index]);
+                string hash = song.GetAlbum();
+
+                PacketHeader packetHeader = new PacketHeader(PacketHeader.SongAction.Download);
+                DownloadBody db = new(DownloadBody.Type.AlbumCover, hash);
+
+                Packet packet = new(packetHeader, db);
+                TxBuffer = packet.Serialize();
+
+                stream.Write(TxBuffer);
+
+                bool reachedTotalBlocks = false;
+
+                //List<byte> coverBytes = new();
+
+                using (FileStream fs = File.Open($"{hash}.jpg", FileMode.Create))
+                {
+                    do
+                    {
+                        int read = stream.Read(RxBuffer);
+                        Debug.WriteLine(read);
+
+                        byte[] receivedBuffer = new byte[read];
+                        Array.Copy(RxBuffer, receivedBuffer, read);
+
+                        packet = new(receivedBuffer);
+                        instance.Log(packet, false);
+
+                        DownloadBody receivedBody = (DownloadBody)packet.body;
+                        fs.Write(receivedBody.GetData(), 0, (int)receivedBody.GetDataByteCount());
+
+                        if (!(receivedBody.GetBlockIndex() < receivedBody.GetTotalBlocks() - 1))
+                            reachedTotalBlocks = true;
+                    } while (!reachedTotalBlocks);
+                }
             }
         }
 
@@ -325,11 +385,11 @@ namespace Client
 
 
                 ////create the album image
-                //System.Windows.Controls.Image albumCover = new Image();
+                //System.Windows.Controls.Image albumCover = new System.Windows.Controls.Image();
                 //albumCover.Style = (Style)FindResource("AlbumImage");
 
-                ////jesus christ giant bitmap thing that will probably be replaced anyways
-                //FileStream fs = File.Open("Tmp/" + searchResults[i].Name + ".png", FileMode.Open);
+                //jesus christ giant bitmap thing that will probably be replaced anyways
+                //FileStream fs = File.Open(searchResults[i].GetAlbum() + ".jpg", FileMode.Open);
                 //System.Drawing.Bitmap dImg = new System.Drawing.Bitmap(fs);
                 //MemoryStream ms = new MemoryStream();
                 //dImg.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -341,7 +401,7 @@ namespace Client
                 //albumCover.Source = bImg;
 
                 //fs.Close();
-
+ 
 
                 //create the song name text
                 TextBlock songName = new TextBlock();
