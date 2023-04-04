@@ -14,8 +14,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
+using Color = System.Windows.Media.Color;
 
 namespace Client
 {
@@ -416,14 +418,37 @@ namespace Client
                 Button downloadButton = new Button();
                 downloadButton.Style = (Style)FindResource("DownloadButton");
                 downloadButton.Name = newGrid.Name = "item" + i;
+                downloadButton.Click += downloadButton_Click;
+
                 if (File.Exists($"./Assets/Mp3/{searchResults[i].GetName()}.mp3"))
                 {
-                    downloadButton.Content = "X";
-                } else
+                    if (downloadButton.IsMouseOver == true)
+                    {
+                        System.Windows.Controls.Image deleteimg = new System.Windows.Controls.Image();
+                        deleteimg.Style = (Style)FindResource("DownloadButton");
+
+                        string deleteimgPath = $"download-button.png";
+                        deleteimg.Source = bitmap;
+
+                        //downloadButton.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122)); //red
+                        //downloadButton.Content = "X";
+                    }
+                } 
+                else
                 {
-                    downloadButton.Content = "D";
+                    if (downloadButton.IsMouseOver == true)
+                    {
+                        System.Windows.Controls.Image dlbuttonimg = new System.Windows.Controls.Image();
+                        dlbuttonimg.Style = (Style)FindResource("DownloadButton");
+
+                        string dlimagePath = $"delete.png";
+                        dlbuttonimg.Source = bitmap;
+
+                        //downloadButton.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
+                        //downloadButton.Content = "D";
+                    }
                 }
-                downloadButton.Click += downloadButton_Click;
+                
 
 
                 //add all elements to grid
@@ -449,20 +474,41 @@ namespace Client
             string clickedItem = clickedGrid.Name.Remove(0, 4);
             Debug.WriteLine(clickedItem);
             int i = Int32.Parse(clickedItem);
+            BitmapImage bitmap = new BitmapImage();
+            //clickedGrid.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
 
             String path = $"./Assets/Mp3/{searchResults[i].GetName()}.mp3";
 
             if (File.Exists(path))
             {
                 //delete file
-                File.Delete(path);
-                clickedGrid.Content = "D";
+                if (clickedGrid.IsMouseOver == true)
+                {
+                    System.Windows.Controls.Image dlbuttonimg = new System.Windows.Controls.Image();
+                    dlbuttonimg.Style = (Style)FindResource("DownloadButton");
+
+                    string dlimagePath = $"delete.png";
+                    dlbuttonimg.Source = bitmap;
+                    //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122)); //red
+                    //clickedGrid.Content = "X";
+                    File.Delete(path);
+                }
             }
             else
             {
                 //download file
+                if (clickedGrid.IsMouseOver == true)
+                {
+                    System.Windows.Controls.Image deleteimg = new System.Windows.Controls.Image();
+                    deleteimg.Style = (Style)FindResource("DownloadButton");
 
-                clickedGrid.Content = "X";
+                    string deleteimgPath = $"download-button.png";
+                    deleteimg.Source = bitmap;
+
+                    //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
+                    //clickedGrid.Content = "D";
+                }
+                //clickedGrid.Content = "X";
             }
         }
 
