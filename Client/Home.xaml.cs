@@ -501,7 +501,7 @@ namespace Client
             string album = searchResults[i].GetAlbum();
             string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
 
-            if(!File.Exists(Constants.Mp3sDirectory + $"{album}.mp3"))
+            if(!File.Exists(Constants.Mp3sDirectory + $"{hash}.mp3"))
             {
                 PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
                 DownloadBody downloadBody = new(DownloadBody.Type.SongFile, hash);
