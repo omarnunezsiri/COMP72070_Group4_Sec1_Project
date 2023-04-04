@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Policy;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -310,10 +311,10 @@ namespace Client
             instance.Log(searchPacket, false);
 
             Utils.PopulateSearchResults(sb.GetResponse(), resultList);
-            GetSongCovers(resultList);
+            ReceiveSongCovers(resultList);
         }
 
-        private void GetSongCovers(List<Song> results)
+        private void ReceiveSongCovers(List<Song> results)
         {
             Logger instance = Logger.Instance;
 
@@ -329,30 +330,46 @@ namespace Client
 
                 stream.Write(TxBuffer);
 
-                bool reachedTotalBlocks = false;
+                ReceiveDownloadData(packet, hash, db.GetType(), true);
+            }
+        }
 
-                //List<byte> coverBytes = new();
+        private void ReceiveDownloadData(Packet packet, string hash, DownloadBody.Type type, bool isTemp)
+        {
+            /* Determines the path to open the Resource from (AlbumCover or SongFile) */
+            string toOpen = "";
+            if (type == DownloadBody.Type.AlbumCover)
+            {
+                toOpen = (isTemp ? Constants.TempDirectory : Constants.ImagesDirectory) + $"{hash}.jpg";
+            }
+            else if (type == DownloadBody.Type.SongFile)
+            {
+                toOpen = (isTemp ? Constants.TempDirectory : Constants.Mp3sDirectory) + $"{hash}.mp3";
+            }
 
-                using (FileStream fs = File.Open($"{hash}.jpg", FileMode.Create))
+
+            Logger instance = Logger.Instance;
+            bool reachedTotalBlocks = false;
+
+            using (FileStream fs = File.Open(toOpen, FileMode.Create))
+            {
+                do
                 {
-                    do
-                    {
-                        int read = stream.Read(RxBuffer);
-                        Debug.WriteLine(read);
+                    int read = stream.Read(RxBuffer);
+                    Debug.WriteLine(read);
 
-                        byte[] receivedBuffer = new byte[read];
-                        Array.Copy(RxBuffer, receivedBuffer, read);
+                    byte[] receivedBuffer = new byte[read];
+                    Array.Copy(RxBuffer, receivedBuffer, read);
 
-                        packet = new(receivedBuffer);
-                        instance.Log(packet, false);
+                    packet = new(receivedBuffer);
+                    instance.Log(packet, false);
 
-                        DownloadBody receivedBody = (DownloadBody)packet.body;
-                        fs.Write(receivedBody.GetData(), 0, (int)receivedBody.GetDataByteCount());
+                    DownloadBody receivedBody = (DownloadBody)packet.body;
+                    fs.Write(receivedBody.GetData(), 0, (int)receivedBody.GetDataByteCount());
 
-                        if (!(receivedBody.GetBlockIndex() < receivedBody.GetTotalBlocks() - 1))
-                            reachedTotalBlocks = true;
-                    } while (!reachedTotalBlocks);
-                }
+                    if (!(receivedBody.GetBlockIndex() < receivedBody.GetTotalBlocks() - 1))
+                        reachedTotalBlocks = true;
+                } while (!reachedTotalBlocks);
             }
         }
 
@@ -389,16 +406,7 @@ namespace Client
                 albumCover.Style = (Style)FindResource("AlbumImage");
 
                 string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
-                BitmapImage bitmap = new BitmapImage();
-
-                using (FileStream stream = new FileStream(imagePath, FileMode.Open))
-                {
-                    bitmap.BeginInit();
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.StreamSource = stream;
-                    bitmap.EndInit();
-                }
-
+                BitmapImage bitmap = LoadRuntimeBitmap(imagePath);
                 albumCover.Source = bitmap;
 
 
@@ -460,7 +468,17 @@ namespace Client
             }
             else
             {
-                //download file
+                string hash = searchResults[i].GetName();
+                PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
+                DownloadBody downloadBody = new(DownloadBody.Type.SongFile, hash);
+
+                Packet packet = new(packetHeader, downloadBody);
+
+                TxBuffer = packet.Serialize();
+
+                stream.Write(TxBuffer);
+
+                ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, false);
 
                 clickedGrid.Content = "X";
             }
@@ -479,7 +497,33 @@ namespace Client
             //clearSearch();
             int i = Int32.Parse(clickedItem);
 
+            string hash = searchResults[i].GetName();
+            string album = searchResults[i].GetAlbum();
             string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
+
+            if(!File.Exists(Constants.Mp3sDirectory + $"{album}.mp3"))
+            {
+                PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
+                DownloadBody downloadBody = new(DownloadBody.Type.SongFile, hash);
+
+                Packet packet = new(packetHeader, downloadBody);
+
+                TxBuffer = packet.Serialize();
+
+                stream.Write(TxBuffer);
+
+                ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, true);
+            }
+
+            BitmapImage bitmap = LoadRuntimeBitmap(imagePath);
+            coverImage.Source = bitmap;
+
+            artist.Content = searchResults[i].GetArtist();
+            songName.Content = hash;
+        }
+
+        private BitmapImage LoadRuntimeBitmap(string imagePath)
+        {
             BitmapImage bitmap = new BitmapImage();
 
             using (FileStream stream = new FileStream(imagePath, FileMode.Open))
@@ -490,9 +534,7 @@ namespace Client
                 bitmap.EndInit();
             }
 
-            coverImage.Source = bitmap;
-
-            Console.WriteLine(searchResults[i].ToString());  //this is supposed to be the request to stream/play the song. Replace with requesting song from server
+            return bitmap;
         }
 
         /// <summary>
