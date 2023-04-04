@@ -384,24 +384,23 @@ namespace Client
                 newGrid.MouseDown += SelectSong;
 
 
-                ////create the album image
-                //System.Windows.Controls.Image albumCover = new System.Windows.Controls.Image();
-                //albumCover.Style = (Style)FindResource("AlbumImage");
+                //create the album image
+                System.Windows.Controls.Image albumCover = new System.Windows.Controls.Image();
+                albumCover.Style = (Style)FindResource("AlbumImage");
 
-                //jesus christ giant bitmap thing that will probably be replaced anyways
-                //FileStream fs = File.Open(searchResults[i].GetAlbum() + ".jpg", FileMode.Open);
-                //System.Drawing.Bitmap dImg = new System.Drawing.Bitmap(fs);
-                //MemoryStream ms = new MemoryStream();
-                //dImg.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                //System.Windows.Media.Imaging.BitmapImage bImg = new System.Windows.Media.Imaging.BitmapImage();
-                //bImg.BeginInit();
-                //bImg.StreamSource = new MemoryStream(ms.ToArray());
-                //bImg.EndInit();
+                string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
+                BitmapImage bitmap = new BitmapImage();
 
-                //albumCover.Source = bImg;
+                using (FileStream stream = new FileStream(imagePath, FileMode.Open))
+                {
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.StreamSource = stream;
+                    bitmap.EndInit();
+                }
 
-                //fs.Close();
- 
+                albumCover.Source = bitmap;
+
 
                 //create the song name text
                 TextBlock songName = new TextBlock();
@@ -414,7 +413,7 @@ namespace Client
                 artistName.Text = searchResults[i].GetArtist();
 
                 //add all elements to grid
-                //newGrid.Children.Add(albumCover);             //TEMP COMMENTING OUT, NEED TO FIGURE OUT WHERE THESE IMAGES ARE GETTING PUT
+                newGrid.Children.Add(albumCover);             //TEMP COMMENTING OUT, NEED TO FIGURE OUT WHERE THESE IMAGES ARE GETTING PUT
                 newGrid.Children.Add(songName);
                 newGrid.Children.Add(artistName);
 
@@ -442,7 +441,19 @@ namespace Client
             //clearSearch();
             int i = Int32.Parse(clickedItem);
 
-            
+            string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
+            BitmapImage bitmap = new BitmapImage();
+
+            using (FileStream stream = new FileStream(imagePath, FileMode.Open))
+            {
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+            }
+
+            coverImage.Source = bitmap;
+
             Console.WriteLine(searchResults[i].ToString());  //this is supposed to be the request to stream/play the song. Replace with requesting song from server
         }
 
