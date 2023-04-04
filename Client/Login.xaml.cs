@@ -81,7 +81,7 @@ namespace Client
                 }
                 else
                 {
-                    MessageBox.Show("Username not found! Try a different one.", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Invalid username or password. Please try again.", "Warning", MessageBoxButton.OK);
                 }
 
             }

@@ -10,7 +10,7 @@
 
     <Window.Resources>
         <Style TargetType="Grid" x:Key="ResultGrid">
-            <Setter Property="Width" Value="140"/>
+            <Setter Property="Width" Value="207"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -18,7 +18,7 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Trigger.Setters>
                         <Setter Property="Background" Value="#FFE6EE"/>
-                        <Setter Property="Width" Value="140"/>
+                        <Setter Property="Width" Value="207"/>
                         <Setter Property="Height" Value="40"/>
                     </Trigger.Setters>
                 </Trigger>
@@ -41,7 +41,7 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
             <Setter Property="FontFamily" Value="Ink Free"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>
@@ -52,7 +52,7 @@
             <Setter Property="Grid.Row" Value="1"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
             <Setter Property="FontFamily" Value="Ink Free"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="11"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
         </Style>
     </Window.Resources>
@@ -73,17 +73,17 @@
                 <ColumnDefinition Width="163*"/>
                 <ColumnDefinition Width="400*"/>
             </Grid.ColumnDefinitions>
-            <Ellipse HorizontalAlignment="Left" Height="66" Margin="10,10,0,0" VerticalAlignment="Top" Width="66">
+            <Ellipse HorizontalAlignment="Left" Height="42" Margin="7,3,0,0" VerticalAlignment="Top" Width="42">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="/Assets/Images/silly music player-1 (5).png"/>
                 </Ellipse.Fill>
             </Ellipse>
 
             <!-- Searching stuff -->
-            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="92,31,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="140" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White" KeyDown="TextBox_KeyDown" TextChanged="searchtb_TextChanged"/>
+            <TextBox x:Name="searchtb" HorizontalAlignment="Left" Margin="54,10,0,0" TextWrapping="Wrap" Text="Search..." VerticalAlignment="Top" Width="207" Height="24" Background="{x:Null}" BorderBrush="Black" FontFamily="Ink Free" FontWeight="Bold" LostFocus="searchtb_LostFocus" GotFocus="searchtb_GotFocus" SelectionBrush="White" KeyDown="TextBox_KeyDown" TextChanged="searchtb_TextChanged" Grid.ColumnSpan="2"/>
 
             <!--<StackPanel x:Name="SearchResultsPanel" Background="red" Height="500" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top"></StackPanel>-->
-            <Canvas Margin="92,60,0,82" x:Name="MainCanvas">
+            <Canvas Margin="54,44,139,98" x:Name="MainCanvas" Grid.ColumnSpan="2">
 
                 <!--<Grid x:Name="SearchResultGridTest" MouseDown="SearchResultGridTest_MouseDown">
                     <Grid.ColumnDefinitions>
@@ -100,7 +100,7 @@
                 </Grid>-->
             </Canvas>
 
-            
+
             <!--back to our regularly scheduled program-->
             <Button x:Name="playButton" Content="" HorizontalAlignment="Left" Margin="145,369,0,0" VerticalAlignment="Top" Height="36" Width="36" BorderBrush="{x:Null}" Grid.ColumnSpan="2" Click="playButton_Click" Grid.Column="1">
                 <Button.Background>
@@ -133,7 +133,7 @@
                     <ImageBrush ImageSource="/Assets/Images/logout.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="212,34,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black">
+            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="3,14,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black" Grid.Column="1">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/magnifier.png"/>
                 </Button.Background>

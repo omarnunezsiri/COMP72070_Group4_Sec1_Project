@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="blackbox.png" />
+    <None Remove="download-button.png" />
     <None Remove="forward-button.png" />
     <None Remove="hide.png" />
     <None Remove="logout.png" />
@@ -51,6 +52,7 @@
     <Resource Include="Assets\Images\view.png" />
     <Resource Include="Assets\Images\volume-down.png" />
     <Resource Include="Assets\Images\volume-up.png" />
+    <Resource Include="download-button.png" />
   </ItemGroup>
 
   <ItemGroup>
