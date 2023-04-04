@@ -22,6 +22,7 @@ namespace Server
         public const string Mp3sDirectory = "Assets/Mp3/";
         public const string TextDirectory = "Assets/Text Files/";
         public const string ImagesDirectory = "Assets/Images/";
+        public const string TempDirectory = "Assets/Temp/";
         public const string AccountsFile = "accounts.txt";
         public const string SongsFile = "songs.txt";
         public const string ArtistsFile = "artists.txt";

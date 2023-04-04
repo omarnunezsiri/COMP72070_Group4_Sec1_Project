@@ -62,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\Temp\" />
     <Folder Include="Assets\Text Files\" />
     <Folder Include="Assets\Text Files\" />
   </ItemGroup>
