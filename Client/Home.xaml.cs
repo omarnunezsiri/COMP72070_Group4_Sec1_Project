@@ -291,29 +291,34 @@ namespace Client
         /// <param name="resultList"></param>
         public void search(List<Song> resultList)
         {
-            PacketHeader searchHeader = new(PacketHeader.SongAction.List);
-            SearchBody searchBody = new(0x00000000, searchtb.Text);
+            string input = searchtb.Text;
+            bool searchText = input.Contains(input, StringComparison.OrdinalIgnoreCase);
+            if (searchText == true)
+            {
+                PacketHeader searchHeader = new(PacketHeader.SongAction.List);
+                SearchBody searchBody = new(0x00000000, input);
 
-            Packet searchPacket = new(searchHeader, searchBody);
+                Packet searchPacket = new(searchHeader, searchBody);
 
-            TxBuffer = searchPacket.Serialize();
+                TxBuffer = searchPacket.Serialize();
 
-            Logger instance = Logger.Instance;
-            instance.Log(searchPacket, true);
+                Logger instance = Logger.Instance;
+                instance.Log(searchPacket, true);
 
-            stream.Write(TxBuffer);
+                stream.Write(TxBuffer);
 
-            int read = stream.Read(RxBuffer);
+                int read = stream.Read(RxBuffer);
 
-            byte[] receivedBuffer = new byte[read];
-            Array.Copy(RxBuffer, receivedBuffer, read);
+                byte[] receivedBuffer = new byte[read];
+                Array.Copy(RxBuffer, receivedBuffer, read);
 
-            searchPacket = new(receivedBuffer);
-            SearchBody sb = (SearchBody)searchPacket.body;
-            instance.Log(searchPacket, false);
+                searchPacket = new(receivedBuffer);
+                SearchBody sb = (SearchBody)searchPacket.body;
+                instance.Log(searchPacket, false);
 
-            Utils.PopulateSearchResults(sb.GetResponse(), resultList);
-            ReceiveSongCovers(resultList);
+                Utils.PopulateSearchResults(sb.GetResponse(), resultList);
+                ReceiveSongCovers(resultList);
+            }
         }
 
         private void ReceiveSongCovers(List<Song> results)
@@ -430,31 +435,22 @@ namespace Client
 
                 if (File.Exists($"./Assets/Mp3/{searchResults[i].GetName()}.mp3"))
                 {
+                    ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
+                    downloadButton.Background = new ImageBrush(bgimg);
+                    downloadButton.Width = 16;
+                    downloadButton.Height = 16;
+
                     if (downloadButton.IsMouseOver == true)
                     {
-                        System.Windows.Controls.Image deleteimg = new System.Windows.Controls.Image();
-                        deleteimg.Style = (Style)FindResource("DownloadButton");
-
-                        string deleteimgPath = $"download-button.png";
-                        deleteimg.Source = bitmap;
-
-                        //downloadButton.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122)); //red
-                        //downloadButton.Content = "X";
+                        downloadButton.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122));
                     }
+                    
                 } 
                 else
                 {
-                    if (downloadButton.IsMouseOver == true)
-                    {
-                        System.Windows.Controls.Image dlbuttonimg = new System.Windows.Controls.Image();
-                        dlbuttonimg.Style = (Style)FindResource("DownloadButton");
+                    ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
+                    downloadButton.Background = new ImageBrush(bgimg);
 
-                        string dlimagePath = $"delete.png";
-                        dlbuttonimg.Source = bitmap;
-
-                        //downloadButton.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
-                        //downloadButton.Content = "D";
-                    }
                 }
                 
 
@@ -492,11 +488,8 @@ namespace Client
                 //delete file
                 if (clickedGrid.IsMouseOver == true)
                 {
-                    System.Windows.Controls.Image dlbuttonimg = new System.Windows.Controls.Image();
-                    dlbuttonimg.Style = (Style)FindResource("DownloadButton");
-
-                    string dlimagePath = $"delete.png";
-                    dlbuttonimg.Source = bitmap;
+                    ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
+                    clickedGrid.Background = new ImageBrush(bgimg);
                     //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122)); //red
                     //clickedGrid.Content = "X";
                     File.Delete(path);
@@ -516,12 +509,15 @@ namespace Client
 
                 ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, false);
 
-                    //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
-                    //clickedGrid.Content = "D";
-                }
-                //clickedGrid.Content = "X";
+                ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
+                clickedGrid.Background = new ImageBrush(bgimg);
+
+                //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
+                //clickedGrid.Content = "D";
             }
+            //clickedGrid.Content = "X";
         }
+    
 
         /// <summary>
         /// Selects song to play
@@ -591,6 +587,7 @@ namespace Client
 
         private void PerformSearch()
         {
+            noResultstb.Visibility = Visibility.Hidden;
             if (searchActive)
             {
                 clearSearch();
@@ -608,9 +605,14 @@ namespace Client
                 }
                 searchActive = true;
             }
+            if (searchResults.Count == 0)
+            {
+                noResultstb.Visibility = Visibility.Visible;
+            }
             if (searchtb.Text == string.Empty)
             {
                 clearSearch();
+                noResultstb.Visibility = Visibility.Hidden;
             }
 
         }
@@ -620,6 +622,7 @@ namespace Client
             if (searchtb.Text == string.Empty)
             {
                 clearSearch();
+                noResultstb.Visibility = Visibility.Hidden;
             }
         }
 

@@ -58,23 +58,12 @@
         <Style TargetType="Button" x:Key="DownloadButton">
             <Setter Property="Grid.Column" Value="2"/>
             <Setter Property="Grid.RowSpan" Value="2"/>
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="15"/>
+            <Setter Property="Height" Value="15"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-            <Setter Property="Background">
-                <Setter.Value>
-                    <ImageBrush ImageSource="download-button.png"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Style.Triggers>
-                <Trigger Property="IsPressed" Value="True">
-                    <Trigger.Setters>
-                        <Setter Property="OpacityMask" Value="LightPink"/>
-                    </Trigger.Setters>
-                </Trigger>
-            </Style.Triggers>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
     </Window.Resources>
 
@@ -179,6 +168,7 @@
                     <ImageBrush ImageSource="/Assets/Images/volume-up.png"/>
                 </Button.Background>
             </Button>
+            <TextBlock x:Name="noResultstb" Margin="54,44,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="207" Grid.ColumnSpan="2" TextAlignment="Center" FontFamily="Ink Free" FontWeight="Bold" Background="#FFFFE6EE" Height="19" HorizontalAlignment="Left" FontSize="16" Visibility="Hidden"><Run Language="en-ca" Text="No results found :("/></TextBlock>
 
 
 
