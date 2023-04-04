@@ -412,10 +412,25 @@ namespace Client
                 artistName.Style = (Style)FindResource("ArtistName");
                 artistName.Text = searchResults[i].GetArtist();
 
+                //Create the download button
+                Button downloadButton = new Button();
+                downloadButton.Style = (Style)FindResource("DownloadButton");
+                downloadButton.Name = newGrid.Name = "item" + i;
+                if (File.Exists($"./Assets/Mp3/{searchResults[i].GetName()}.mp3"))
+                {
+                    downloadButton.Content = "X";
+                } else
+                {
+                    downloadButton.Content = "D";
+                }
+                downloadButton.Click += downloadButton_Click;
+
+
                 //add all elements to grid
                 newGrid.Children.Add(albumCover);             //TEMP COMMENTING OUT, NEED TO FIGURE OUT WHERE THESE IMAGES ARE GETTING PUT
                 newGrid.Children.Add(songName);
                 newGrid.Children.Add(artistName);
+                newGrid.Children.Add(downloadButton);
 
                 buttonList.Add(newGrid);
                 //Button newBtn = new Button();
@@ -425,6 +440,29 @@ namespace Client
                 //newBtn.Height = HEIGHT;
                 //newBtn.Click += NewBtn_Click;
                 //buttonList.Add(newBtn);
+            }
+        }
+
+        private void downloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button clickedGrid = (Button)sender;
+            string clickedItem = clickedGrid.Name.Remove(0, 4);
+            Debug.WriteLine(clickedItem);
+            int i = Int32.Parse(clickedItem);
+
+            String path = $"./Assets/Mp3/{searchResults[i].GetName()}.mp3";
+
+            if (File.Exists(path))
+            {
+                //delete file
+                File.Delete(path);
+                clickedGrid.Content = "D";
+            }
+            else
+            {
+                //download file
+
+                clickedGrid.Content = "X";
             }
         }
 
