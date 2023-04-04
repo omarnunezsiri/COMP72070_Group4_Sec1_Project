@@ -89,7 +89,10 @@ try
                                     }
                                 } /* If we can add the account to the Dictionary, response is success. Failure otherwise. */
                                 else if (accountController.AddAccount(accountReceived.getUsername(), accountReceived.getPassword()))
+                                {
                                     accountReceived.setStatus(Account.Status.Success);
+                                    FileHandler.WriteAccounts(accountController, Constants.TextDirectory + Constants.AccountsFile);
+                                }
                                 else
                                     accountReceived.setStatus(Account.Status.Failure);
                                 break;

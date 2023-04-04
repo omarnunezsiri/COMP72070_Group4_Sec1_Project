@@ -64,7 +64,7 @@ namespace Server
 
             foreach (var song in songs) 
             {
-                if(song.Key.Contains(searchTerm))
+                if(song.Key.ToLower().Contains(searchTerm.ToLower()))
                 {
                     results.Add(song.Value);
                 }

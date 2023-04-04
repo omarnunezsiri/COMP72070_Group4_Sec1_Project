@@ -412,7 +412,7 @@ namespace Client
                 System.Windows.Controls.Image albumCover = new System.Windows.Controls.Image();
                 albumCover.Style = (Style)FindResource("AlbumImage");
 
-                string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
+                string imagePath = Constants.TempDirectory + $"{searchResults[i].GetAlbum()}.jpg";
                 BitmapImage bitmap = LoadRuntimeBitmap(imagePath);
                 albumCover.Source = bitmap;
 
@@ -488,7 +488,7 @@ namespace Client
                 //delete file
                 if (clickedGrid.IsMouseOver == true)
                 {
-                    ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
+                    ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
                     clickedGrid.Background = new ImageBrush(bgimg);
                     //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122)); //red
                     //clickedGrid.Content = "X";
@@ -509,7 +509,7 @@ namespace Client
 
                 ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, false);
 
-                ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
+                ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
                 clickedGrid.Background = new ImageBrush(bgimg);
 
                 //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
@@ -534,7 +534,7 @@ namespace Client
 
             string hash = searchResults[i].GetName();
             string album = searchResults[i].GetAlbum();
-            string imagePath = $"{searchResults[i].GetAlbum()}.jpg";
+            string imagePath = Constants.TempDirectory + $"{searchResults[i].GetAlbum()}.jpg";
 
             if(!File.Exists(Constants.Mp3sDirectory + $"{hash}.mp3"))
             {
