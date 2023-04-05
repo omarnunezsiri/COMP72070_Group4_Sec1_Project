@@ -59,10 +59,4 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Assets\adminMp3\" />
-    <Folder Include="Assets\Temp\" />
-    <Folder Include="Assets\Text Files\" />
-  </ItemGroup>
-
 </Project>

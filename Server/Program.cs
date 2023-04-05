@@ -23,7 +23,7 @@ FileHandler.ReadAlbums(albumController, Constants.TextDirectory + Constants.Albu
 FileHandler.ReadArtists(artistController, Constants.TextDirectory + Constants.ArtistsFile, Constants.ImagesDirectory);
 FileHandler.ReadAccounts(accountController, Constants.TextDirectory + Constants.AccountsFile);
 
-MediaControlBody.State state = MediaControlBody.State.Idle;
+MediaControlBody.State state;
 
 #if (UseSockets)
 IPEndPoint ipEndPoint = new(IPAddress.Any, Constants.PortNumber);
@@ -37,6 +37,7 @@ try
     // keep listening for connections until interrupted
     while (true)
     {
+        state = MediaControlBody.State.Idle;
         Console.WriteLine("Waiting for Client Connection...");
         using TcpClient handler = await listener.AcceptTcpClientAsync();
         Console.WriteLine("Connection Established! Waiting for login/signup...\n");
@@ -153,6 +154,7 @@ try
                                     case MediaControlBody.Action.Previous:
                                         break;
                                     case MediaControlBody.Action.Skip:
+                                        state = MediaControlBody.State.Idle;
                                         break;
                                     case MediaControlBody.Action.GetState:
                                         break;
