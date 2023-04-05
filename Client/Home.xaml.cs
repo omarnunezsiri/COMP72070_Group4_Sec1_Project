@@ -47,6 +47,8 @@ namespace Client
         NetworkStream stream;
         MediaControlBody.State state;
 
+        string mp3Dir;
+
         //search stuff
         //this list "searchResults" should be populated with the search results from the server
         public List<Song> searchResults { get; set; } = new List<Song> { };
@@ -63,7 +65,7 @@ namespace Client
         //is the search view currently showing
         bool searchActive = false;
 
-        public Home()
+        public Home(string username)
         {
             InitializeComponent();
             stream = App.client.GetStream();
@@ -76,6 +78,13 @@ namespace Client
             currentSongName = "";
             RxBuffer = new byte[Constants.Mp3BufferMax + Constants.CoverBufferMax];
             cancellationTokenSource = new CancellationTokenSource();
+
+            /* Determines if the current user has its own dedicted Mp3s folder */
+            mp3Dir = ClientConstants.AssetsDirectory + $"{username}Mp3/";
+            if(!Directory.Exists(mp3Dir))
+            {
+                Directory.CreateDirectory(mp3Dir);
+            }
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -269,7 +278,7 @@ namespace Client
             string hash = searchResults[i].GetName();
             string album = searchResults[i].GetAlbum();
             string imagePath = Constants.TempDirectory + $"{searchResults[i].GetAlbum()}.jpg";
-            string localMp3Path = Constants.Mp3sDirectory + $"{hash}.mp3";
+            string localMp3Path = mp3Dir + $"{hash}.mp3";
 
             if(currentSongName.Equals(hash))
             {
@@ -449,7 +458,7 @@ namespace Client
             }
             else if (type == DownloadBody.Type.SongFile)
             {
-                toOpen = (isTemp ? Constants.TempDirectory : Constants.Mp3sDirectory) + $"{hash}.mp3";
+                toOpen = (isTemp ? Constants.TempDirectory : mp3Dir) + $"{hash}.mp3";
             }
 
 
@@ -533,7 +542,7 @@ namespace Client
                 downloadButton.Name = newGrid.Name = "item" + i;
                 downloadButton.Click += downloadButton_Click;
 
-                if (File.Exists(Constants.Mp3sDirectory + $"{searchResults[i].GetName()}.mp3"))
+                if (File.Exists(mp3Dir + $"{searchResults[i].GetName()}.mp3"))
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
                     downloadButton.ToolTip = "Delete";
@@ -569,7 +578,7 @@ namespace Client
             string clickedItem = clickedGrid.Name.Remove(0, 4);
             int i = Int32.Parse(clickedItem);
 
-            String path = Constants.Mp3sDirectory + $"{searchResults[i].GetName()}.mp3";
+            String path = mp3Dir + $"{searchResults[i].GetName()}.mp3";
 
             if (File.Exists(path))
             {

@@ -75,7 +75,7 @@ namespace Client
 
                 if (account.getStatus() == Account.Status.Success)
                 {
-                    Home newWindow = new Home();
+                    Home newWindow = new Home(usernameTB.Text);
                     newWindow.Show();
                     this.Close();
                 }

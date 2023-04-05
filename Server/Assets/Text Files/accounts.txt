@@ -1,1 +1,2 @@
-﻿admin,root
+admin,root
+itsdee,qwerty123

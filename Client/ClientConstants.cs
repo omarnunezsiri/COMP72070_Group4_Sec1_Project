@@ -9,7 +9,7 @@ namespace Client
     public class ClientConstants
     {
         public static string ImagesDirectory = "Assets/Images/";
-        public static string Mp3Directory = "Assets/Mp3/";
+        public static string AssetsDirectory = "Assets/";
         public static string Unused = "";
         public static int PortNumber = 27500;
     }
