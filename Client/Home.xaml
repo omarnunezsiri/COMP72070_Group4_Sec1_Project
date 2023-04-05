@@ -149,7 +149,7 @@
                 </Button.Background>
             </Button>
             <Label x:Name="songName" Content="song name" HorizontalAlignment="Left" Margin="114,292,0,0" VerticalAlignment="Top" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Height="36" Grid.ColumnSpan="2" Grid.Column="1"/>
-            <Label x:Name="artist" Content="artist" HorizontalAlignment="Left" Margin="130,319,0,0" VerticalAlignment="Top" Width="66" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Grid.ColumnSpan="2" Grid.Column="1"/>
+            <Label x:Name="artist" Content="artist" HorizontalAlignment="Left" Margin="130,319,0,0" VerticalAlignment="Top" Width="151" FontFamily="Ink Free" Background="{x:Null}" FontSize="20" Grid.ColumnSpan="2" Grid.Column="1"/>
             <Label x:Name="startTime" Content="00:00" HorizontalAlignment="Left" Margin="22,410,0,0" VerticalAlignment="Top" Width="54" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}"/>
             <Label x:Name="endTime" Content="00:00" HorizontalAlignment="Left" Margin="340,410,0,0" VerticalAlignment="Top" Width="50" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}" Grid.Column="2"/>
             <Button Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="54,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16">

@@ -12,6 +12,7 @@ namespace Server
         public const int AccountIndividualBytes = 2;
         public const int AlbumIndividualBytes = 2;
         public const int PortNumber = 27500;
+        public const int DefaultVolume = 20;
         /* Allows for optimizations in write/read depending on buffer sizes */
         public const int SmallBufferMax = 1024;
         public const int CoverBufferMax = 15000;

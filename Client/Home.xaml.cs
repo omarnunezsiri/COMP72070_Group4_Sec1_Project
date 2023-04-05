@@ -22,35 +22,26 @@ using System.Windows.Media.Media3D;
 using Color = System.Windows.Media.Color;
 
 namespace Client
-{
-    public class State
-    {
-        public bool RunState { get; set; }
-        public long Position { get; set; }
-    }
-   
+{ 
     /// <summary>
     /// Interaction logic for Home.xaml
     /// </summary>
     public partial class Home : Window
     {
-        //list of song names to pretend to select from as if it was a database of songs                 DELETE THIS
-        public List<Song> fakeResults { get; set; } = new List<Song>
-        {
-            new Song("Anti-Hero", "No idea", "Taylor Swift", 100),
-            new Song("Hello", "No glue", "Adele", 200),
-            new Song("Golden Hour", "Shrug", "JVKE", 300),
-        };
-
-        State playingState = new();
+        /* Media player members */
         WaveOutEvent outputDevice = new();
+        AudioFileReader audioFileReader;
 
+        /* Information about the current song being played */
         string currentSongLocation;
+        string currentSongName;
+        bool isNewAudioFile;
 
-        CancellationTokenSource cancellationToken;
+        /* Used for asynchronous programming */
+        CancellationTokenSource cancellationTokenSource;
         Task playTask;
 
-        /* Data Commucations */
+        /* Data Communications */
         byte[] TxBuffer;
         byte[] RxBuffer;
         NetworkStream stream;
@@ -61,9 +52,6 @@ namespace Client
         public List<Song> searchResults { get; set; } = new List<Song> { };
 
         List<Grid> buttonList = new List<Grid>();   //list for storing search result buttons
-
-        //next up is a bunch of trash that defines the size and where the buttons appear
-
 
         int currentY = 0; //Y location of the current button
         int Xloc = 0; //X location to put every button
@@ -78,18 +66,16 @@ namespace Client
         public Home()
         {
             InitializeComponent();
-            playingState.RunState = false;
-            playingState.Position = 0;
+            stream = App.client.GetStream();
+
             progressBar.Minimum = 0;
             progressBar.Value = 0;
-            Volume.Value = 20;
-
-            stream = App.client.GetStream();
-            RxBuffer = new byte[Constants.Mp3BufferMax + Constants.CoverBufferMax];
+            Volume.Value = Constants.DefaultVolume;
             state = MediaControlBody.State.Idle;
-
             currentSongLocation = "";
-            cancellationToken = new CancellationTokenSource();
+            currentSongName = "";
+            RxBuffer = new byte[Constants.Mp3BufferMax + Constants.CoverBufferMax];
+            cancellationTokenSource = new CancellationTokenSource();
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
@@ -163,6 +149,7 @@ namespace Client
             MediaControlBody mediaControlBody;
             if (state == MediaControlBody.State.Playing) //SONG IS NOT PLAYING
             {
+                outputDevice.Pause();
                 mediaControlBody = new(MediaControlBody.Action.Pause);
                 StateTransition(packetHeader, mediaControlBody);
                 playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
@@ -175,26 +162,28 @@ namespace Client
                     StateTransition(packetHeader, mediaControlBody);
                     playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "pause-button.png", UriKind.Relative));
 
-                    if (playTask is null)
-                        playTask = PlayWorkerAsync(currentSongLocation, cancellationToken.Token);
-                    else if(playTask.IsCanceled || playTask.IsCompleted)
+                    if(playTask is null || playTask.IsCompleted || playTask.IsCanceled)
                     {
-                        cancellationToken = new CancellationTokenSource();
-                        playTask = PlayWorkerAsync(currentSongLocation, cancellationToken.Token);
+                        cancellationTokenSource = new CancellationTokenSource();
+                        playTask = PlayMp3Async(currentSongLocation, cancellationTokenSource.Token);
                     }
                 }
             }
         }
 
-        private async Task PlayWorkerAsync(string songLocation, CancellationToken cancellationToken)
+        private async Task PlayMp3Async(string songLocation, CancellationToken cancellationToken)
         {
-            using (var audioFile = new AudioFileReader(songLocation))
+            if(audioFileReader is null || isNewAudioFile)
             {
-                TimeSpan totalDuration = audioFile.TotalTime;
+                /* Initial Song Setup...Labels, progress bar max and audio load */
+                
+                isNewAudioFile = false;
+                audioFileReader = new(songLocation);
+                TimeSpan totalDuration = audioFileReader.TotalTime;
 
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    progressBar.Maximum = audioFile.Length;
+                    progressBar.Maximum = audioFileReader.Length;
 
                     endTime.Content = string.Format("{0:D2}:{1:D2}",
                         totalDuration.Minutes,
@@ -203,49 +192,44 @@ namespace Client
                     outputDevice.Volume = (float)Volume.Value / 100;
                 });
 
-                outputDevice.Init(audioFile);
-                outputDevice.Play();
+                outputDevice.Init(audioFileReader);
+            }
 
-                while (outputDevice.PlaybackState == PlaybackState.Playing && !cancellationToken.IsCancellationRequested)
-                {
-                    await Dispatcher.InvokeAsync(() =>
-                    {
-                        if (outputDevice.PlaybackState is PlaybackState.Playing)
-                        {
-                            progressBar.Value = playingState.Position = outputDevice.GetPosition();
-                            TimeSpan currentPosition = outputDevice.GetPositionTimeSpan();
-                            startTime.Content = string.Format("{0:D2}:{1:D2}",
-                                                currentPosition.Minutes,
-                                                currentPosition.Seconds);
-                            Volume.Value = (double)outputDevice.Volume * 100;
-                        }
-                    });
-
-                    if (state == MediaControlBody.State.Paused)
-                    {
-                        if (outputDevice.PlaybackState != PlaybackState.Stopped)
-                        {
-                            outputDevice.Pause();
-                            while (state == MediaControlBody.State.Paused && !cancellationToken.IsCancellationRequested)
-                            {
-                                await Task.Delay(100);
-                            }
-
-                            outputDevice.Play();
-                        }
-                    }
-                    else
-                    {
-                        await Task.Delay(100);
-                    }
-                }
-
+            /* Keeps looping until the song ends or a cancellation is requested through the cancellation token */
+            outputDevice.Play();
+            while (outputDevice.PlaybackState == PlaybackState.Playing && !cancellationToken.IsCancellationRequested)
+            {
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
-                    progressBar.Value += (audioFile.Position - progressBar.Value);
+                    /* Tell the dispatcher to update UI information for formatting */
+                    if (outputDevice.PlaybackState is PlaybackState.Playing)
+                    {
+                        progressBar.Value = outputDevice.GetPosition();
+                        TimeSpan currentPosition = outputDevice.GetPositionTimeSpan();
+                        startTime.Content = string.Format("{0:D2}:{1:D2}",
+                                            currentPosition.Minutes,
+                                            currentPosition.Seconds);
+                        Volume.Value = (double)outputDevice.Volume * 100;
+                    }
                 });
+
+                await Task.Delay(100);
             }
+
+            /* If the song ended, perform a cleanup. */
+            if(SongReachedEnd())
+            {
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    progressBar.Value += (audioFileReader.Position - progressBar.Value);
+                    PlayCleanup();
+                });
+            } 
+        }
+
+        private bool SongReachedEnd()
+        {
+            return (progressBar.Value + (audioFileReader.Position - progressBar.Value) == progressBar.Maximum);
         }
 
         private void PlayCleanup()
@@ -260,6 +244,7 @@ namespace Client
             outputDevice.Dispose();
 
             state = MediaControlBody.State.Idle;
+            isNewAudioFile = true;
         }
 
         /// <summary>
@@ -271,8 +256,6 @@ namespace Client
         {
             Grid clickedGrid = (Grid)sender;
             string clickedItem = clickedGrid.Name.Remove(0, 4);
-            Debug.WriteLine(clickedItem);
-            //clearSearch();
             int i = Int32.Parse(clickedItem);
 
             string hash = searchResults[i].GetName();
@@ -280,43 +263,60 @@ namespace Client
             string imagePath = Constants.TempDirectory + $"{searchResults[i].GetAlbum()}.jpg";
             string localMp3Path = Constants.Mp3sDirectory + $"{hash}.mp3";
 
-            if (!File.Exists(localMp3Path))
+            if(currentSongName.Equals(hash))
             {
-                PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
-                DownloadBody downloadBody = new(DownloadBody.Type.SongFile, hash);
-
-                Packet packet = new(packetHeader, downloadBody);
-
-                TxBuffer = packet.Serialize();
-
-                stream.Write(TxBuffer);
-
-                currentSongLocation = ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, true);
+                playButton_Click(sender, e);
             }
             else
             {
-                currentSongLocation = localMp3Path;
+                if (!File.Exists(localMp3Path))
+                {
+                    if (outputDevice.PlaybackState != PlaybackState.Stopped)
+                    {
+                        Directory.GetFiles(Constants.TempDirectory, "*.mp3").ToList()
+                                                                            .ForEach(file => File.Delete(file));
+                    }
+
+                    PacketHeader packetHeader = new(PacketHeader.SongAction.Download);
+                    DownloadBody downloadBody = new(DownloadBody.Type.SongFile, hash);
+
+                    Packet packet = new(packetHeader, downloadBody);
+
+                    TxBuffer = packet.Serialize();
+
+                    stream.Write(TxBuffer);
+
+                    currentSongLocation = ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, true);
+                    currentSongName = hash;
+                }
+                else
+                {
+                    currentSongLocation = localMp3Path;
+                    currentSongName = hash;
+                }
+
+                BitmapImage bitmap = LoadRuntimeBitmap(imagePath);
+                coverImage.Source = bitmap;
+                artist.Content = searchResults[i].GetArtist();
+                songName.Content = hash;
+
+                /* Can interrupt an async Task */
+                if (playTask is not null && !playTask.IsCompleted)
+                {
+                    cancellationTokenSource.Cancel();
+                    await playTask;
+                    PlayCleanup();
+                }
+
+                isNewAudioFile = true;
+                playButton_Click(sender, e);
             }
-
-            BitmapImage bitmap = LoadRuntimeBitmap(imagePath);
-            coverImage.Source = bitmap;
-
-            artist.Content = searchResults[i].GetArtist();
-            songName.Content = hash;
-
-            if (playTask is not null && !playTask.IsCompleted)
-            {
-                cancellationToken.Cancel();
-                await playTask;
-                PlayCleanup();
-            }
-
-            playButton_Click(sender, e);
         }
 
 
         private void StateTransition(PacketHeader packetHeader, MediaControlBody mediaControlBody)
         {
+            /* Transitions from current <state> to the MediaControlBody.State received from server */
             Packet pausePacket = new(packetHeader, mediaControlBody);
 
             TxBuffer = pausePacket.Serialize();
@@ -345,6 +345,9 @@ namespace Client
 
         private void PerformLogout()
         {
+            Task.WaitAll(playTask); // wait until playTask is cancelled (if active)
+
+            /* Load login window again */
             Login newWindow = new Login();
             newWindow.Show();
             Close();
@@ -358,6 +361,9 @@ namespace Client
         {
             if (searchActive)
             {
+                Directory.GetFiles(Constants.TempDirectory, "*.jpg").ToList()
+                                                    .ForEach(file => File.Delete(file));
+
                 foreach (Grid button in buttonList)
                 {
                     MainCanvas.Children.Remove(button);
@@ -407,7 +413,6 @@ namespace Client
 
         private void ReceiveSongCovers(List<Song> results)
         {
-            Logger instance = Logger.Instance;
 
             foreach (Song song in results)
             {
@@ -442,12 +447,12 @@ namespace Client
             Logger instance = Logger.Instance;
             bool reachedTotalBlocks = false;
 
+            /* Receive each block and write it to the file <toOpen> */
             using (FileStream fs = File.Open(toOpen, FileMode.Create))
             {
                 do
                 {
                     int read = stream.Read(RxBuffer);
-                    Debug.WriteLine(read);
 
                     byte[] receivedBuffer = new byte[read];
                     Array.Copy(RxBuffer, receivedBuffer, read);
@@ -519,7 +524,7 @@ namespace Client
                 downloadButton.Name = newGrid.Name = "item" + i;
                 downloadButton.Click += downloadButton_Click;
 
-                if (File.Exists($"./Assets/Mp3/{searchResults[i].GetName()}.mp3"))
+                if (File.Exists(Constants.Mp3sDirectory + $"{searchResults[i].GetName()}.mp3"))
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
                     downloadButton.Background = new ImageBrush(bgimg);
@@ -530,31 +535,20 @@ namespace Client
                     {
                         downloadButton.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122));
                     }
-                    
                 } 
                 else
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
                     downloadButton.Background = new ImageBrush(bgimg);
-
                 }
-                
-
 
                 //add all elements to grid
-                newGrid.Children.Add(albumCover);             //TEMP COMMENTING OUT, NEED TO FIGURE OUT WHERE THESE IMAGES ARE GETTING PUT
+                newGrid.Children.Add(albumCover);             
                 newGrid.Children.Add(songName);
                 newGrid.Children.Add(artistName);
                 newGrid.Children.Add(downloadButton);
 
                 buttonList.Add(newGrid);
-                //Button newBtn = new Button();
-                //newBtn.Content = searchResults[i];
-                //newBtn.Name = "button" + i.ToString();
-                //newBtn.Width = WIDTH;
-                //newBtn.Height = HEIGHT;
-                //newBtn.Click += NewBtn_Click;
-                //buttonList.Add(newBtn);
             }
         }
 
@@ -565,9 +559,8 @@ namespace Client
             Debug.WriteLine(clickedItem);
             int i = Int32.Parse(clickedItem);
             BitmapImage bitmap = new BitmapImage();
-            //clickedGrid.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
 
-            String path = $"./Assets/Mp3/{searchResults[i].GetName()}.mp3";
+            String path = Constants.Mp3sDirectory + $"{searchResults[i].GetName()}.mp3";
 
             if (File.Exists(path))
             {
@@ -576,8 +569,6 @@ namespace Client
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
                     clickedGrid.Background = new ImageBrush(bgimg);
-                    //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(255, 160, 122)); //red
-                    //clickedGrid.Content = "X";
                     File.Delete(path);
                 }
             }
@@ -597,11 +588,7 @@ namespace Client
 
                 ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
                 clickedGrid.Background = new ImageBrush(bgimg);
-
-                //clickedGrid.Background = new SolidColorBrush(Color.FromRgb(152, 251, 152)); //green
-                //clickedGrid.Content = "D";
             }
-            //clickedGrid.Content = "X";
         }
     
 

@@ -3,3 +3,4 @@ Jpg,Purpose,Justin Bieber
 Png,Changes,Justin Bieber
 Jpg,Believe,Justin Bieber
 Jpg,Justice,Justin Bieber
+Jpg,El Merengue,Manuel Turizo
