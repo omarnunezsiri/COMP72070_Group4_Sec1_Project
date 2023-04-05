@@ -145,6 +145,7 @@ try
                                 {
                                     case MediaControlBody.Action.Play:
                                         state = MediaControlBody.State.Playing;
+                                        
                                         break;
                                     case MediaControlBody.Action.Pause:
                                         state = MediaControlBody.State.Paused;
@@ -156,6 +157,8 @@ try
                                     case MediaControlBody.Action.GetState:
                                         break;
                                 }
+
+                                mcb.appendServerResponse(state);
                                 break;
                             case PacketHeader.SongAction.Download:
 

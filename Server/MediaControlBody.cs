@@ -79,11 +79,9 @@ namespace Server
             this.action = ((actionFlags & mask) != 0) ? Action.GetState : this.action;
 
             this.state = State.NotApplicable;
-            Console.WriteLine("aaaaa " + state + " " + serialized.Length);
             
             if (serialized.Length > 1)
             {
-                Console.WriteLine("responding");
                 this.role = Role.Server;
                 byte stateFlags = serialized[1];
                 
