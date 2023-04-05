@@ -117,12 +117,12 @@
                     <ImageBrush x:Name="playImg" ImageSource="/Assets/Images/play-button.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="rewindButton" Content="" HorizontalAlignment="Left" Margin="114,379,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}" Grid.Column="1">
+            <Button x:Name="rewindButton" Content="" HorizontalAlignment="Left" Margin="114,379,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}" Grid.Column="1" Click="rewindButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/rewind-button.png" Stretch="Uniform"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="forwardButton" Content="" HorizontalAlignment="Left" Margin="23,379,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}" Grid.Column="2">
+            <Button x:Name="forwardButton" Content="" HorizontalAlignment="Left" Margin="23,379,0,0" VerticalAlignment="Top" Height="18" Width="26" BorderBrush="{x:Null}" Grid.Column="2" Click="forwardButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/forward-button.png" Stretch="Uniform"/>
                 </Button.Background>

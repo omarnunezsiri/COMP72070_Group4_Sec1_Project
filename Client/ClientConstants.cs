@@ -12,5 +12,6 @@ namespace Client
         public static string AssetsDirectory = "Assets/";
         public static string Unused = "";
         public static int PortNumber = 27500;
+        public static int SkipSeconds = 10;
     }
 }

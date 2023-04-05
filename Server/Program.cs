@@ -3,7 +3,6 @@
 using System.Net.Sockets;
 using System.Net;
 using Server;
-using System.Drawing;
 
 /* Defaults to the Server project directory instead of the Debug (which is ignored by our .gitignore file). */
 Directory.SetCurrentDirectory("../../../");
@@ -31,16 +30,23 @@ TcpListener listener = new(ipEndPoint);
 
 try
 {
+    Console.ForegroundColor = ConsoleColor.Cyan;
     Console.WriteLine("---- Silly Music Player Running on SSP (3.5.2) ----\n");
+    Console.ForegroundColor = ConsoleColor.White;
+
     listener.Start();
 
     // keep listening for connections until interrupted
     while (true)
     {
         state = MediaControlBody.State.Idle;
+
         Console.WriteLine("Waiting for Client Connection...");
         using TcpClient handler = await listener.AcceptTcpClientAsync();
-        Console.WriteLine("Connection Established! Waiting for login/signup...\n");
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Connection Established! Waiting for client action...\n");
+        Console.ForegroundColor = ConsoleColor.White;
 
         await using NetworkStream stream = handler.GetStream();
 
@@ -220,9 +226,10 @@ try
         }
         catch (IOException)
         {
-
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\n---- Closing current Client Connection ----\n");
+            Console.ForegroundColor = ConsoleColor.White;
         }
-        Console.WriteLine("\n Closing current Client Connection \n");
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using NAudio.Utils;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using Server;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Client
     public partial class Home : Window
     {
         /* Media player members */
-        WaveOutEvent outputDevice = new();
+        WaveOutEvent outputDevice;
         AudioFileReader audioFileReader;
 
         /* Information about the current song being played */
@@ -71,6 +72,7 @@ namespace Client
         {
             InitializeComponent();
             stream = App.client.GetStream();
+            outputDevice = new();
 
             progressBar.Minimum = 0;
             progressBar.Value = 0;
@@ -80,6 +82,7 @@ namespace Client
             currentSongName = "";
             RxBuffer = new byte[Constants.Mp3BufferMax + Constants.CoverBufferMax];
             cancellationTokenSource = new CancellationTokenSource();
+            outputDevice = new();
 
             /* Determines if the current user has its own dedicted Mp3s folder */
             mp3Dir = ClientConstants.AssetsDirectory + $"{username}Mp3/";
@@ -104,7 +107,7 @@ namespace Client
             {
                 /* Initial Song Setup...Labels, progress bar max and audio load */
 
-        isNewAudioFile = false;
+                isNewAudioFile = false;
                 audioFileReader = new(songLocation);
                 TimeSpan totalDuration = audioFileReader.TotalTime;
 
@@ -131,8 +134,8 @@ namespace Client
                     /* Tell the dispatcher to update UI information for formatting */
                     if (outputDevice.PlaybackState is PlaybackState.Playing)
                     {
-                        progressBar.Value = outputDevice.GetPosition();
-                        TimeSpan currentPosition = outputDevice.GetPositionTimeSpan();
+                        progressBar.Value = audioFileReader.Position;
+                        TimeSpan currentPosition = audioFileReader.CurrentTime;
                         startTime.Content = string.Format("{0:D2}:{1:D2}",
                                             currentPosition.Minutes,
                                             currentPosition.Seconds);
@@ -154,15 +157,15 @@ namespace Client
 
                 if(repeatActive)
                 {
-                    _ = PlayMp3Async(songLocation, cancellationToken);
+                    if(!cancellationToken.IsCancellationRequested)
+                    {
+                        playTask = PlayMp3Async(songLocation, cancellationToken);
+                    }
                 }
                 else
                 {
                     /* Handshake between Client and Server to end media play */
-                    await Dispatcher.InvokeAsync(() =>
-                    {
-                        EndPlayCommunication();
-                    });
+                    await Dispatcher.InvokeAsync(EndPlayCommunication);
                 }
             } 
         }
@@ -181,7 +184,7 @@ namespace Client
 
             outputDevice.Dispose();
 
-            if(repeatActive is false && playTask.IsCompleted)
+            if(repeatActive is false || playTask.IsCompleted)
             {
                 playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
                 state = MediaControlBody.State.Idle;
@@ -252,7 +255,7 @@ namespace Client
                     state = MediaControlBody.State.Idle;
                 }
 
-                if(currentSongName != "")
+                if(playTask is not null)
                     PlayCleanup();
 
                 isNewAudioFile = true;
@@ -348,6 +351,18 @@ namespace Client
             }
 
             return toOpen;
+        }
+
+        private void Skip(TimeSpan timeSpan)
+        {
+            if (audioFileReader != null && outputDevice.PlaybackState == PlaybackState.Playing)
+            {
+                TimeSpan newPosition = audioFileReader.CurrentTime + timeSpan;
+                if (newPosition > TimeSpan.Zero && newPosition < audioFileReader.TotalTime)
+                {
+                    audioFileReader.CurrentTime = newPosition;
+                }
+            }
         }
 
         /************ OTHERS ***********/
@@ -739,6 +754,16 @@ namespace Client
                 repeatActive = false;
             else
                 repeatActive = true;
+        }
+
+        private void rewindButton_Click(object sender, RoutedEventArgs e)
+        {
+            Skip(TimeSpan.FromSeconds(-ClientConstants.SkipSeconds));
+        }
+
+        private void forwardButton_Click(object sender, RoutedEventArgs e)
+        {
+            Skip(TimeSpan.FromSeconds(ClientConstants.SkipSeconds));
         }
     }
 }
