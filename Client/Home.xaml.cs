@@ -387,34 +387,29 @@ namespace Client
         /// <param name="resultList"></param>
         public void search(List<Song> resultList)
         {
-            string input = searchtb.Text;
-            bool searchText = input.Contains(input, StringComparison.OrdinalIgnoreCase);
-            if (searchText == true)
-            {
-                PacketHeader searchHeader = new(PacketHeader.SongAction.List);
-                SearchBody searchBody = new(0x00000000, input);
+            PacketHeader searchHeader = new(PacketHeader.SongAction.List);
+            SearchBody searchBody = new(0x00000000, searchtb.Text);
 
-                Packet searchPacket = new(searchHeader, searchBody);
+            Packet searchPacket = new(searchHeader, searchBody);
 
-                TxBuffer = searchPacket.Serialize();
+            TxBuffer = searchPacket.Serialize();
 
-                Logger instance = Logger.Instance;
-                instance.Log(searchPacket, true);
+            Logger instance = Logger.Instance;
+            instance.Log(searchPacket, true);
 
-                stream.Write(TxBuffer);
+            stream.Write(TxBuffer);
 
-                int read = stream.Read(RxBuffer);
+            int read = stream.Read(RxBuffer);
 
-                byte[] receivedBuffer = new byte[read];
-                Array.Copy(RxBuffer, receivedBuffer, read);
+            byte[] receivedBuffer = new byte[read];
+            Array.Copy(RxBuffer, receivedBuffer, read);
 
-                searchPacket = new(receivedBuffer);
-                SearchBody sb = (SearchBody)searchPacket.body;
-                instance.Log(searchPacket, false);
+            searchPacket = new(receivedBuffer);
+            SearchBody sb = (SearchBody)searchPacket.body;
+            instance.Log(searchPacket, false);
 
-                Utils.PopulateSearchResults(sb.GetResponse(), resultList);
-                ReceiveSongCovers(resultList);
-            }
+            Utils.PopulateSearchResults(sb.GetResponse(), resultList);
+            ReceiveSongCovers(resultList);
         }
 
         private void ReceiveSongCovers(List<Song> results)
