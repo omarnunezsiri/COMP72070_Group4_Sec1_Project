@@ -237,7 +237,7 @@ namespace Client
 
         private bool SongReachedEnd()
         {
-            return (progressBar.Value + (audioFileReader.Position - progressBar.Value) == progressBar.Maximum);
+            return (outputDevice.PlaybackState == PlaybackState.Stopped);
         }
 
         private void PlayCleanup()
@@ -351,9 +351,15 @@ namespace Client
         }
 
 
-        private void PerformLogout()
+        private async void PerformLogout()
         {
-            Task.WaitAll(playTask); // wait until playTask is cancelled (if active)
+            if(playTask is not null && !playTask.IsCompleted)
+            {
+                cancellationTokenSource.Cancel();
+                await playTask;
+                audioFileReader.Dispose();
+                PlayCleanup();
+            }
 
             /* Load login window again */
             Login newWindow = new Login();
@@ -561,9 +567,7 @@ namespace Client
         {
             Button clickedGrid = (Button)sender;
             string clickedItem = clickedGrid.Name.Remove(0, 4);
-            Debug.WriteLine(clickedItem);
             int i = Int32.Parse(clickedItem);
-            BitmapImage bitmap = new BitmapImage();
 
             String path = Constants.Mp3sDirectory + $"{searchResults[i].GetName()}.mp3";
 
