@@ -4,3 +4,6 @@ Png,Changes,Justin Bieber
 Jpg,Believe,Justin Bieber
 Jpg,Justice,Justin Bieber
 Jpg,El Merengue,Manuel Turizo
+Jpg,ASCEND,ILLENIUM
+Jpg,Awake,ILLENIUM
+Jpg,Fallen Embers,ILLENIUM
