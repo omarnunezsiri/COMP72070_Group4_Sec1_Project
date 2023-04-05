@@ -61,6 +61,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\Mp3\" />
+    <Folder Include="Assets\Mp3\" />
     <Folder Include="Assets\Text Files\" />
     <Folder Include="Assets\Temp\" />
     <Folder Include="Assets\Temp\" />

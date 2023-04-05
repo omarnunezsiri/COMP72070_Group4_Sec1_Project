@@ -530,6 +530,7 @@ namespace Client
                 if (File.Exists(Constants.Mp3sDirectory + $"{searchResults[i].GetName()}.mp3"))
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
+                    downloadButton.ToolTip = "Delete";
                     downloadButton.Background = new ImageBrush(bgimg);
                     downloadButton.Width = 16;
                     downloadButton.Height = 16;
@@ -542,6 +543,7 @@ namespace Client
                 else
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
+                    downloadButton.ToolTip = "Download";
                     downloadButton.Background = new ImageBrush(bgimg);
                 }
 
@@ -571,6 +573,7 @@ namespace Client
                 if (clickedGrid.IsMouseOver == true)
                 {
                     ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "download-button.png", UriKind.Relative));
+                    clickedGrid.ToolTip = "Download";
                     clickedGrid.Background = new ImageBrush(bgimg);
                     File.Delete(path);
                 }
@@ -590,6 +593,7 @@ namespace Client
                 ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, false);
 
                 ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
+                clickedGrid.ToolTip = "Delete";
                 clickedGrid.Background = new ImageBrush(bgimg);
             }
         }

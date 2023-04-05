@@ -143,7 +143,7 @@
                     <ImageBrush ImageSource="/Assets/Images/logout.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="3,14,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black" Grid.Column="1">
+            <Button x:Name="searchButton" Content="" HorizontalAlignment="Left" Margin="3,14,0,0" VerticalAlignment="Top" Height="18" Width="18" BorderBrush="{x:Null}" Click="searchButton_Click" OpacityMask="Black" Grid.Column="1" ToolTip="Search">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/magnifier.png"/>
                 </Button.Background>
@@ -158,12 +158,12 @@
                 </Button.Background>
             </Button>
             <Image x:Name="coverImage" HorizontalAlignment="Left" Height="234" Margin="47,53,0,0" VerticalAlignment="Top" Width="236" Source="/Assets/Images/blackbox.png" Grid.ColumnSpan="2" Grid.Column="1"/>
-            <Button x:Name="volumeDown" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="235,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeDown_Click">
+            <Button x:Name="volumeDown" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="235,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeDown_Click" ToolTip="Volume Down">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/volume-down.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="volumeUp" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="373,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeUp_Click">
+            <Button x:Name="volumeUp" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="373,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeUp_Click" ToolTip="Volume Up">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/volume-up.png"/>
                 </Button.Background>
