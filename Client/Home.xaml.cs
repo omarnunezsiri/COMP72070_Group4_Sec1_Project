@@ -153,6 +153,7 @@ namespace Client
                 mediaControlBody = new(MediaControlBody.Action.Pause);
                 StateTransition(packetHeader, mediaControlBody);
                 playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
+                playButton.ToolTip = "Play";
             }
             else //SONG IS PLAYING
             {
@@ -161,8 +162,9 @@ namespace Client
                     mediaControlBody = new(MediaControlBody.Action.Play);
                     StateTransition(packetHeader, mediaControlBody);
                     playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "pause-button.png", UriKind.Relative));
+                    playButton.ToolTip = "Pause";
 
-                    if(playTask is null || playTask.IsCompleted || playTask.IsCanceled)
+                    if (playTask is null || playTask.IsCompleted || playTask.IsCanceled)
                     {
                         cancellationTokenSource = new CancellationTokenSource();
                         playTask = PlayMp3Async(currentSongLocation, cancellationTokenSource.Token);
@@ -303,8 +305,8 @@ namespace Client
 
                 BitmapImage bitmap = LoadRuntimeBitmap(imagePath);
                 coverImage.Source = bitmap;
-                artist.Content = searchResults[i].GetArtist();
-                songName.Content = hash;
+                artist.Text = searchResults[i].GetArtist();
+                songName.Text = hash;
 
                 /* Can interrupt an async Task */
                 if (playTask is not null && !playTask.IsCompleted)
