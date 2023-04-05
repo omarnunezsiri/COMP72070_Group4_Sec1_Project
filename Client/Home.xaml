@@ -163,7 +163,7 @@
                     <ImageBrush ImageSource="/Assets/Images/volume-down.png"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="volumeUp" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="372,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeUp_Click">
+            <Button x:Name="volumeUp" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="373,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeUp_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/volume-up.png"/>
                 </Button.Background>
