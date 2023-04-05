@@ -157,7 +157,11 @@
                     <ImageBrush ImageSource="/Assets/Images/repeat.png"/>
                 </Button.Background>
             </Button>
-            <Image x:Name="coverImage" HorizontalAlignment="Left" Height="234" Margin="47,53,0,0" VerticalAlignment="Top" Width="236" Source="/Assets/Images/blackbox.png" Grid.ColumnSpan="2" Grid.Column="1"/>
+            <Image x:Name="coverImage" HorizontalAlignment="Left" Height="234" Margin="47,51,0,0" VerticalAlignment="Top" Width="236" Source="/Assets/Images/blackbox.png" Grid.ColumnSpan="2" Grid.Column="1">
+                <Image.Effect>
+                    <DropShadowEffect/>
+                </Image.Effect>
+            </Image>
             <Button x:Name="volumeDown" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="235,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="volumeDown_Click" ToolTip="Volume Down">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/volume-down.png"/>
