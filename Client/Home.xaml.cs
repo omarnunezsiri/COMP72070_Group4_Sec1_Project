@@ -171,6 +171,12 @@ namespace Client
             }
         }
 
+        /// <summary>
+        /// Async task in charge of playing a song and performing UI-related changes
+        /// </summary>
+        /// <param name="songLocation">path to the .mp3 file to play</param>
+        /// <param name="cancellationToken">cancellation token for propen synchronization</param>
+        /// <returns>The PlayMp3Async task</returns>
         private async Task PlayMp3Async(string songLocation, CancellationToken cancellationToken)
         {
             if(audioFileReader is null || isNewAudioFile)

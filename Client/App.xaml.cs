@@ -22,7 +22,16 @@ namespace Client
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             Logger.SetFileName(Constants.TextDirectory + Constants.ClientLogsFile);
+
+            /* Defaults to the Client project directory instead of the Debug (which is ignored by our .gitignore file). */
             Directory.SetCurrentDirectory("../../../");
+
+            /* Clears temp files before load */
+            DirectoryInfo directoryInfo = new DirectoryInfo(Constants.TempDirectory);
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                file.Delete();
+            }
 
             IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint iPEndPoint = new(iPAddress, ClientConstants.PortNumber);
