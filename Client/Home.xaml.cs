@@ -65,6 +65,7 @@ namespace Client
         //is the search view currently showing
         bool searchActive = false;
 
+        bool repeatActive = false;
         public Home(string username)
         {
             InitializeComponent();
@@ -241,6 +242,11 @@ namespace Client
                     progressBar.Value += (audioFileReader.Position - progressBar.Value);
                     PlayCleanup();
                 });
+
+                if(repeatActive)
+                {
+                    PlayMp3Async(songLocation, cancellationToken);      //YEEHAW
+                }
             } 
         }
 
@@ -691,6 +697,14 @@ namespace Client
                 textBox.MoveFocus(tRequest);
                 clearSearch();
             }
+        }
+
+        private void ToggleRepeat(object sender, RoutedEventArgs e)
+        {
+            if (repeatActive)
+                repeatActive = false;
+            else
+                repeatActive = true;
         }
     }
 }
