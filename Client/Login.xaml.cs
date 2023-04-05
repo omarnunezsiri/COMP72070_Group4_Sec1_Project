@@ -33,7 +33,7 @@ namespace Client
         {
             InitializeComponent();
             stream = App.client.GetStream();
-            RxBuffer = new byte[1024];
+            RxBuffer = new byte[Constants.SmallBufferMax];
         }
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
@@ -43,7 +43,7 @@ namespace Client
 
         private void PerformLogin()
         {
-            if (usernameTB.Text == null || passwordBox.Password == null || passwordTextBox.Text == null || usernameTB.Text == "Username" || passwordBox.Password == "Password")
+            if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || usernameTB.Text == "Username")
             {
                 MessageBoxResult result = MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
             }
@@ -53,7 +53,12 @@ namespace Client
                 PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.LogIn);
 
                 /* Builds the body with the given login information */
-                string password = passwordBox.Password ?? passwordTextBox.Text;
+                string password;
+                if (showPassword.IsChecked is true)
+                    password = passwordTextBox.Text;
+                else
+                    password = passwordBox.Password;
+
                 Account account = new(usernameTB.Text, password);
 
                 /* Builds the packet with all necessary information and serializes it */

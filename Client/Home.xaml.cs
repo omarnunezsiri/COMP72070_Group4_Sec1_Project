@@ -174,8 +174,6 @@ namespace Client
 
         private void PlayCleanup()
         {
-            playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
-
             if (outputDevice.PlaybackState != PlaybackState.Stopped)
             {
                 outputDevice.Stop();
@@ -183,7 +181,12 @@ namespace Client
 
             outputDevice.Dispose();
 
-            state = MediaControlBody.State.Idle;
+            if(repeatActive is false && playTask.IsCompleted)
+            {
+                playImg.ImageSource = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "play-button.png", UriKind.Relative));
+                state = MediaControlBody.State.Idle;
+            }
+            
             isNewAudioFile = true;
         }
 
@@ -246,8 +249,11 @@ namespace Client
                 {
                     cancellationTokenSource.Cancel();
                     await playTask;
-                    PlayCleanup();
+                    state = MediaControlBody.State.Idle;
                 }
+
+                if(currentSongName != "")
+                    PlayCleanup();
 
                 isNewAudioFile = true;
                 playButton_Click(sender, e);
@@ -525,26 +531,28 @@ namespace Client
             }
             if (!searchActive)
             {
-                MakeButton();
-                foreach (Grid button in buttonList)
+                if (searchtb.Text == string.Empty)
                 {
-                    Canvas.SetTop(button, currentY);
-                    Canvas.SetLeft(button, Xloc);
-                    currentY += HEIGHT;
-                    MainCanvas.Children.Add(button);    //adds the button to the canvas
+                    clearSearch();
+                    noResultstb.Visibility = Visibility.Hidden;
                 }
-                searchActive = true;
+                else
+                {
+                    MakeButton();
+                    foreach (Grid button in buttonList)
+                    {
+                        Canvas.SetTop(button, currentY);
+                        Canvas.SetLeft(button, Xloc);
+                        currentY += HEIGHT;
+                        MainCanvas.Children.Add(button);    //adds the button to the canvas
+                    }
+                    searchActive = true;
+                } 
             }
             if (searchResults.Count == 0)
             {
                 noResultstb.Visibility = Visibility.Visible;
             }
-            if (searchtb.Text == string.Empty)
-            {
-                clearSearch();
-                noResultstb.Visibility = Visibility.Hidden;
-            }
-
         }
 
 

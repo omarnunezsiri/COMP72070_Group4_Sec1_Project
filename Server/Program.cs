@@ -45,7 +45,7 @@ try
         await using NetworkStream stream = handler.GetStream();
 
         Packet rx;
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[Constants.SmallBufferMax];
         int receivedBytes;
 
         // Connection will run until Client disconnects, then goes back to listening

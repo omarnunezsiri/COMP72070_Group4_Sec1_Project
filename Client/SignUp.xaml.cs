@@ -30,7 +30,7 @@ namespace Client
         {
             InitializeComponent();
             stream = App.client.GetStream();
-            RxBuffer = new byte[1024];
+            RxBuffer = new byte[Constants.SmallBufferMax];
         }
 
         private void ShowPassword_Checked(object sender, RoutedEventArgs e)
@@ -123,7 +123,7 @@ namespace Client
             //insert check for username and pw
 
             //add check from server ???
-            if (usernameTB.Text == string.Empty || passwordBox.Password == string.Empty || cnfmpasswordBox.Password == string.Empty)
+            if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || (cnfmpasswordBox.Password == string.Empty && cnfmpasswordTextBox.Text == string.Empty))
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
                 check = false;

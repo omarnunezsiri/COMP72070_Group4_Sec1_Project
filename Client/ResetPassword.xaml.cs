@@ -25,8 +25,6 @@ namespace Client
     public partial class ResetPassword : Window
     {
         bool check = false;
-        //bool valid;
-        ArrayList usernames = new ArrayList();
 
         /* Data communications */
         byte[] TxBuffer;
@@ -39,7 +37,6 @@ namespace Client
         public ResetPassword()
         {
             InitializeComponent();
-            AddToList();
 
             /* Sets the Header to be of type LogIn (Resetting Password) */
             packetHeader = new(PacketHeader.AccountAction.LogIn);
@@ -48,7 +45,7 @@ namespace Client
             account = new Account(ClientConstants.Unused, ClientConstants.Unused);
 
             stream = App.client.GetStream();
-            RxBuffer = new byte[1024];
+            RxBuffer = new byte[Constants.SmallBufferMax];
         }
 
         private void ShowPassword_Checked(object sender, RoutedEventArgs e)
@@ -133,7 +130,7 @@ namespace Client
         {
             check = false;
             //add check from server ???
-            if (usernameTB.Text == string.Empty || passwordBox.Password == string.Empty || cnfmpasswordBox.Password == string.Empty)
+            if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || (cnfmpasswordBox.Password == string.Empty && cnfmpasswordTextBox.Text == string.Empty))
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
                 check = false;
@@ -162,12 +159,12 @@ namespace Client
                     check = true;
                 }
             }
-            if (unameValid.Content == "username not found :(")
+            if (unameValid.Content.ToString() == "username not found :(")
             {
                 MessageBox.Show("Username does not exist!", "Warning", MessageBoxButton.OK);
                 check = false;
             }
-            if (check == true && unameValid.Content == "username found :)")
+            if (check == true && unameValid.Content.ToString() == "username found :)")
             {
                 PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.NotApplicable);
                 string actualPw = passwordBox.Password ?? passwordTextBox.Text;
@@ -210,15 +207,6 @@ namespace Client
             //Login newWindow = new Login();
             //newWindow.Show();
             this.Close();
-        }
-
-        private void AddToList()
-        {
-            usernames.Add("spaceman");
-            usernames.Add("dxbby");
-            usernames.Add("ajdj");
-            usernames.Add("itsdee");
-            usernames.Add("sharkfin");
         }
 
         private void cnfmpasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
