@@ -759,7 +759,7 @@ namespace Client
             }
             else
             {
-                ImageSource repeatimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "repeat-dblue.png", UriKind.Relative));
+                ImageSource repeatimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "repeat-blue.png", UriKind.Relative));
                 repeatButton.Background = new ImageBrush(repeatimg);
                 rptCircle.Visibility = Visibility.Visible;
                 repeatActive = true;
