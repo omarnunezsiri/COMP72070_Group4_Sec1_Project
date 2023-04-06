@@ -125,19 +125,19 @@ namespace Client
             //add check from server ???
             if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || (cnfmpasswordBox.Password == string.Empty && cnfmpasswordTextBox.Text == string.Empty))
             {
-                MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+                MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 check = false;
             }
             else if (usernameTB.Text.Length < 3)
             {
-                MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK);
+                MessageBox.Show("Username too short!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 check = false;
             }
             else if (showPassword.IsChecked == true)
             {
                 if (!passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
                 {
-                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     check = false;
                 }
                 else
@@ -150,7 +150,7 @@ namespace Client
             {
                 if (!passwordBox.Password.Equals(cnfmpasswordBox.Password))
                 {
-                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     check = false;
                 }
                 else
@@ -192,7 +192,7 @@ namespace Client
                 }
                 else
                 {
-                    MessageBox.Show("Username is taken! Try using a different one", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Username is taken! Try using a different one", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }

@@ -45,7 +45,7 @@ namespace Client
         {
             if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || usernameTB.Text == "Username")
             {
-                MessageBoxResult result = MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+                MessageBoxResult result = MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
@@ -86,7 +86,7 @@ namespace Client
                 }
                 else
                 {
-                    MessageBox.Show("Invalid username or password. Please try again.", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Invalid username or password. Please try again.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 
             }

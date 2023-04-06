@@ -132,14 +132,14 @@ namespace Client
             string password = "";
             if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || (cnfmpasswordBox.Password == string.Empty && cnfmpasswordTextBox.Text == string.Empty))
             {
-                MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
+                MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 check = false;
             }
             else if (showPassword.IsChecked == true)
             {
                 if (!passwordTextBox.Text.Equals(cnfmpasswordTextBox.Text))
                 {
-                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     check = false;
                 }
                 else
@@ -152,7 +152,7 @@ namespace Client
             {
                 if (!passwordBox.Password.Equals(cnfmpasswordBox.Password))
                 {
-                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK);
+                    MessageBox.Show("Passwords don't match!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     check = false;
                 }
                 else
@@ -163,7 +163,7 @@ namespace Client
             }
             if (unameValid.Content.ToString() == "username not found :(")
             {
-                MessageBox.Show("Username does not exist!", "Warning", MessageBoxButton.OK);
+                MessageBox.Show("Username does not exist!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 check = false;
             }
             if (check == true && unameValid.Content.ToString() == "username found :)")
