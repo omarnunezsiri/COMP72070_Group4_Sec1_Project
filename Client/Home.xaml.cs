@@ -751,9 +751,19 @@ namespace Client
         private void ToggleRepeat(object sender, RoutedEventArgs e)
         {
             if (repeatActive)
+            {
                 repeatActive = false;
+                ImageSource repeatimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "repeat.png", UriKind.Relative));
+                repeatButton.Background = new ImageBrush(repeatimg);
+                rptCircle.Visibility = Visibility.Hidden;
+            }
             else
+            {
+                ImageSource repeatimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "repeat-dblue.png", UriKind.Relative));
+                repeatButton.Background = new ImageBrush(repeatimg);
+                rptCircle.Visibility = Visibility.Visible;
                 repeatActive = true;
+            }
         }
 
         private void rewindButton_Click(object sender, RoutedEventArgs e)

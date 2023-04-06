@@ -152,7 +152,7 @@
             <TextBlock x:Name="artist" Text="waiting for artist..." HorizontalAlignment="Left" Margin="47,319,0,0" VerticalAlignment="Top" Width="234" FontFamily="Ink Free" Background="{x:Null}" FontSize="18" Grid.ColumnSpan="2" Grid.Column="1" TextAlignment="Center"/>
             <Label x:Name="startTime" Content="00:00" HorizontalAlignment="Left" Margin="22,410,0,0" VerticalAlignment="Top" Width="54" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}"/>
             <Label x:Name="endTime" Content="00:00" HorizontalAlignment="Left" Margin="340,410,0,0" VerticalAlignment="Top" Width="50" FontFamily="Ink Free" Height="23" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="{x:Null}" Grid.Column="2"/>
-            <Button Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="54,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="ToggleRepeat">
+            <Button x:Name="repeatButton" Grid.Column="2" Content="" HorizontalAlignment="Left" Margin="54,380,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Width="15" Height="16" Click="ToggleRepeat" Foreground="Black">
                 <Button.Background>
                     <ImageBrush ImageSource="/Assets/Images/repeat.png"/>
                 </Button.Background>
@@ -173,6 +173,7 @@
                 </Button.Background>
             </Button>
             <TextBlock x:Name="noResultstb" Margin="54,44,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="207" Grid.ColumnSpan="2" TextAlignment="Center" FontFamily="Ink Free" FontWeight="Bold" Background="#FFFFE6EE" Height="19" HorizontalAlignment="Left" FontSize="16" Visibility="Hidden"><Run Language="en-ca" Text="No results found :("/></TextBlock>
+            <Ellipse x:Name="rptCircle" Grid.Column="2" HorizontalAlignment="Left" Height="3" Margin="60,396,0,0" Stroke="#FF0081E9" VerticalAlignment="Top" Width="3" Fill="#FF0081E9" Visibility="Hidden"/>
 
 
 

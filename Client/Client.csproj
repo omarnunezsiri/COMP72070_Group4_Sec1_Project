@@ -15,6 +15,7 @@
     <None Remove="logout.png" />
     <None Remove="magnifier.png" />
     <None Remove="play-button.png" />
+    <None Remove="repeat-white.png" />
     <None Remove="repeat.png" />
     <None Remove="rewind-button.png" />
     <None Remove="silly music player-1 %284%29.png" />
@@ -51,6 +52,7 @@
     <Resource Include="Assets\Images\view.png" />
     <Resource Include="Assets\Images\volume-down.png" />
     <Resource Include="Assets\Images\volume-up.png" />
+    <Resource Include="repeat-white.png" />
   </ItemGroup>
 
   <ItemGroup>
