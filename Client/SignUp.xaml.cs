@@ -189,6 +189,7 @@ namespace Client
                     success.Visibility = Visibility.Visible;
                     submitButton.Visibility = Visibility.Hidden;
                     nextButton.Visibility = Visibility.Visible;
+                    cancelButton.Visibility = Visibility.Hidden;
                 }
                 else
                 {
