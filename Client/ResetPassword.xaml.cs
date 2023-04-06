@@ -129,7 +129,7 @@ namespace Client
         private void PerformReset()
         {
             check = false;
-            //add check from server ???
+            string password = "";
             if (usernameTB.Text == string.Empty || (passwordBox.Password == string.Empty && passwordTextBox.Text == string.Empty) || (cnfmpasswordBox.Password == string.Empty && cnfmpasswordTextBox.Text == string.Empty))
             {
                 MessageBox.Show("Username or password cannot be empty!", "Warning", MessageBoxButton.OK);
@@ -145,6 +145,7 @@ namespace Client
                 else
                 {
                     check = true;
+                    password = passwordTextBox.Text;
                 }
             }
             else if (showPassword.IsChecked == false)
@@ -157,6 +158,7 @@ namespace Client
                 else
                 {
                     check = true;
+                    password = passwordBox.Password;
                 }
             }
             if (unameValid.Content.ToString() == "username not found :(")
@@ -167,8 +169,7 @@ namespace Client
             if (check == true && unameValid.Content.ToString() == "username found :)")
             {
                 PacketHeader packetHeader = new PacketHeader(PacketHeader.AccountAction.NotApplicable);
-                string actualPw = passwordBox.Password ?? passwordTextBox.Text;
-                Account account = new Account(usernameTB.Text, actualPw);
+                Account account = new Account(usernameTB.Text, password);
 
                 Packet packet = new(packetHeader, account);
                 Logger instance = Logger.Instance;
