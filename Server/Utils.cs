@@ -59,15 +59,17 @@ namespace Server
         /// <returns>List of songs that match search criteria</returns>
         public static List<Song> SearchSong(SongController sc, String searchTerm)
         {
-            List<Song> results = new List<Song>();
+            List<Song> results = new();
             Dictionary<String, Song> songs = sc.ViewSongs();
 
-            foreach (var song in songs) 
+            searchTerm = searchTerm.ToLower();
+            
+            foreach (KeyValuePair<string, Song> songPair in songs)
             {
-                if(song.Key.ToLower().Contains(searchTerm.ToLower()))
-                {
-                    results.Add(song.Value);
-                }
+                string name = songPair.Value.GetName();
+
+                if (name.StartsWith(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    results.Add(songPair.Value);
             }
 
             return results;
