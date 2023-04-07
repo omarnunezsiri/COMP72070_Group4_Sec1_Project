@@ -18,8 +18,9 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
-        public static TcpClient client;
-        private async void Application_Startup(object sender, StartupEventArgs e)
+        public static UdpClient client;
+        public static IPEndPoint iPEndPoint;
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
             Logger.SetFileName(Constants.TextDirectory + Constants.ClientLogsFile);
 
@@ -34,11 +35,9 @@ namespace Client
             }
 
             IPAddress iPAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint iPEndPoint = new(iPAddress, ClientConstants.PortNumber);
+            iPEndPoint = new(iPAddress, ClientConstants.PortNumber);
 
             client = new();
-
-            await client.ConnectAsync(iPEndPoint);
         }
     }
 }

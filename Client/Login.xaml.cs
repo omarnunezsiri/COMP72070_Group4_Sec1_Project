@@ -27,12 +27,10 @@ namespace Client
         /* Data communications */
         byte[] TxBuffer;
         byte[] RxBuffer;
-        NetworkStream stream;
 
         public Login()
         {
             InitializeComponent();
-            stream = App.client.GetStream();
             RxBuffer = new byte[Constants.SmallBufferMax];
         }
 
@@ -68,9 +66,9 @@ namespace Client
                 Logger instance = Logger.Instance;
                 instance.Log(packet, true);
 
-                stream.Write(TxBuffer);
+                App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-                stream.Read(RxBuffer);
+                RxBuffer = App.client.Receive(ref App.iPEndPoint);
 
                 // Receive response Packet
                 packet = new Packet(RxBuffer);

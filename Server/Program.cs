@@ -25,221 +25,202 @@ FileHandler.ReadAccounts(accountController, Constants.TextDirectory + Constants.
 MediaControlBody.State state;
 
 #if (UseSockets)
-IPEndPoint ipEndPoint = new(IPAddress.Any, Constants.PortNumber);
-TcpListener listener = new(ipEndPoint);
+UdpClient client = new UdpClient(Constants.PortNumber);
+
+Console.ForegroundColor = ConsoleColor.Cyan;
+Console.WriteLine("---- Silly Music Player Running on SSP (3.5.2) ----\n");
+Console.ForegroundColor = ConsoleColor.White;
+
+state = MediaControlBody.State.Idle;
+
+Packet rx;
+byte[] buffer = new byte[Constants.SmallBufferMax];
+int receivedBytes;
 
 try
 {
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine("---- Silly Music Player Running on SSP (3.5.2) ----\n");
-    Console.ForegroundColor = ConsoleColor.White;
-
-    listener.Start();
-
-    // keep listening for connections until interrupted
-    while (true)
+    // Will run until interrupted (CTRL + C)
+    try
     {
-        state = MediaControlBody.State.Idle;
-
-        Console.WriteLine("Waiting for Client Connection...");
-        using TcpClient handler = await listener.AcceptTcpClientAsync();
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Connection Established! Waiting for client action...\n");
-        Console.ForegroundColor = ConsoleColor.White;
-
-        await using NetworkStream stream = handler.GetStream();
-
-        Packet rx;
-        byte[] buffer = new byte[Constants.SmallBufferMax];
-        int receivedBytes;
-
-        // Connection will run until Client disconnects, then goes back to listening
-        try
+        bool individualSend;
+        IPEndPoint iPEndPoint = new(IPAddress.Any, 0);
+        while ((receivedBytes = (buffer = client.Receive(ref iPEndPoint)).Length) > 0)
         {
-            bool individualSend;
-            while ((receivedBytes = stream.Read(buffer)) > 0)
+            individualSend = true;
+            rx = new Packet(buffer);
+
+            logger.Log(rx, false);
+            //check for packet type and handle accordingly
+            switch (rx.header.GetPacketType())
             {
-                individualSend = true;
+                case PacketHeader.Type.Account:
 
-                byte[] receivedBuffer = new byte[receivedBytes];
-                Array.Copy(buffer, receivedBuffer, receivedBytes);
-                rx = new Packet(receivedBuffer);
+                    Account accountReceived = (Account)rx.body;
 
-                logger.Log(rx, false);
-                //check for packet type and handle accordingly
-                switch (rx.header.GetPacketType())
-                {
-                    case PacketHeader.Type.Account:
-
-                        Account accountReceived = (Account)rx.body;
-
-                        switch (rx.header.GetAccountAction())
-                        {
-                            case PacketHeader.AccountAction.NotApplicable:
-                                /* Work around to reset password after user was found */
-                                accountController.FindAccount(accountReceived.getUsername()).setPassword(accountReceived.getPassword());
-                                accountReceived.setStatus(Account.Status.Success);
-                                break;
-                            case PacketHeader.AccountAction.SignUp:
-                                /* If we receive an empty password, the user is attempting to create a username that doesn't exist */
-                                if (accountReceived.getPassword() == string.Empty)
+                    switch (rx.header.GetAccountAction())
+                    {
+                        case PacketHeader.AccountAction.NotApplicable:
+                            /* Work around to reset password after user was found */
+                            accountController.FindAccount(accountReceived.getUsername()).setPassword(accountReceived.getPassword());
+                            accountReceived.setStatus(Account.Status.Success);
+                            break;
+                        case PacketHeader.AccountAction.SignUp:
+                            /* If we receive an empty password, the user is attempting to create a username that doesn't exist */
+                            if (accountReceived.getPassword() == string.Empty)
+                            {
+                                try
                                 {
+                                    Account account = accountController.FindAccount(accountReceived.getUsername());
+                                    accountReceived.setStatus(Account.Status.Failure);
+                                }
+                                catch (Exception)
+                                {
+                                    accountReceived.setStatus(Account.Status.Success);
+                                }
+                            } /* If we can add the account to the Dictionary, response is success. Failure otherwise. */
+                            else if (accountController.AddAccount(accountReceived.getUsername(), accountReceived.getPassword()))
+                            {
+                                accountReceived.setStatus(Account.Status.Success);
+                                FileHandler.WriteAccounts(accountController, Constants.TextDirectory + Constants.AccountsFile);
+                            }
+                            else
+                                accountReceived.setStatus(Account.Status.Failure);
+                            break;
+                        case PacketHeader.AccountAction.LogIn:
+                            bool success = false;
+                            try
+                            {
+                                Account foundAccount = accountController.FindAccount(accountReceived.getUsername());
+
+                                /* If password is empty, user is trying to reset their password */
+                                if ((accountReceived.getPassword() == string.Empty))
+                                    success = true;
+                                else
+                                {
+                                    /* If password is not empty, user is trying to log in */
+                                    if (accountReceived.getPassword() == foundAccount.getPassword())
+                                        success = true;
+                                }
+                            }
+                            catch (KeyNotFoundException)
+                            {
+
+                            }
+
+                            if (success)
+                                accountReceived.setStatus(Account.Status.Success);
+                            else
+                                accountReceived.setStatus(Account.Status.Failure);
+                            break;
+                    }
+                    break;
+
+                case PacketHeader.Type.Song:
+                    switch (rx.header.GetSongAction())
+                    {
+                        case PacketHeader.SongAction.NotApplicable:
+
+                            throw new NotImplementedException();
+
+                            break;
+                        case PacketHeader.SongAction.Sync:
+
+                            throw new NotImplementedException();
+
+                            break;
+                        case PacketHeader.SongAction.Media:
+
+                            MediaControlBody mcb = (MediaControlBody)rx.body;
+                            switch(mcb.GetAction())
+                            {
+                                case MediaControlBody.Action.Play:
+                                    state = MediaControlBody.State.Playing;
+                                        
+                                    break;
+                                case MediaControlBody.Action.Pause:
+                                    state = MediaControlBody.State.Paused;
+                                    break;
+                                case MediaControlBody.Action.Previous:
+                                    break;
+                                case MediaControlBody.Action.Skip:
+                                    state = MediaControlBody.State.Idle;
+                                    break;
+                                case MediaControlBody.Action.GetState:
+                                    break;
+                            }
+
+                            mcb.appendServerResponse(state);
+                            break;
+                        case PacketHeader.SongAction.Download:
+
+                            DownloadBody db = (DownloadBody)rx.body;
+                            string hash = db.GetHash();
+                            switch (db.GetType())
+                            {
+                                case DownloadBody.Type.AlbumCover:
                                     try
                                     {
-                                        Account account = accountController.FindAccount(accountReceived.getUsername());
-                                        accountReceived.setStatus(Account.Status.Failure);
+                                        Album album = albumController.FindAlbum(hash);
+                                        byte[] coverBytes = Utils.GetBitmapBytes(album.GetImage());
+                                        TransmitDownloadData(rx, client, iPEndPoint, coverBytes);
+                                        individualSend = false;
                                     }
                                     catch (Exception)
                                     {
-                                        accountReceived.setStatus(Account.Status.Success);
-                                    }
-                                } /* If we can add the account to the Dictionary, response is success. Failure otherwise. */
-                                else if (accountController.AddAccount(accountReceived.getUsername(), accountReceived.getPassword()))
-                                {
-                                    accountReceived.setStatus(Account.Status.Success);
-                                    FileHandler.WriteAccounts(accountController, Constants.TextDirectory + Constants.AccountsFile);
-                                }
-                                else
-                                    accountReceived.setStatus(Account.Status.Failure);
-                                break;
-                            case PacketHeader.AccountAction.LogIn:
-                                bool success = false;
-                                try
-                                {
-                                    Account foundAccount = accountController.FindAccount(accountReceived.getUsername());
 
-                                    /* If password is empty, user is trying to reset their password */
-                                    if ((accountReceived.getPassword() == string.Empty))
-                                        success = true;
-                                    else
+                                    }
+                                    break;
+                                case DownloadBody.Type.SongFile:
+                                    try
                                     {
-                                        /* If password is not empty, user is trying to log in */
-                                        if (accountReceived.getPassword() == foundAccount.getPassword())
-                                            success = true;
+                                        byte[] mp3Bytes = FileHandler.readMp3Bytes(Constants.Mp3sDirectory + $"{hash}.mp3");
+                                        TransmitDownloadData(rx, client, iPEndPoint, mp3Bytes);
+                                        individualSend = false;
                                     }
-                                }
-                                catch (KeyNotFoundException)
-                                {
+                                    catch (Exception)
+                                    {
 
-                                }
+                                    }
+                                    break;
+                            }
 
-                                if (success)
-                                    accountReceived.setStatus(Account.Status.Success);
-                                else
-                                    accountReceived.setStatus(Account.Status.Failure);
-                                break;
-                        }
-                        break;
+                            break;
+                        case PacketHeader.SongAction.List:
 
-                    case PacketHeader.Type.Song:
-                        switch (rx.header.GetSongAction())
-                        {
-                            case PacketHeader.SongAction.NotApplicable:
+                            SearchBody sb = (SearchBody)rx.body;
+                            List<Song> results = Utils.SearchSong(songController, sb.GetFilter());
 
-                                throw new NotImplementedException();
-
-                                break;
-                            case PacketHeader.SongAction.Sync:
-
-                                throw new NotImplementedException();
-
-                                break;
-                            case PacketHeader.SongAction.Media:
-
-                                MediaControlBody mcb = (MediaControlBody)rx.body;
-                                switch(mcb.GetAction())
-                                {
-                                    case MediaControlBody.Action.Play:
-                                        state = MediaControlBody.State.Playing;
-                                        
-                                        break;
-                                    case MediaControlBody.Action.Pause:
-                                        state = MediaControlBody.State.Paused;
-                                        break;
-                                    case MediaControlBody.Action.Previous:
-                                        break;
-                                    case MediaControlBody.Action.Skip:
-                                        state = MediaControlBody.State.Idle;
-                                        break;
-                                    case MediaControlBody.Action.GetState:
-                                        break;
-                                }
-
-                                mcb.appendServerResponse(state);
-                                break;
-                            case PacketHeader.SongAction.Download:
-
-                                DownloadBody db = (DownloadBody)rx.body;
-                                string hash = db.GetHash();
-                                switch (db.GetType())
-                                {
-                                    case DownloadBody.Type.AlbumCover:
-                                        try
-                                        {
-                                            Album album = albumController.FindAlbum(hash);
-                                            byte[] coverBytes = Utils.GetBitmapBytes(album.GetImage());
-                                            await TransmitDownloadData(rx, stream, coverBytes);
-                                            individualSend = false;
-                                        }
-                                        catch (Exception)
-                                        {
-
-                                        }
-                                        break;
-                                    case DownloadBody.Type.SongFile:
-                                        try
-                                        {
-                                            byte[] mp3Bytes = FileHandler.readMp3Bytes(Constants.Mp3sDirectory + $"{hash}.mp3");
-                                            await TransmitDownloadData(rx, stream, mp3Bytes);
-                                            individualSend = false;
-                                        }
-                                        catch (Exception)
-                                        {
-
-                                        }
-                                        break;
-                                }
-
-                                break;
-                            case PacketHeader.SongAction.List:
-
-                                SearchBody sb = (SearchBody)rx.body;
-                                List<Song> results = Utils.SearchSong(songController, sb.GetFilter());
-
-                                //create the packet after here
-                                sb.appendServerResponse(Utils.GenerateServerSearchResponse(results));
-                                break;
-                        }
-                        break;
-                }
-
-                if(individualSend)
-                {
-                    logger.Log(rx, true);
-
-                    byte[] TxBuffer = rx.Serialize();
-                    stream.Write(TxBuffer);
-                }
-
+                            //create the packet after here
+                            sb.appendServerResponse(Utils.GenerateServerSearchResponse(results));
+                            break;
+                    }
+                    break;
             }
-        }
-        catch (IOException)
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\n---- Closing current Client Connection ----\n");
-            Console.ForegroundColor = ConsoleColor.White;
+
+            if(individualSend)
+            {
+                logger.Log(rx, true);
+
+                byte[] TxBuffer = rx.Serialize();
+                client.Send(TxBuffer, TxBuffer.Length, iPEndPoint);
+            }
+
         }
     }
-
+    catch (IOException ioException)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Error.WriteLine($"Exception caught: {ioException.Message} -- {ioException.Source}");
+        Console.ForegroundColor = ConsoleColor.White;
+    }
 }
 finally
 {
-    listener.Stop();
+    client.Close();
 }
 #endif
 
-static async Task TransmitDownloadData(Packet rx, NetworkStream stream, byte[] bytes)
+static void TransmitDownloadData(Packet rx, UdpClient udpClient, IPEndPoint iPEndPoint,  byte[] bytes)
 {
     Logger instance = Logger.Instance;
 
@@ -276,10 +257,9 @@ static async Task TransmitDownloadData(Packet rx, NetworkStream stream, byte[] b
         db.appendServerResponse(blockIndex, totalBlocks, (uint)dataBytes.Length, dataBytes);
 
         byte[] serialized = rx.Serialize();
-        await stream.WriteAsync(serialized);
-
+        udpClient.Send(serialized, serialized.Length, iPEndPoint);
         instance.Log(rx, true);
 
-        Thread.Sleep(1); // client can't catch up if thread doesn't sleep for at least a millisecond
+        byte[] RxBuffer = udpClient.Receive(ref iPEndPoint);
     }
 }

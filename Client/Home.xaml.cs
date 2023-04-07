@@ -46,7 +46,6 @@ namespace Client
         /* Data Communications */
         byte[] TxBuffer;
         byte[] RxBuffer;
-        NetworkStream stream;
         MediaControlBody.State state;
 
         string mp3Dir;
@@ -71,7 +70,6 @@ namespace Client
         public Home(string username)
         {
             InitializeComponent();
-            stream = App.client.GetStream();
             outputDevice = new();
 
             progressBar.Minimum = 0;
@@ -231,9 +229,9 @@ namespace Client
 
                     TxBuffer = packet.Serialize();
 
-                    stream.Write(TxBuffer);
+                    App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-                    currentSongLocation = ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, true);
+                    currentSongLocation = ReceiveDownloadData(hash, DownloadBody.Type.SongFile, true);
                     currentSongName = hash;
                 }
                 else
@@ -274,20 +272,22 @@ namespace Client
 
         private void StateTransition(PacketHeader packetHeader, MediaControlBody mediaControlBody)
         {
+            Logger instance = Logger.Instance;
+
             /* Transitions from current <state> to the MediaControlBody.State received from server */
             Packet pausePacket = new(packetHeader, mediaControlBody);
 
             TxBuffer = pausePacket.Serialize();
 
-            stream.Write(TxBuffer);
+            App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
+            instance.Log(pausePacket, true);
 
-            int read = stream.Read(RxBuffer);
-
-            byte[] receivedBuffer = new byte[read];
-            Array.Copy(RxBuffer, receivedBuffer, read);
+            byte[] receivedBuffer = App.client.Receive(ref App.iPEndPoint);
 
             pausePacket = new(receivedBuffer);
             mediaControlBody = (MediaControlBody)pausePacket.body;
+
+            instance.Log(pausePacket, false);
 
             state = mediaControlBody.GetState();
         }
@@ -295,6 +295,7 @@ namespace Client
 
         private void ReceiveSongCovers(List<Song> results)
         {
+            Logger logger = Logger.Instance;
 
             foreach (Song song in results)
             {
@@ -305,14 +306,15 @@ namespace Client
 
                 Packet packet = new(packetHeader, db);
                 TxBuffer = packet.Serialize();
+                
+                App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
+                logger.Log(packet, true);
 
-                stream.Write(TxBuffer);
-
-                ReceiveDownloadData(packet, hash, db.GetType(), true);
+                ReceiveDownloadData(hash, db.GetType(), true);
             }
         }
 
-        private string ReceiveDownloadData(Packet packet, string hash, DownloadBody.Type type, bool isTemp)
+        private string ReceiveDownloadData(string hash, DownloadBody.Type type, bool isTemp)
         {
             /* Determines the path to open the Resource from (AlbumCover or SongFile) */
             string toOpen = "";
@@ -328,16 +330,14 @@ namespace Client
 
             Logger instance = Logger.Instance;
             bool reachedTotalBlocks = false;
+            Packet packet;
 
             /* Receive each block and write it to the file <toOpen> */
             using (FileStream fs = File.Open(toOpen, FileMode.Create))
             {
                 do
                 {
-                    int read = stream.Read(RxBuffer);
-
-                    byte[] receivedBuffer = new byte[read];
-                    Array.Copy(RxBuffer, receivedBuffer, read);
+                    byte[] receivedBuffer = App.client.Receive(ref App.iPEndPoint);
 
                     packet = new(receivedBuffer);
                     instance.Log(packet, false);
@@ -347,6 +347,8 @@ namespace Client
 
                     if (!(receivedBody.GetBlockIndex() < receivedBody.GetTotalBlocks() - 1))
                         reachedTotalBlocks = true;
+
+                    App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
                 } while (!reachedTotalBlocks);
             }
 
@@ -436,14 +438,11 @@ namespace Client
             TxBuffer = searchPacket.Serialize();
 
             Logger instance = Logger.Instance;
+            
+            App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
             instance.Log(searchPacket, true);
 
-            stream.Write(TxBuffer);
-
-            int read = stream.Read(RxBuffer);
-
-            byte[] receivedBuffer = new byte[read];
-            Array.Copy(RxBuffer, receivedBuffer, read);
+            byte[] receivedBuffer = App.client.Receive(ref App.iPEndPoint);
 
             searchPacket = new(receivedBuffer);
             SearchBody sb = (SearchBody)searchPacket.body;
@@ -676,6 +675,7 @@ namespace Client
 
             String path = mp3Dir + $"{searchResults[i].GetName()}.mp3";
 
+            Logger instance = Logger.Instance;
             if (File.Exists(path))
             {
                 //delete file
@@ -697,9 +697,10 @@ namespace Client
 
                 TxBuffer = packet.Serialize();
 
-                stream.Write(TxBuffer);
+                App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-                ReceiveDownloadData(packet, hash, DownloadBody.Type.SongFile, false);
+                instance.Log(packet, true);
+                ReceiveDownloadData(hash, DownloadBody.Type.SongFile, false);
 
                 ImageSource bgimg = new BitmapImage(new Uri(ClientConstants.ImagesDirectory + "delete.png", UriKind.Relative));
                 clickedGrid.ToolTip = "Delete";

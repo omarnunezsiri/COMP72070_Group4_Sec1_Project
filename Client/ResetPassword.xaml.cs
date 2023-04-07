@@ -29,7 +29,6 @@ namespace Client
         /* Data communications */
         byte[] TxBuffer;
         byte[] RxBuffer;
-        NetworkStream stream;
 
         PacketHeader packetHeader;
         Account account;
@@ -44,7 +43,6 @@ namespace Client
             /* Creates an account with no username/password to be replaced to avoid reallocations */
             account = new Account(ClientConstants.Unused, ClientConstants.Unused);
 
-            stream = App.client.GetStream();
             RxBuffer = new byte[Constants.SmallBufferMax];
         }
 
@@ -83,9 +81,9 @@ namespace Client
             /* Serializes the packet */
             TxBuffer = packet.Serialize();
 
-            stream.Write(TxBuffer);
+            App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-            stream.Read(RxBuffer);
+            RxBuffer = App.client.Receive(ref App.iPEndPoint);
             
             /* Deserializes Response packet */
             packet = new(RxBuffer);
@@ -178,9 +176,9 @@ namespace Client
 
                 TxBuffer = packet.Serialize();
 
-                stream.Write(TxBuffer);
+                App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-                stream.Read(RxBuffer);
+                RxBuffer = App.client.Receive(ref App.iPEndPoint);
 
                 packet = new(RxBuffer);
                 instance.Log(packet, false);

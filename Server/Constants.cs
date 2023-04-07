@@ -17,7 +17,7 @@ namespace Server
         public const int SmallBufferMax = 1024;
         public const int CoverBufferMax = 15000;
         public const int SearchBufferMax = 65535;
-        public const int Mp3BufferMax = 64000;
+        public const int Mp3BufferMax = 53000;
         /*******************************************************************/
         public const string DefaultImageFile = "default.png";
         public const string Mp3sDirectory = "Assets/Mp3/";
