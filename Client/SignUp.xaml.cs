@@ -23,13 +23,11 @@ namespace Client
     public partial class SignUp : Window
     {
         bool check = false;
-        NetworkStream stream;
         byte[] RxBuffer;
 
         public SignUp()
         {
             InitializeComponent();
-            stream = App.client.GetStream();
             RxBuffer = new byte[Constants.SmallBufferMax];
         }
 
@@ -69,9 +67,9 @@ namespace Client
 
             byte[] TxBuffer = packet.Serialize();
 
-            stream.Write(TxBuffer);
+            App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-            stream.Read(RxBuffer);
+            RxBuffer = App.client.Receive(ref App.iPEndPoint);
 
             packet = new(RxBuffer);
             instance.Log(packet, false);
@@ -176,9 +174,9 @@ namespace Client
                 Logger instance = Logger.Instance;
                 instance.Log(packet, true);
 
-                stream.Write(TxBuffer);
+                App.client.Send(TxBuffer, TxBuffer.Length, App.iPEndPoint);
 
-                stream.Read(RxBuffer);
+                RxBuffer = App.client.Receive(ref App.iPEndPoint);
 
                 Packet responsePacket = new Packet(RxBuffer);
                 instance.Log(packet, false);
